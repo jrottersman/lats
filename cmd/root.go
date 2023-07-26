@@ -1,0 +1,26 @@
+package cmd
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/spf13/cobra"
+
+)
+
+var rootCmd = &cobra.Command{
+	Use:   "lats",
+	Short: "Lats simplifies disaster recovery in AWS",
+	Long: `Lats simplifies disaster recovery in AWS"
+                Complete documentation is available at https://latscli.io/documentation/`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Hi From Lats")
+	},
+}
+
+func Execute() {
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
