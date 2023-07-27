@@ -35,6 +35,16 @@ func GeneratePrompt(pc PromptContent) promptui.Prompt {
 	}
 }
 
+func PromptInput(p promptui.Prompt) string {
+	result, err := p.Run()
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		os.Exit(1)
+	}
+
+	return result
+}
+
 func PromptGetInput(pc PromptContent) string {
 	validate := func(input string) error {
 		if len(input) <= 0 {
