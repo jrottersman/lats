@@ -1,14 +1,22 @@
 package helpers
 
-type promptContent struct {
-	errorMsg string
-	label    string
+import (
+	"fmt"
+	"errors"
+	"os"
+
+	"github.com/manifoldco/promptui"
+)
+
+type PromptContent struct {
+	ErrorMsg string
+	Label    string
 }
 
-func promptGetInput(pc promptContent) string {
+func PromptGetInput(pc PromptContent) string {
 	validate := func(input string) error {
 		if len(input) <= 0 {
-			return errors.New(pc.errorMsg)
+			return errors.New(pc.ErrorMsg)
 		}
 		return nil
 	}
@@ -21,7 +29,7 @@ func promptGetInput(pc promptContent) string {
 	}
 
 	prompt := promptui.Prompt{
-		Label:     pc.label,
+		Label:     pc.Label,
 		Templates: templates,
 		Validate:  validate,
 	}
