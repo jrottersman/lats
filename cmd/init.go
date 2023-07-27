@@ -1,10 +1,8 @@
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/spf13/cobra"
 	"github.com/jrottersman/lats/helpers"
+	"github.com/spf13/cobra"
 )
 
 var (
@@ -19,11 +17,11 @@ var (
 	}
 )
 
-func getMainRegion() {
+func getMainRegion() string {
 	mainRegionPromptContent := helpers.PromptContent{
 		"Please provide an AWS region.",
 		"What is the AWS region your database is running in?",
 	}
 	mainRegion := helpers.PromptGetInput(mainRegionPromptContent)
-	fmt.Println(mainRegion)
+	return mainRegion
 }

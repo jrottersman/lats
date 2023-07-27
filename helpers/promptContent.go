@@ -1,8 +1,8 @@
 package helpers
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/manifoldco/promptui"
@@ -11,6 +11,28 @@ import (
 type PromptContent struct {
 	ErrorMsg string
 	Label    string
+}
+
+func GeneratePrompt(pc PromptContent) promptui.Prompt {
+	validate := func(input string) error {
+		if len(input) <= 0 {
+			return errors.New(pc.ErrorMsg)
+		}
+		return nil
+	}
+
+	templates := &promptui.PromptTemplates{
+		Prompt:  "{{ . }} ",
+		Valid:   "{{ . | green }} ",
+		Invalid: "{{ . | red }} ",
+		Success: "{{ . | bold }} ",
+	}
+
+	return promptui.Prompt{
+		Label:     pc.Label,
+		Templates: templates,
+		Validate:  validate,
+	}
 }
 
 func PromptGetInput(pc PromptContent) string {
@@ -44,5 +66,3 @@ func PromptGetInput(pc PromptContent) string {
 
 	return result
 }
-
-
