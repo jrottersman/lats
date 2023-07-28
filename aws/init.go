@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/rds"
 )
 
 func Init(region string) aws.Config {
@@ -12,4 +13,8 @@ func Init(region string) aws.Config {
 		panic("configuration error, " + err.Error())
 	}
 	return cfg
+}
+
+func getRDSClient(cfg aws.Config) *rds.Client {
+	return rds.NewFromConfig(cfg)
 }
