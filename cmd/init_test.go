@@ -2,6 +2,10 @@ package cmd
 
 import "testing"
 
+func mockGetRegion() string {
+	return "foo"
+}
+
 func TestNewConfig(t *testing.T) {
 
 	expected_backup := "us-east-1"
@@ -15,5 +19,18 @@ func TestNewConfig(t *testing.T) {
 
 	if actual.BackupRegion != expected_backup {
 		t.Errorf("backup region actual %s, expected %s", actual.BackupRegion, expected_backup)
+	}
+}
+
+func TestGenConfig(t *testing.T) {
+	br := mockGetRegion
+	mr := mockGetRegion
+	expected := Config{
+		"foo",
+		"foo",
+	}
+	actual := genConfig(mr, br)
+	if actual != expected {
+		t.Errorf("expected %v got %v", expected, actual)
 	}
 }

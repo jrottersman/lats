@@ -16,12 +16,16 @@ func (cb ClosingBuffer) Close() error {
 	return nil
 }
 
+func mockValidate(input string) error {
+	return nil
+}
+
 func TestGeneratePrompt(t *testing.T) {
 	pc := PromptContent{
 		"foo",
 		"bar",
 	}
-	resp := GeneratePrompt(pc)
+	resp := GeneratePrompt(pc, mockValidate)
 	expected := "bar"
 	if resp.Label != expected {
 		t.Errorf("test failed expected %s, got %s", expected, resp.Label)
@@ -48,4 +52,16 @@ func TestPromptInput(t *testing.T) {
 		t.Errorf("expected %s, actual %s", expected, resp)
 	}
 
+}
+
+func TestValidate(t *testing.T) {
+	e := validate("")
+	if e == nil {
+		t.Errorf("expected validate to fail")
+	}
+
+	p := validate("foo")
+	if p != nil {
+		t.Errorf("this should be nil")
+	}
 }

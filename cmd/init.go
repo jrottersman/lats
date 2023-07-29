@@ -21,7 +21,7 @@ var (
 		Short:   "Initalizes lats and configures it for creating backups",
 		Long:    "Initalize (lats init) will setup lats with the correct regions and let you choose where you want to store state",
 		Run: func(cmd *cobra.Command, args []string) {
-			getMainRegion()
+			genConfig(getMainRegion, getBackupRegion)
 		},
 	}
 )
@@ -45,7 +45,7 @@ func getBackupRegion() string {
 	}
 	backupRegionPromptContent := helpers.PromptContent{
 		"Please provide an AWS region.",
-		"What is the AWS region your database is running in?",
+		"What is the AWS region your backup should be in?",
 	}
 	backupRegion := helpers.PromptGetInput(backupRegionPromptContent)
 	return backupRegion
@@ -61,4 +61,10 @@ func newConfig(mainRegion string, backupRegion string) Config {
 		MainRegion:   mainRegion,
 		BackupRegion: backupRegion,
 	}
+}
+
+func genConfig(mr, br func() string) Config {
+	mainRegion := mr()
+	backupRegion := br()
+	return newConfig(mainRegion, backupRegion)
 }

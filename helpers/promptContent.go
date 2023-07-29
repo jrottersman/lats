@@ -13,13 +13,15 @@ type PromptContent struct {
 	Label    string
 }
 
-func GeneratePrompt(pc PromptContent) promptui.Prompt {
-	validate := func(input string) error {
-		if len(input) <= 0 {
-			return errors.New(pc.ErrorMsg)
-		}
-		return nil
+func validate(input string) error {
+	if len(input) <= 0 {
+		return errors.New("validation error length of input must be greater then 0")
 	}
+	return nil
+}
+
+func GeneratePrompt(pc PromptContent, v func(string) error) promptui.Prompt {
+	validate := v
 
 	templates := &promptui.PromptTemplates{
 		Prompt:  "{{ . }} ",
@@ -46,6 +48,6 @@ func PromptInput(p promptui.Prompt) string {
 }
 
 func PromptGetInput(pc PromptContent) string {
-	p := GeneratePrompt(pc)
+	p := GeneratePrompt(pc, validate)
 	return PromptInput(p)
 }
