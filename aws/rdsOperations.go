@@ -10,12 +10,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
-//DbInstances is a struct that holds our RDS Client
-type DbInstances struct {
-	RdsClient *rds.Client
+type Client interface {
+	DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput) (*rds.DescribeDBInstancesOutput, error)
 }
 
-// GetInstance gets data about a DB instance.
+type DbInstances struct {
+	RdsClient Client
+}
+
 func (instances *DbInstances) GetInstance(instanceName string) (
 	*types.DBInstance, error) {
 	output, err := instances.RdsClient.DescribeDBInstances(context.TODO(),

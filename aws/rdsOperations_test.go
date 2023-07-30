@@ -1,42 +1,34 @@
 package aws
 
 import (
-	"reflect"
+	"context"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
-func TestDbInstances_GetInstance(t *testing.T) {
-	type fields struct {
-		RdsClient *rds.Client
+type mockRDSClient struct{}
+
+func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput) (*rds.DescribeDBInstancesOutput, error) {
+	f := "foo"
+	r := &rds.DescribeDBInstancesOutput{
+		DBInstances: []types.DBInstance{types.DBInstance{DBInstanceIdentifier: &f}},
 	}
-	type args struct {
-		instanceName string
+	return r, nil
+}
+
+func TestGetInstance(t *testing.T) {
+	expected := "foo"
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
 	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    *types.DBInstance
-		wantErr bool
-	}{
-		// TODO: Add test cases.
+	resp, err := dbi.GetInstance("foo")
+	if err != nil {
+		t.Errorf("got the following error %v", err)
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			instances := &DbInstances{
-				RdsClient: tt.fields.RdsClient,
-			}
-			got, err := instances.GetInstance(tt.args.instanceName)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("DbInstances.GetInstance() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("DbInstances.GetInstance() = %v, want %v", got, tt.want)
-			}
-		})
+	if *resp.DBInstanceIdentifier != expected {
+		t.Errorf("got %s expected %s", *resp.DBInstanceIdentifier, expected)
 	}
 }
