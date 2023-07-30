@@ -1,0 +1,11 @@
+mode: set
+github.com/jrottersman/lats/aws/init.go:12.37,14.16 2 0
+github.com/jrottersman/lats/aws/init.go:14.16,15.47 1 0
+github.com/jrottersman/lats/aws/init.go:17.2,17.12 1 0
+github.com/jrottersman/lats/aws/init.go:20.47,22.2 1 0
+github.com/jrottersman/lats/aws/rdsOperations.go:20.28,25.16 2 0
+github.com/jrottersman/lats/aws/rdsOperations.go:25.16,27.37 2 0
+github.com/jrottersman/lats/aws/rdsOperations.go:27.37,30.4 2 0
+github.com/jrottersman/lats/aws/rdsOperations.go:30.9,32.4 1 0
+github.com/jrottersman/lats/aws/rdsOperations.go:33.3,33.18 1 0
+github.com/jrottersman/lats/aws/rdsOperations.go:34.8,36.3 1 0

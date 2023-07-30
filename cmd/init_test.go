@@ -1,6 +1,10 @@
 package cmd
 
-import "testing"
+import (
+	"fmt"
+	"os"
+	"testing"
+)
 
 func mockGetRegion() string {
 	return "foo"
@@ -33,4 +37,21 @@ func TestGenConfig(t *testing.T) {
 	if actual != expected {
 		t.Errorf("expected %v got %v", expected, actual)
 	}
+}
+
+func TestWriteConfig(t *testing.T) {
+	filename := "/tmp/config.json"
+	conf := Config{
+		"foo",
+		"bar",
+	}
+	writeConfig(conf, filename)
+	dat, err := os.ReadFile(filename)
+	if err != nil {
+		t.Errorf("File not created")
+	}
+	if string(dat) != "fwf" {
+		fmt.Print(string(dat))
+	}
+	os.Remove(filename)
 }

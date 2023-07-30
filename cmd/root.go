@@ -17,6 +17,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+// Execute is the main function for cobra that we will run in our main.go
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -26,4 +27,5 @@ func Execute() {
 
 func init() {
 	rootCmd.AddCommand(initCmd)
+	rootCmd.AddCommand(CreateRDSSnapshotCmd)
 }

@@ -1,13 +1,17 @@
 package cmd
 
 import (
+	"encoding/json"
+	"fmt"
+	"os"
+
 	"github.com/jrottersman/lats/helpers"
 	"github.com/spf13/cobra"
 )
 
 type Config struct {
-	MainRegion   string
-	BackupRegion string
+	MainRegion   string `json:"mainRegion"`
+	BackupRegion string `json:"backupRegion"`
 }
 
 var (
@@ -21,7 +25,8 @@ var (
 		Short:   "Initalizes lats and configures it for creating backups",
 		Long:    "Initalize (lats init) will setup lats with the correct regions and let you choose where you want to store state",
 		Run: func(cmd *cobra.Command, args []string) {
-			genConfig(getMainRegion, getBackupRegion)
+			c := genConfig(getMainRegion, getBackupRegion)
+			writeConfig(c, ".latsConfig.json")
 		},
 	}
 )
@@ -67,4 +72,14 @@ func genConfig(mr, br func() string) Config {
 	mainRegion := mr()
 	backupRegion := br()
 	return newConfig(mainRegion, backupRegion)
+}
+
+func writeConfig(c Config, filename string) error {
+	conf, err := json.Marshal(c)
+	if err != nil {
+		fmt.Errorf("Error writing config: %s", err)
+		return err
+	}
+	err = os.WriteFile(filename, conf, 0644)
+	return nil
 }
