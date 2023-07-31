@@ -8,15 +8,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 )
 
-// Init creates a config for AWS that we use to generate clients
-func Init(region string) aws.Config {
+// Init creates an RDS Client
+func Init(region string) *rds.Client {
+	cfg := createConfig(region)
+	return getRDSClient(cfg)
+}
+
+func getRDSClient(cfg aws.Config) *rds.Client {
+	return rds.NewFromConfig(cfg)
+}
+
+func createConfig(region string) aws.Config {
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
 	if err != nil {
 		panic("configuration error, " + err.Error())
 	}
 	return cfg
-}
-
-func getRDSClient(cfg aws.Config) *rds.Client {
-	return rds.NewFromConfig(cfg)
 }

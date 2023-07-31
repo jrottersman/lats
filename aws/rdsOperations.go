@@ -18,6 +18,7 @@ type DbInstances struct {
 	RdsClient Client
 }
 
+
 func (instances *DbInstances) GetInstance(instanceName string) (
 	*types.DBInstance, error) {
 	output, err := instances.RdsClient.DescribeDBInstances(context.TODO(),

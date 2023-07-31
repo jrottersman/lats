@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	aws.Init("us-west-2")
+	aws.Init("us-east-1")
 	cmd.Execute()
 }
