@@ -10,7 +10,7 @@ import (
 
 type mockRDSClient struct{}
 
-func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput) (*rds.DescribeDBInstancesOutput, error) {
+func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput, optFns ...func(*rds.Options)) (*rds.DescribeDBInstancesOutput, error) {
 	f := "foo"
 	r := &rds.DescribeDBInstancesOutput{
 		DBInstances: []types.DBInstance{types.DBInstance{DBInstanceIdentifier: &f}},

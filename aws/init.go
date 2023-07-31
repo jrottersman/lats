@@ -9,9 +9,12 @@ import (
 )
 
 // Init creates an RDS Client
-func Init(region string) *rds.Client {
+func Init(region string) DbInstances {
 	cfg := createConfig(region)
-	return getRDSClient(cfg)
+	client := getRDSClient(cfg)
+	return DbInstances{
+		RdsClient: client,
+	}
 }
 
 func getRDSClient(cfg aws.Config) *rds.Client {
