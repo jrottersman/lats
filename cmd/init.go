@@ -83,3 +83,17 @@ func writeConfig(c Config, filename string) error {
 	err = os.WriteFile(filename, conf, 0644)
 	return nil
 }
+
+func readConfig(filename string) (Config, error) {
+	// LOOK INTO IO PACKAGE there is probably something that fixes this mess
+	confFile, err := os.ReadFile(filename)
+	if err != nil {
+		fmt.Printf("Error reading config: %s", err)
+	}
+	conf := Config{}
+	err = json.Unmarshal(confFile, &conf)
+	if err != nil {
+		fmt.Printf("Error unmarshalling json: %s\n", err)
+	}
+	return conf, err
+}

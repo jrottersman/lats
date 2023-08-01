@@ -55,3 +55,20 @@ func TestWriteConfig(t *testing.T) {
 	}
 	os.Remove(filename)
 }
+
+func TestReadConfig(t *testing.T) {
+	filename := "/tmp/config.json"
+	mconf := Config{
+		"foo",
+		"bar",
+	}
+	writeConfig(mconf, filename)
+	conf, err := readConfig(filename)
+	if err != nil {
+		t.Errorf("got error: %s", err)
+	}
+	if conf.MainRegion != "foo" {
+		t.Errorf("%s, %s", conf.MainRegion, conf.BackupRegion)
+	}
+	os.Remove(filename)
+}
