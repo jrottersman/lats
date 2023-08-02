@@ -18,6 +18,16 @@ func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.Descr
 	return r, nil
 }
 
+// TODO create mock CreateSnapshot function
+func (m mockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error){
+	r := &rds.CreateDBSnapshotOutput{
+		DBSnapshot: &types.DBSnapshot{
+			AllocatedStorage: 1000,
+		},
+	}
+	return r, nil
+}
+
 func TestGetInstance(t *testing.T) {
 	expected := "foo"
 	c := mockRDSClient{}
@@ -30,5 +40,19 @@ func TestGetInstance(t *testing.T) {
 	}
 	if *resp.DBInstanceIdentifier != expected {
 		t.Errorf("got %s expected %s", *resp.DBInstanceIdentifier, expected)
+	}
+}
+
+func TestCreateSnapshot(t *testing.T) {
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	resp, err := dbi.CreateSnapshot("foo", "bar")
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
+	if resp.AllocatedStorage != 1000 {
+		t.Errorf("got %d expected 1000", resp.AllocatedStorage)
 	}
 }

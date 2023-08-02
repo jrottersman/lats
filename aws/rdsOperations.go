@@ -12,6 +12,7 @@ import (
 
 type Client interface {
 	DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput, optFns ...func(*rds.Options)) (*rds.DescribeDBInstancesOutput, error)
+	CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error)
 }
 
 type DbInstances struct {
@@ -37,4 +38,17 @@ func (instances *DbInstances) GetInstance(instanceName string) (
 	} else {
 		return &output.DBInstances[0], nil
 	}
+}
+
+func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName string) (
+	*types.DBSnapshot, error) {
+	output, err := instances.RdsClient.CreateDBSnapshot(context.TODO(), &rds.CreateDBSnapshotInput{
+		DBInstanceIdentifier: aws.String(instanceName),
+		DBSnapshotIdentifier: aws.String(snapshotName),
+	})
+	if err != nil {
+		log.Printf("Couldn't create snapshot %v: %v\n", snapshotName, err)
+		return nil, err
+	} 
+	return output.DBSnapshot, nil
 }
