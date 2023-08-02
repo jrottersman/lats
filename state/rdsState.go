@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
-func EncodeRDSDatabaseOutput(db *types.DBInstance) *gob.Encoder {
+func EncodeRDSDatabaseOutput(db *types.DBInstance) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
 
@@ -16,5 +16,5 @@ func EncodeRDSDatabaseOutput(db *types.DBInstance) *gob.Encoder {
 	if err != nil {
 		log.Printf("Error encoding our database: %s", err)
 	}
-	return enc
+	return encoder
 }
