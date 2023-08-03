@@ -24,3 +24,16 @@ func TestEncodeRDSDBOutput(t *testing.T) {
 		t.Errorf("got %d expected %d", result.AllocatedStorage, db.AllocatedStorage)
 	}
 }
+
+func TestDecodeRDSDBOutput(t *testing.T) {
+	db := types.DBInstance{
+		AllocatedStorage:      1000,
+		BackupRetentionPeriod: 30,
+	}
+	r := EncodeRDSDatabaseOutput(&db)
+	resp := DecodeRDSDatabaseOutput(r)
+	if resp.AllocatedStorage != db.AllocatedStorage {
+		t.Errorf("Expected %d, got %d", resp.AllocatedStorage, db.AllocatedStorage)
+	}
+
+}

@@ -15,13 +15,13 @@ func EncodeRDSDatabaseOutput(db *types.DBInstance) bytes.Buffer {
 
 	err := enc.Encode(db)
 	if err != nil {
-		log.fatalf("Error encoding our database: %s", err)
+		log.Fatalf("Error encoding our database: %s", err)
 	}
 	return encoder
 }
 
 // DecodeRDSDatabaseOutput takes a bytes buffer and returns it to a DbInstance type in preperation of restoring the database
-func DecodeRDSDatabaseOutput(b bytes.Buffer) types.DbInstance {
+func DecodeRDSDatabaseOutput(b bytes.Buffer) types.DBInstance {
 	var dbInstance types.DBInstance
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&dbInstance)
