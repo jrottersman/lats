@@ -1,6 +1,8 @@
 package state
 
 import (
+	"encoding/json"
+	"fmt"
 	"os"
 	"sync"
 	"testing"
@@ -47,4 +49,32 @@ func TestUpdateState(t *testing.T) {
 	if sm.StateLocations[0].Object != "boo" {
 		t.Errorf("got %s expected %s\n", sm.StateLocations[0].Object, obj)
 	}
+}
+
+func TestSyncState(t *testing.T) {
+	var mu sync.Mutex
+	var s []stateKV
+	sm := StateManager{
+		mu,
+		s,
+	}
+
+	filename := "/tmp/foo"
+	obj := "boo"
+	defer os.Remove(filename)
+	sm.UpdateState(obj, filename)
+	sm.SyncState(filename)
+	f, err := os.ReadFile(filename)
+	if err != nil {
+		t.Errorf("couldn't read file got %s", err)
+	}
+	var sf []stateKV
+	err = json.Unmarshal(f, &sf)
+	if err != nil {
+		fmt.Printf("Couldn't unmarshall the json %s", err)
+	}
+	if sf[0].Object != obj {
+		t.Errorf("got %s expected %s", sf[0].Object, obj)
+	}
+
 }
