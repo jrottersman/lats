@@ -18,6 +18,18 @@ type StateManager struct {
 	StateLocations []stateKV
 }
 
+func (s StateManager) updateState(name string, filename string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	kv := stateKV{
+		Object:       name,
+		FileLocation: filename,
+	}
+	s.StateLocations = append(s.StateLocations, kv)
+
+	return nil
+}
+
 func InitState(f string) error {
 	initStr := []string{}
 	m, err := json.Marshal(initStr)
