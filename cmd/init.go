@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/jrottersman/lats/helpers"
+	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
 )
 
@@ -27,6 +28,7 @@ var (
 		Run: func(cmd *cobra.Command, args []string) {
 			c := genConfig(getMainRegion, getBackupRegion)
 			writeConfig(c, ".latsConfig.json")
+			state.InitState(".confState.json")
 		},
 	}
 )
