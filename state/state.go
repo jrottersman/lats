@@ -32,3 +32,21 @@ func initState(f string) error {
 	}
 	return nil
 }
+
+func readState(filename string) (StateManager, error) {
+	f, err := os.ReadFile(filename)
+	if err != nil {
+		fmt.Printf("Error reading the file %s", err)
+	}
+	var s []stateKV
+	err = json.Unmarshal(f, &s)
+	if err != nil {
+		fmt.Printf("Error reading the file %s", err)
+	}
+	var m sync.Mutex
+	sm := StateManager{
+		m,
+		s,
+	}
+	return sm, err
+}
