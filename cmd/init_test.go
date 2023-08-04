@@ -32,6 +32,7 @@ func TestGenConfig(t *testing.T) {
 	expected := Config{
 		"foo",
 		"foo",
+		".confState.json",
 	}
 	actual := genConfig(mr, br)
 	if actual != expected {
@@ -44,6 +45,7 @@ func TestWriteConfig(t *testing.T) {
 	conf := Config{
 		"foo",
 		"bar",
+		"tmp/baz.json",
 	}
 	writeConfig(conf, filename)
 	dat, err := os.ReadFile(filename)
@@ -61,6 +63,7 @@ func TestReadConfig(t *testing.T) {
 	mconf := Config{
 		"foo",
 		"bar",
+		"tmp/baz.json",
 	}
 	writeConfig(mconf, filename)
 	conf, err := readConfig(filename)

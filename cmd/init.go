@@ -11,8 +11,9 @@ import (
 )
 
 type Config struct {
-	MainRegion   string `json:"mainRegion"`
-	BackupRegion string `json:"backupRegion"`
+	MainRegion    string `json:"mainRegion"`
+	BackupRegion  string `json:"backupRegion"`
+	StateFileName string `json:"stateFileName`
 }
 
 var (
@@ -65,8 +66,9 @@ func init() {
 
 func newConfig(mainRegion string, backupRegion string) Config {
 	return Config{
-		MainRegion:   mainRegion,
-		BackupRegion: backupRegion,
+		MainRegion:    mainRegion,
+		BackupRegion:  backupRegion,
+		StateFileName: ".confState.json",
 	}
 }
 
@@ -87,7 +89,6 @@ func writeConfig(c Config, filename string) error {
 }
 
 func readConfig(filename string) (Config, error) {
-	// LOOK INTO IO PACKAGE there is probably something that fixes this mess
 	confFile, err := os.ReadFile(filename)
 	if err != nil {
 		fmt.Printf("Error reading config: %s", err)
