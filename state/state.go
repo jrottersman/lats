@@ -18,7 +18,7 @@ type StateManager struct {
 	StateLocations []stateKV
 }
 
-func (s StateManager) updateState(name string, filename string) error {
+func (s *StateManager) UpdateState(name string, filename string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	kv := stateKV{
@@ -26,8 +26,6 @@ func (s StateManager) updateState(name string, filename string) error {
 		FileLocation: filename,
 	}
 	s.StateLocations = append(s.StateLocations, kv)
-
-	return nil
 }
 
 func InitState(f string) error {
@@ -55,9 +53,9 @@ func ReadState(filename string) (StateManager, error) {
 	if err != nil {
 		fmt.Printf("Error reading the file %s", err)
 	}
-	var m sync.Mutex
+	var mu sync.Mutex
 	sm := StateManager{
-		m,
+		mu,
 		s,
 	}
 	return sm, err

@@ -2,6 +2,7 @@ package state
 
 import (
 	"os"
+	"sync"
 	"testing"
 )
 
@@ -31,4 +32,19 @@ func TestReadState(t *testing.T) {
 		t.Errorf("expected length to be 0")
 	}
 
+}
+
+func TestUpdateState(t *testing.T) {
+	var mu sync.Mutex
+	var s []stateKV
+	sm := StateManager{
+		mu,
+		s,
+	}
+	filename := "/tmp/foo"
+	obj := "boo"
+	sm.UpdateState(obj, filename)
+	if sm.StateLocations[0].Object != "boo" {
+		t.Errorf("got %s expected %s\n", sm.StateLocations[0].Object, obj)
+	}
 }
