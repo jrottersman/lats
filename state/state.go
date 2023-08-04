@@ -15,7 +15,7 @@ type stateKV struct {
 
 type StateManager struct {
 	mu             sync.Mutex
-	StateLocations []stateKV
+	StateLocations []stateKV `json:"stateLocations"`
 }
 
 func (s *StateManager) UpdateState(name string, filename string) {
@@ -28,14 +28,30 @@ func (s *StateManager) UpdateState(name string, filename string) {
 	s.StateLocations = append(s.StateLocations, kv)
 }
 
-func InitState(f string) error {
+func (s *StateManager) SyncState(filename string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	m, err := json.Marshal(s.StateLocations)
+	if err != nil {
+		fmt.Printf("Error creating json: %s", err)
+		return err
+	}
+	err = os.WriteFile(filename, m, 0644)
+	if err != nil {
+		fmt.Printf("Error writing file %s", err)
+		return err
+	}
+	return nil
+}
+
+func InitState(filename string) error {
 	initStr := []string{}
 	m, err := json.Marshal(initStr)
 	if err != nil {
 		fmt.Printf("Error initing empty string to json %s", err)
 		return err
 	}
-	err = os.WriteFile(f, m, 0644)
+	err = os.WriteFile(filename, m, 0644)
 	if err != nil {
 		fmt.Printf("Error writing file %s", err)
 		return err
