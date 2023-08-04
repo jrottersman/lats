@@ -14,11 +14,11 @@ type stateKV struct {
 }
 
 type StateManager struct {
-	mu sync.Mutex
-	s  []stateKV
+	mu             sync.Mutex
+	StateLocations []stateKV
 }
 
-func initState(f string) error {
+func InitState(f string) error {
 	initStr := []string{}
 	m, err := json.Marshal(initStr)
 	if err != nil {
@@ -33,7 +33,7 @@ func initState(f string) error {
 	return nil
 }
 
-func readState(filename string) (StateManager, error) {
+func ReadState(filename string) (StateManager, error) {
 	f, err := os.ReadFile(filename)
 	if err != nil {
 		fmt.Printf("Error reading the file %s", err)
