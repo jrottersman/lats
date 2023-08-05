@@ -32,7 +32,7 @@ func DecodeRDSDatabaseOutput(b bytes.Buffer) types.DBInstance {
 }
 
 // EncodeRDSSnapshotOutput converts a DbSnapshot struct to an array of bytes in preperation for wrtiing it to disk
-func EncodeRDSSnapshotOutput(snapshot types.DBSnapshot) bytes.Buffer {
+func EncodeRDSSnapshotOutput(snapshot *types.DBSnapshot) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
 
@@ -44,8 +44,8 @@ func EncodeRDSSnapshotOutput(snapshot types.DBSnapshot) bytes.Buffer {
 }
 
 
-// DecodeRDSDatabaseOutput takes a bytes buffer and returns it to a DbInstance type in preperation of restoring the database
-func DecodeRDSDatabaseOutput(b bytes.Buffer) types.DBSnapshot {
+// DecodeRDSSnapshhotOutput takes a bytes buffer and returns it to a DbSnapshot type in preperation of restoring the database
+func DecodeRDSSnapshotOutput(b bytes.Buffer) types.DBSnapshot {
 	var dbSnapshot types.DBSnapshot
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&dbSnapshot)

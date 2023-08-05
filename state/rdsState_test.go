@@ -37,3 +37,36 @@ func TestDecodeRDSDBOutput(t *testing.T) {
 	}
 
 }
+
+func TestEncodeRDSSnapshotOutput(t *testing.T) {
+
+	snap := types.DBSnapshot{
+		AllocatedStorage: 1000,
+		Encrypted:        true,
+		PercentProgress:  100,
+	}
+	r := EncodeRDSSnapshotOutput(&snap)
+	var result types.DBSnapshot
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if result.AllocatedStorage != snap.AllocatedStorage {
+		t.Errorf("got %d expected %d", result.AllocatedStorage, snap.AllocatedStorage)
+	}
+}
+
+func TestDecodeRDSSnapshotOutput(t *testing.T) {
+	snap := types.DBSnapshot{
+		AllocatedStorage: 1000,
+		Encrypted:        true,
+		PercentProgress:  100,
+	}
+	r := EncodeRDSSnapshotOutput(&snap)
+	resp := DecodeRDSSnapshotOutput(r)
+	if resp.AllocatedStorage != snap.AllocatedStorage {
+		t.Errorf("Expected %d, got %d", resp.AllocatedStorage, snap.AllocatedStorage)
+	}
+
+}
