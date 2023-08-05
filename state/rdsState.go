@@ -1,11 +1,10 @@
 package state
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/gob"
-	"fmt"
 	"log"
+	"os"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
@@ -57,7 +56,7 @@ func DecodeRDSSnapshotOutput(b bytes.Buffer) types.DBSnapshot {
 	return dbSnapshot
 }
 
-func WriteOutput(filename string, b bytes.Buffer) (int, error) {
+func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 	f, err := os.Create(filename)
 	if err != nil {
 		log.Fatalf("Error creating file: %s", err)
@@ -65,7 +64,7 @@ func WriteOutput(filename string, b bytes.Buffer) (int, error) {
 	defer f.Close()
 	n, err := b.WriteTo(f)
 	if err != nil {
-		log.Fatalf("error writing to file %s")
+		log.Fatalf("error writing to file %s", err)
 	}
 	return n, err
 }

@@ -1,7 +1,9 @@
 package state
 
 import (
+	"bytes"
 	"encoding/gob"
+	"os"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
@@ -69,4 +71,32 @@ func TestDecodeRDSSnapshotOutput(t *testing.T) {
 		t.Errorf("Expected %d, got %d", resp.AllocatedStorage, snap.AllocatedStorage)
 	}
 
+}
+
+func TestWriteOutput(t *testing.T) {
+	type foo struct {
+		A string
+	}
+	s := foo{
+		"bar",
+	}
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(s)
+	if err != nil {
+		t.Errorf("Error encoding our test: %s", err)
+	}
+
+	var expected int64
+	expected = 33
+	filename := "/tmp/foo.gob"
+	defer os.Remove(filename)
+	n, err := WriteOutput(filename, encoder)
+	if err != nil {
+		t.Errorf("got an error: %s", err)
+	}
+	if n != expected {
+		t.Errorf("got: %d expected %d", n, expected)
+	}
 }
