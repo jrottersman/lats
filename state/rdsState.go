@@ -44,7 +44,6 @@ func EncodeRDSSnapshotOutput(snapshot *types.DBSnapshot) bytes.Buffer {
 	return encoder
 }
 
-
 // DecodeRDSSnapshhotOutput takes a bytes buffer and returns it to a DbSnapshot type in preperation of restoring the database
 func DecodeRDSSnapshotOutput(b bytes.Buffer) types.DBSnapshot {
 	var dbSnapshot types.DBSnapshot

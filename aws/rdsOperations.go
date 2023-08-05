@@ -16,13 +16,12 @@ type Client interface {
 	CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error)
 }
 
-//DbInstances holds our RDS client that allows for operations in AWS
+// DbInstances holds our RDS client that allows for operations in AWS
 type DbInstances struct {
 	RdsClient Client
 }
 
-
-//GetInstance describes an RDS instance and returns it's output
+// GetInstance describes an RDS instance and returns it's output
 func (instances *DbInstances) GetInstance(instanceName string) (
 	*types.DBInstance, error) {
 	output, err := instances.RdsClient.DescribeDBInstances(context.TODO(),
@@ -55,6 +54,6 @@ func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName s
 	if err != nil {
 		log.Printf("Couldn't create snapshot %v: %v\n", snapshotName, err)
 		return nil, err
-	} 
+	}
 	return output.DBSnapshot, nil
 }

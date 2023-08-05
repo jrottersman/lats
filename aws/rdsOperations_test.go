@@ -19,7 +19,7 @@ func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.Descr
 }
 
 // TODO create mock CreateSnapshot function
-func (m mockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error){
+func (m mockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error) {
 	r := &rds.CreateDBSnapshotOutput{
 		DBSnapshot: &types.DBSnapshot{
 			AllocatedStorage: 1000,
