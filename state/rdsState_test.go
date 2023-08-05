@@ -92,6 +92,7 @@ func TestWriteOutput(t *testing.T) {
 	expected = 33
 	filename := "/tmp/foo.gob"
 	defer os.Remove(filename)
+
 	n, err := WriteOutput(filename, encoder)
 	if err != nil {
 		t.Errorf("got an error: %s", err)
