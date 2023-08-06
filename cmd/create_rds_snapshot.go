@@ -11,7 +11,8 @@ import (
 
 var (
 	// Variables used for flags
-	dbName string
+	dbName       string
+	snapshotName string
 
 	CreateRDSSnapshotCmd = &cobra.Command{
 		Use:     "CreateRDSSnapshot",
@@ -26,6 +27,8 @@ var (
 
 func init() {
 	CreateRDSSnapshotCmd.Flags().StringVarP(&dbName, "database-name", "d", "", "Database name we want to create the snapshot for")
+	CreateRDSSnapshotCmd.Flags().StringVarP(&snapshotName, "snapshot-name", "s", "", "Snapshot name we want to use for creating our snapshot")
+
 }
 
 func run() {
@@ -55,11 +58,10 @@ func run() {
 	if err != nil {
 		log.Fatalf("failed to write state file: %s\n", err)
 	}
-
-	sm.UpdateState(*i.DBName, *f1)
+	sm.UpdateState(dbName, *f1)
 
 	// Copy Snapshot
-	snap, err := dbi.CreateSnapshot(*i.DBName, "TODOSnapShotName")
+	snap, err := dbi.CreateSnapshot(dbName, "TODOSnapShotName")
 	if err != nil {
 		log.Fatalf("failed to create snapshot %s\n", err)
 	}
