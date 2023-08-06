@@ -30,6 +30,7 @@ var (
 			c := genConfig(getMainRegion, getBackupRegion)
 			writeConfig(c, ".latsConfig.json")
 			state.InitState(".confState.json")
+			os.Mkdir(".state", os.ModePerm)
 		},
 	}
 )
