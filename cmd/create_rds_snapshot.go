@@ -27,8 +27,6 @@ var (
 
 func init() {
 	CreateRDSSnapshotCmd.Flags().StringVarP(&dbName, "database-name", "d", "", "Database name we want to create the snapshot for")
-	CreateRDSSnapshotCmd.Flags().StringVarP(&snapshotName, "snapshot-name", "s", "", "Snapshot name we want to use for creating our snapshot")
-
 }
 
 func run() {
@@ -61,7 +59,8 @@ func run() {
 	sm.UpdateState(dbName, *f1)
 
 	// Copy Snapshot
-	snap, err := dbi.CreateSnapshot(dbName, "TODOSnapShotName")
+	snapName := helpers.SnapshotName(dbName)
+	snap, err := dbi.CreateSnapshot(dbName, snapName)
 	if err != nil {
 		log.Fatalf("failed to create snapshot %s\n", err)
 	}
