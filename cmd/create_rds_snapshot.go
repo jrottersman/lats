@@ -73,4 +73,5 @@ func run() {
 		log.Fatalf("failed to write state file: %s\n", err)
 	}
 	sm.UpdateState(*snap.DBSnapshotIdentifier, *f2)
+	sm.SyncState(stateFileName)
 }
