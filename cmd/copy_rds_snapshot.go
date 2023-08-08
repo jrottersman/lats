@@ -1,7 +1,12 @@
 package cmd
 
-var (
+import (
+	"fmt"
 
+	"github.com/spf13/cobra"
+)
+
+var (
 	CopyRDSSnapshotCmd = &cobra.Command{
 		Use:     "CopyRDSSnapshot",
 		Aliases: []string{"CopySnapshot"},
@@ -11,3 +16,4 @@ var (
 			fmt.Println("TODO implement me")
 		},
 	}
+)
