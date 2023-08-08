@@ -59,6 +59,10 @@ func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName s
 	return output.DBSnapshot, nil
 }
 
+// TODO Copy Snapshot
+// TODO Copy Option Group
+
+// Get a Parameter Group we will use this for moving custom parameter groups around jumped the gun here but oh well
 func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 	*types.DBParameterGroup, error) {
 	output, err := instances.RdsClient.DescribeDBParameterGroups(
