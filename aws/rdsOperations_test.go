@@ -87,3 +87,17 @@ func TestDescribeParameterGroup(t *testing.T) {
 		t.Errorf("expected foo got %s", *resp.DBParameterGroupName)
 	}
 }
+
+func TestCopySnapshot(t *testing.T) {
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	resp, err := dbi.CopySnapshot("foo", "bar", "us-east-1", "keyArn")
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
+	if resp.AllocatedStorage != 1000 {
+		t.Errorf("got %d expected 1000", resp.AllocatedStorage)
+	}
+}
