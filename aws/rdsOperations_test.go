@@ -28,6 +28,14 @@ func (m mockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateD
 	return r, nil
 }
 
+func (m mockRDSClient) DescribeDBParameterGroups(ctx context.Context, params *rds.DescribeDBParameterGroupsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBParameterGroupsOutput, error) {
+	f := "foo"
+	r := rds.DescribeDBParameterGroupsOutput{
+		DBParameterGroups: []types.DBParameterGroup{types.DBParameterGroup{DBParameterGroupName: &f}},
+	}
+	return &r, nil
+}
+
 func TestGetInstance(t *testing.T) {
 	expected := "foo"
 	c := mockRDSClient{}
@@ -54,5 +62,19 @@ func TestCreateSnapshot(t *testing.T) {
 	}
 	if resp.AllocatedStorage != 1000 {
 		t.Errorf("got %d expected 1000", resp.AllocatedStorage)
+	}
+}
+
+func TestDescribeParameterGroup(t *testing.T) {
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	resp, err := dbi.GetParameterGroup("foo")
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
+	if *resp.DBParameterGroupName != "foo" {
+		t.Errorf("expected foo got %s", *resp.DBParameterGroupName)
 	}
 }
