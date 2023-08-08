@@ -37,7 +37,12 @@ func (m mockRDSClient) DescribeDBParameterGroups(ctx context.Context, params *rd
 }
 
 func (m mockRDSClient) CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBSnapshotOutput, error) {
-	return nil, nil
+	r := &rds.CopyDBSnapshotOutput{
+		DBSnapshot: &types.DBSnapshot{
+			AllocatedStorage: 1000,
+		},
+	}
+	return r, nil
 }
 
 func TestGetInstance(t *testing.T) {
