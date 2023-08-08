@@ -15,6 +15,7 @@ type Client interface {
 	DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput, optFns ...func(*rds.Options)) (*rds.DescribeDBInstancesOutput, error)
 	CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error)
 	DescribeDBParameterGroups(ctx context.Context, params *rds.DescribeDBParameterGroupsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBParameterGroupsOutput, error)
+	CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBSnapshotOutput, error)
 }
 
 // DbInstances holds our RDS client that allows for operations in AWS
@@ -59,7 +60,22 @@ func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName s
 	return output.DBSnapshot, nil
 }
 
-// TODO Copy Snapshot
+// CopySnapshot copies a snapshot to a new region note it needs to run from the destination region so it needs a different client then CreateSnapshot!
+func (instances *DbInstances) CopySnapshot(originalSnapshotName string, NewSnapshotName string, sourceRegion string, KmsKey string) (
+	*types.DBSnapshot, error) {
+	output, err := instances.RdsClient.CopyDBSnapshot(context.TODO(), &rds.CopyDBSnapshotInput{
+		SourceDBSnapshotIdentifier: aws.String(originalSnapshotName),
+		TargetDBSnapshotIdentifier: aws.String(NewSnapshotName),
+		SourceRegion:               aws.String(sourceRegion), // this generates a presigned URL under the hood which enables cross region copies
+		KmsKeyId:                   aws.String(KmsKey),
+	})
+	if err != nil {
+		log.Printf("Couldn't copy snapshot %s: %s\n", NewSnapshotName, err)
+		return nil, err
+	}
+	return output.DBSnapshot, nil
+}
+
 // TODO Copy Option Group
 
 // Get a Parameter Group we will use this for moving custom parameter groups around jumped the gun here but oh well
