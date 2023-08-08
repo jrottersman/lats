@@ -36,6 +36,10 @@ func (m mockRDSClient) DescribeDBParameterGroups(ctx context.Context, params *rd
 	return &r, nil
 }
 
+func (m mockRDSClient) CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBSnapshotOutput, error) {
+	return nil, nil
+}
+
 func TestGetInstance(t *testing.T) {
 	expected := "foo"
 	c := mockRDSClient{}
