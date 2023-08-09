@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 )
 
@@ -19,6 +20,10 @@ func Init(region string) DbInstances {
 
 func getRDSClient(cfg aws.Config) *rds.Client {
 	return rds.NewFromConfig(cfg)
+}
+
+func getKMSClient(cfg aws.Config) *kms.Client {
+	return kms.NewFromConfig(cfg)
 }
 
 func createConfig(region string) aws.Config {
