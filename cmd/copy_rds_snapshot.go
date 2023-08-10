@@ -41,5 +41,5 @@ func createSnapshot() {
 	if err != nil {
 		log.Fatalf("Error reading state %s", err)
 	}
-	fmt.Println("TODO implement me, %v so this passes", sm)
+	fmt.Printf("TODO implement me, %v so this passes", sm)
 }
