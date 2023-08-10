@@ -19,3 +19,13 @@ func EncodeKmsOutput(kmd *types.KeyMetadata) bytes.Buffer {
 	}
 	return encoder
 }
+
+func DecodeKmsOutput(b bytes.Buffer) types.KeyMetadata {
+	var kmsMetadata types.KeyMetadata
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&kmsMetadata)
+	if err != nil {
+		log.Fatalf("Error decoding state for KMS Key: %s", err)
+	}
+	return kmsMetadata
+}

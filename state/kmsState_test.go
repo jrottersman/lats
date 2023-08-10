@@ -30,7 +30,7 @@ func TestDecodeKmsOutput(t *testing.T) {
 	}
 	b := EncodeKmsOutput(&kmd)
 	result := DecodeKmsOutput(b)
-	if *result.KeyId != *kmd.KeyID {
+	if *result.KeyId != *kmd.KeyId {
 		t.Errorf("got %s expected %s", *result.KeyId, *kmd.KeyId)
 	}
 }
