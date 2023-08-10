@@ -23,3 +23,14 @@ func TestEncodeKmsOutput(t *testing.T) {
 		t.Errorf("got %s expected %s", *result.KeyId, *kmd.KeyId)
 	}
 }
+
+func TestDecodeKmsOutput(t *testing.T) {
+	kmd := types.KeyMetadata{
+		KeyId: aws.String("foo"),
+	}
+	b := EncodeKmsOutput(&kmd)
+	result := DecodeKmsOutput(b)
+	if *result.KeyId != *kmd.KeyID {
+		t.Errorf("got %s expected %s", *result.KeyId, *kmd.KeyId)
+	}
+}
