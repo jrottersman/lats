@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
@@ -57,8 +56,14 @@ func createSnapshot() {
 	if err != nil {
 		log.Fatalf("Error copying snapshot %s", err)
 	}
-
-	fmt.Printf("TODO implement me, %v so this passes", sm)
+	f2 := helpers.RandomStateFileName()
+	b2 := state.EncodeRDSSnapshotOutput(snap)
+	_, err = state.WriteOutput(*f2, b2)
+	if err != nil {
+		log.Fatalf("failed to write state file: %s\n", err)
+	}
+	sm.UpdateState(*snap.DBSnapshotIdentifier, *f2)
+	sm.SyncState(stateFileName)
 }
 
 func createKMSKey(config Config, sm state.StateManager) string {
