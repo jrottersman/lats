@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/aws/aws-sdk-go-v2/service/kms/types"
 	"github.com/jrottersman/lats/aws"
+	"github.com/jrottersman/lats/helpers"
 	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
 )
@@ -45,7 +47,20 @@ func createSnapshot() {
 
 	// Create KMS key
 	if kmsKey == "" {
-		aws.InitKms(config.BackupRegion)
+		var kmsStruct types.KeyMetadata
+		c := aws.InitKms(config.BackupRegion)
+		kmsStruct, err = c.CreateKMSKey()
+		if err != nil {
+			log.Fatalf("failed creating KMS key %s", err)
+		}
+		kf := helpers.RandomStateFileName()
+		b := state.EncodeKmsOutput(kmsStruct)
+		_, err = state.WriteOutput(*kf, b)
+		if err != nil {
+			log.Printf("Issues writing state %s", err)
+		}
+		sm.UpdateState(*kmsStruct.KeyId, *kf)
+
 	}
 	fmt.Printf("TODO implement me, %v so this passes", sm)
 }
