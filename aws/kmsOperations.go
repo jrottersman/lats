@@ -16,7 +16,13 @@ type KmsOperations struct {
 	Client KmsClient
 }
 
-func (k KmsOperations) CreateKMSKey() (*types.KeyMetadata, error) {
+type KmsConfig struct {
+	Description *string
+	Multiregion *bool
+	Policy      *string
+}
+
+func (k KmsOperations) CreateKMSKey(cfg ...KmsConfig) (*types.KeyMetadata, error) {
 	// TODO handle multiregion keys
 	// TODO handle key policies
 	input := &kms.CreateKeyInput{}
