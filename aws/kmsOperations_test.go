@@ -26,11 +26,15 @@ func TestCreateKMSKey(t *testing.T) {
 	kmsOp := KmsOperations{
 		Client: c,
 	}
-	results, err := kmsOp.CreateKMSKey()
+	results, err := kmsOp.CreateKMSKey(nil)
 	if err != nil {
 		t.Errorf("error calling CreateKMSKey %s", err)
 	}
 	if *results.KeyId != "foobar" {
 		t.Errorf("got %s expected foobar", *results.KeyId)
 	}
+}
+
+func TestCreateKMSKeyWithConfig(t *testing.T) {
+
 }

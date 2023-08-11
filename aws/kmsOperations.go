@@ -2,7 +2,6 @@ package aws
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/service/kms"
@@ -23,14 +22,12 @@ type KmsConfig struct {
 	Policy      *string
 }
 
-func (k KmsOperations) CreateKMSKey(cfg ...*KmsConfig) (*types.KeyMetadata, error) {
+func (k KmsOperations) CreateKMSKey(cfg *KmsConfig) (*types.KeyMetadata, error) {
 	// TODO handle multiregion keys
 	// TODO handle key policies
-	var input *kms.CreateKeyInput
-	if cfg == nil {
-		input = &kms.CreateKeyInput{}
-	} else {
-		fmt.Println("implement me")
+	input := &kms.CreateKeyInput{}
+	if cfg != nil {
+		input = handleKmsConfig(*cfg)
 	}
 	output, err := k.Client.CreateKey(context.TODO(), input)
 	if err != nil {
@@ -38,4 +35,18 @@ func (k KmsOperations) CreateKMSKey(cfg ...*KmsConfig) (*types.KeyMetadata, erro
 		return nil, err
 	}
 	return output.KeyMetadata, nil
+}
+
+func handleKmsConfig(k KmsConfig) *kms.CreateKeyInput {
+	input := kms.CreateKeyInput{}
+	if k.Description != nil {
+		input.Description = k.Description
+	}
+	if k.Multiregion != nil {
+		input.MultiRegion = k.Multiregion
+	}
+	if k.Policy != nil {
+		input.Policy = k.Policy
+	}
+	return &input
 }
