@@ -47,12 +47,12 @@ func createSnapshot() {
 
 	// Create KMS key
 	if kmsKey == "" {
-		createKMSKey(config, sm)
+		kmsKey = createKMSKey(config, sm)
 	}
 	fmt.Printf("TODO implement me, %v so this passes", sm)
 }
 
-func createKMSKey(config Config, sm state.StateManager) {
+func createKMSKey(config Config, sm state.StateManager) string {
 	var kmsStruct *types.KeyMetadata
 	c := aws.InitKms(config.BackupRegion)
 	kmsStruct, err := c.CreateKMSKey()
@@ -66,5 +66,6 @@ func createKMSKey(config Config, sm state.StateManager) {
 		log.Printf("Issues writing state %s", err)
 	}
 	sm.UpdateState(*kmsStruct.KeyId, *kf)
+	return *kmsStruct.KeyId
 
 }
