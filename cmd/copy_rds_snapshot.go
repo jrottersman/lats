@@ -53,7 +53,7 @@ func createSnapshot() {
 }
 
 func createKMSKey(config Config, sm state.StateManager) {
-	var kmsStruct types.KeyMetadata
+	var kmsStruct *types.KeyMetadata
 	c := aws.InitKms(config.BackupRegion)
 	kmsStruct, err := c.CreateKMSKey()
 	if err != nil {
