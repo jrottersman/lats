@@ -47,20 +47,24 @@ func createSnapshot() {
 
 	// Create KMS key
 	if kmsKey == "" {
-		var kmsStruct types.KeyMetadata
-		c := aws.InitKms(config.BackupRegion)
-		kmsStruct, err = c.CreateKMSKey()
-		if err != nil {
-			log.Fatalf("failed creating KMS key %s", err)
-		}
-		kf := helpers.RandomStateFileName()
-		b := state.EncodeKmsOutput(kmsStruct)
-		_, err = state.WriteOutput(*kf, b)
-		if err != nil {
-			log.Printf("Issues writing state %s", err)
-		}
-		sm.UpdateState(*kmsStruct.KeyId, *kf)
-
+		createKMSKey(config, sm)
 	}
 	fmt.Printf("TODO implement me, %v so this passes", sm)
+}
+
+func createKMSKey(config Config, sm state.StateManager) {
+	var kmsStruct types.KeyMetadata
+	c := aws.InitKms(config.BackupRegion)
+	kmsStruct, err := c.CreateKMSKey()
+	if err != nil {
+		log.Fatalf("failed creating KMS key %s", err)
+	}
+	kf := helpers.RandomStateFileName()
+	b := state.EncodeKmsOutput(kmsStruct)
+	_, err = state.WriteOutput(*kf, b)
+	if err != nil {
+		log.Printf("Issues writing state %s", err)
+	}
+	sm.UpdateState(*kmsStruct.KeyId, *kf)
+
 }
