@@ -49,6 +49,15 @@ func createSnapshot() {
 	if kmsKey == "" {
 		kmsKey = createKMSKey(config, sm)
 	}
+	// Get RDS Client
+	dbi := aws.Init(config.BackupRegion)
+
+	// Copy Snapshot
+	snap, err := dbi.CopySnapshot(originalSnapshotName, copySnapshotName, config.MainRegion, kmsKey)
+	if err != nil {
+		log.Fatalf("Error copying snapshot %s", err)
+	}
+
 	fmt.Printf("TODO implement me, %v so this passes", sm)
 }
 
