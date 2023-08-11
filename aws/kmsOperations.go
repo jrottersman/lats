@@ -22,7 +22,7 @@ type KmsConfig struct {
 	Policy      *string
 }
 
-func (k KmsOperations) CreateKMSKey(cfg ...KmsConfig) (*types.KeyMetadata, error) {
+func (k KmsOperations) CreateKMSKey(cfg ...*KmsConfig) (*types.KeyMetadata, error) {
 	// TODO handle multiregion keys
 	// TODO handle key policies
 	input := &kms.CreateKeyInput{}
