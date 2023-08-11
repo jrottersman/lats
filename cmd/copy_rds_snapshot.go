@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
 )
@@ -40,6 +41,11 @@ func createSnapshot() {
 	sm, err := state.ReadState(stateFileName)
 	if err != nil {
 		log.Fatalf("Error reading state %s", err)
+	}
+
+	// Create KMS key
+	if kmsKey == "" {
+		aws.InitKms(config.BackupRegion)
 	}
 	fmt.Printf("TODO implement me, %v so this passes", sm)
 }

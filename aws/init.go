@@ -18,6 +18,14 @@ func Init(region string) DbInstances {
 	}
 }
 
+func InitKms(region string) KmsOperations {
+	cfg := createConfig(region)
+	client := getKMSClient(cfg)
+	return KmsOperations{
+		Client: client,
+	}
+}
+
 func getRDSClient(cfg aws.Config) *rds.Client {
 	return rds.NewFromConfig(cfg)
 }
