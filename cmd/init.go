@@ -8,6 +8,7 @@ import (
 	"github.com/jrottersman/lats/helpers"
 	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -27,6 +28,10 @@ var (
 		Short:   "Initalizes lats and configures it for creating backups",
 		Long:    "Initalize (lats init) will setup lats with the correct regions and let you choose where you want to store state",
 		Run: func(cmd *cobra.Command, args []string) {
+			viper.SetConfigName("latsConfig")
+			viper.SetConfigType("yaml")
+			viper.AddConfigPath(".")
+
 			c := genConfig(getMainRegion, getBackupRegion)
 			writeConfig(c, ".latsConfig.json")
 			state.InitState(".confState.json")
