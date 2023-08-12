@@ -15,6 +15,7 @@ var (
 	kmsKey               string
 	originalSnapshotName string
 	copySnapshotName     string
+	configFile           string
 
 	CopyRDSSnapshotCmd = &cobra.Command{
 		Use:     "CopyRDSSnapshot",
@@ -31,6 +32,7 @@ func init() {
 	CopyRDSSnapshotCmd.Flags().StringVarP(&kmsKey, "kms-key", "k", "", "KMS key to use for the snapshot optional")
 	CopyRDSSnapshotCmd.Flags().StringVarP(&copySnapshotName, "copy-snapshot", "c", "", "Name of the snapshot copy we are creating")
 	CopyRDSSnapshotCmd.Flags().StringVarP(&originalSnapshotName, "snapshot", "s", "", "Snapshot we want to copy")
+	CopyRDSSnapshotCmd.Flags().StringVarP(&configFile, "config-file", "f", "", "Config file for the snapshot that we want to parse")
 }
 
 func createSnapshot() {
