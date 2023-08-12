@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
@@ -8,6 +9,7 @@ import (
 	"github.com/jrottersman/lats/helpers"
 	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -44,6 +46,23 @@ func createSnapshot() {
 	sm, err := state.ReadState(stateFileName)
 	if err != nil {
 		log.Fatalf("Error reading state %s", err)
+	}
+
+	if configFile != "" {
+		viper.SetConfigFile(configFile)
+		viper.AddConfigPath(".")
+		err := viper.ReadInConfig() // Find and read the config file
+		if err != nil {             // Handle errors reading the config file
+			fmt.Errorf("Error reading config file: %w", err)
+		}
+		getKey := fmt.Sprintf("%s", viper.Get("kmsKey"))
+		kmsKey = getKey
+
+		origSnap := fmt.Sprintf("%s", viper.Get("OriginalSnapshotName"))
+		originalSnapshotName = origSnap
+
+		copySnap := fmt.Sprintf("%s", viper.Get("copySnapshotName"))
+		copySnapshotName = copySnap
 	}
 
 	// Create KMS key
