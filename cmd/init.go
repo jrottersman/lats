@@ -28,14 +28,25 @@ var (
 		Short:   "Initalizes lats and configures it for creating backups",
 		Long:    "Initalize (lats init) will setup lats with the correct regions and let you choose where you want to store state",
 		Run: func(cmd *cobra.Command, args []string) {
-			viper.SetConfigName("latsConfig")
-			viper.SetConfigType("yaml")
+			viper.SetConfigName(".latsConfig")
+			viper.SetConfigType("json")
 			viper.AddConfigPath(".")
 
-			c := genConfig(getMainRegion, getBackupRegion)
-			writeConfig(c, ".latsConfig.json")
+			if err := viper.ReadInConfig(); err != nil {
+				if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+					c := genConfig(getMainRegion, getBackupRegion)
+					writeConfig(c, ".latsConfig.json")
+					state.InitState(".confState.json")
+					os.Mkdir(".state", os.ModePerm)
+				} else {
+					fmt.Errorf("Error parsing config file %s", err)
+				}
+			}
+
+			// Config file found and successfully parsed
 			state.InitState(".confState.json")
 			os.Mkdir(".state", os.ModePerm)
+
 		},
 	}
 )
