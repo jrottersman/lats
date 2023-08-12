@@ -34,10 +34,7 @@ var (
 
 			if err := viper.ReadInConfig(); err != nil {
 				if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-					c := genConfig(getMainRegion, getBackupRegion)
-					writeConfig(c, ".latsConfig.json")
-					state.InitState(".confState.json")
-					os.Mkdir(".state", os.ModePerm)
+					genConfigFile()
 				} else {
 					fmt.Errorf("Error parsing config file %s", err)
 				}
@@ -51,6 +48,12 @@ var (
 	}
 )
 
+func genConfigFile() {
+	c := genConfig(getMainRegion, getBackupRegion)
+	writeConfig(c, ".latsConfig.json")
+	state.InitState(".confState.json")
+	os.Mkdir(".state", os.ModePerm)
+}
 func getMainRegion() string {
 	if mainRegion != "" {
 		return mainRegion
