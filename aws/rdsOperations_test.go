@@ -2,6 +2,7 @@ package aws
 
 import (
 	"context"
+	"reflect"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds"
@@ -42,6 +43,11 @@ func (m mockRDSClient) CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSna
 			AllocatedStorage: 1000,
 		},
 	}
+	return r, nil
+}
+
+func (m mockRDSClient) RestoreDBClusterFromSnapshot(ctx context.Context, params *rds.RestoreDBClusterFromSnapshotInput, optFns ...func(*rds.Options)) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
+	r := &rds.RestoreDBClusterFromSnapshotOutput{}
 	return r, nil
 }
 
@@ -99,5 +105,19 @@ func TestCopySnapshot(t *testing.T) {
 	}
 	if resp.AllocatedStorage != 1000 {
 		t.Errorf("got %d expected 1000", resp.AllocatedStorage)
+	}
+}
+
+func TestRestoreSnapshotCluster(t *testing.T) {
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	resp, err := dbi.restoreSnapshotCluster("foo")
+	if err != nil {
+		t.Errorf("got error: %s", err)
+	}
+	if reflect.TypeOf(resp) != reflect.TypeOf(&rds.RestoreDBClusterFromSnapshotOutput{}) {
+		t.Error()
 	}
 }
