@@ -29,4 +29,5 @@ func init() {
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(CreateRDSSnapshotCmd)
 	rootCmd.AddCommand(CopyRDSSnapshotCmd)
+	rootCmd.AddCommand(RestoreRDSSnapshotCmd)
 }
