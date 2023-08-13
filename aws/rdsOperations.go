@@ -3,6 +3,7 @@ package aws
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -16,6 +17,7 @@ type Client interface {
 	CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error)
 	DescribeDBParameterGroups(ctx context.Context, params *rds.DescribeDBParameterGroupsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBParameterGroupsOutput, error)
 	CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBSnapshotOutput, error)
+	RestoreDBClusterFromSnapshot(ctx context.Context, params *rds.RestoreDBClusterFromSnapshotInput, optFns ...func(*rds.Options)) (*rds.RestoreDBClusterFromSnapshotOutput, error)
 }
 
 // DbInstances holds our RDS client that allows for operations in AWS
@@ -97,4 +99,8 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 	} else {
 		return &output.DBParameterGroups[0], err
 	}
+}
+
+func (instances *DbInstances) restoreSnapshot(snapshotID string) {
+	fmt.Println("Implement me")
 }

@@ -45,6 +45,11 @@ func (m mockRDSClient) CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSna
 	return r, nil
 }
 
+func (m mockRDSClient) RestoreDBClusterFromSnapshot(ctx context.Context, params *rds.RestoreDBClusterFromSnapshotInput, optFns ...func(*rds.Options)) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
+	r := &rds.RestoreDBClusterFromSnapshotOutput{}
+	return r, nil
+}
+
 func TestGetInstance(t *testing.T) {
 	expected := "foo"
 	c := mockRDSClient{}
