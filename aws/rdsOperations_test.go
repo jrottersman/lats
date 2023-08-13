@@ -2,6 +2,7 @@ package aws
 
 import (
 	"context"
+	"reflect"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds"
@@ -104,5 +105,19 @@ func TestCopySnapshot(t *testing.T) {
 	}
 	if resp.AllocatedStorage != 1000 {
 		t.Errorf("got %d expected 1000", resp.AllocatedStorage)
+	}
+}
+
+func TestRestoreSnapshotCluster(t *testing.T) {
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	resp, err := dbi.restoreSnapshotCluster("foo")
+	if err != nil {
+		t.Errorf("got error: %s", err)
+	}
+	if reflect.TypeOf(resp) != reflect.TypeOf(&rds.RestoreDBClusterFromSnapshotOutput{}) {
+		t.Error()
 	}
 }
