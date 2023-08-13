@@ -3,7 +3,6 @@ package aws
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -101,6 +100,15 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 	}
 }
 
-func (instances *DbInstances) restoreSnapshot(snapshotID string) {
-	fmt.Println("Implement me")
+func (instances *DbInstances) restoreSnapshotCluster(snapshotID string) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
+	input := rds.RestoreDBClusterFromSnapshotInput{ // TODO Actually figure this out
+		DBClusterIdentifier: aws.String("foo"),
+		SnapshotIdentifier:  aws.String(snapshotID),
+	}
+	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(context.TODO(), &input)
+	if err != nil {
+		log.Printf("error creating snapshot cluster")
+		return nil, err
+	}
+	return output, nil
 }
