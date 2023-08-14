@@ -116,8 +116,8 @@ func (instances *DbInstances) restoreSnapshotCluster(snapshotID string) (*rds.Re
 
 func (instances *DbInstances) restoreSnapshotInstance(snapshotID string) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
 	input := rds.RestoreDBInstanceFromDBSnapshotInput{ // TODO actually figure this out
-		DBInstanceClass: aws.String("foo"),
-		SnapshotIdentifier: aws.String(snapshotID)
+		DBInstanceIdentifier: aws.String("foo"),
+		DBSnapshotIdentifier: aws.String(snapshotID),
 	}
 
 	output, err := instances.RdsClient.RestoreDBInstanceFromDBSnapshot(context.TODO(), &input)

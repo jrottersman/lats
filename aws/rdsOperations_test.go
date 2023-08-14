@@ -126,3 +126,17 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 		t.Error()
 	}
 }
+
+func TestRestoreSnapshotInstance(t *testing.T) {
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	resp, err := dbi.restoreSnapshotInstance("foo")
+	if err != nil {
+		t.Errorf("got error: %s", err)
+	}
+	if reflect.TypeOf(resp) != reflect.TypeOf(&rds.RestoreDBInstanceFromDBSnapshotOutput{}) {
+		t.Error()
+	}
+}
