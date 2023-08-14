@@ -17,6 +17,7 @@ type Client interface {
 	DescribeDBParameterGroups(ctx context.Context, params *rds.DescribeDBParameterGroupsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBParameterGroupsOutput, error)
 	CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBSnapshotOutput, error)
 	RestoreDBClusterFromSnapshot(ctx context.Context, params *rds.RestoreDBClusterFromSnapshotInput, optFns ...func(*rds.Options)) (*rds.RestoreDBClusterFromSnapshotOutput, error)
+	RestoreDBInstanceFromDBSnapshot(ctx context.Context, params *rds.RestoreDBInstanceFromDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error)
 }
 
 // DbInstances holds our RDS client that allows for operations in AWS
@@ -111,4 +112,9 @@ func (instances *DbInstances) restoreSnapshotCluster(snapshotID string) (*rds.Re
 		return nil, err
 	}
 	return output, nil
+}
+
+func (instances *DbInstances) restoreSnapshotInstance(snapshotID string) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
+	log.Printf("implement me ")
+	return nil, nil
 }
