@@ -10,6 +10,8 @@ import (
 
 // THis whole approach might need some serious refactoring I should be using a map I think s
 
+const SnapshotType = "RDSSnapshot"
+
 // StateKV manages our state file and object location
 type stateKV struct {
 	Object       string `json:"object"`
@@ -60,7 +62,7 @@ func (s *StateManager) GetStateObject(object string) interface{} {
 				fmt.Printf("error reading the file %s", err)
 			}
 			buf := bytes.NewBuffer(dat)
-			if s.StateLocations[i].ObjectType == "RDSSnapshot" {
+			if s.StateLocations[i].ObjectType == SnapshotType {
 				snap := DecodeRDSSnapshotOutput(*buf)
 				return snap
 			}

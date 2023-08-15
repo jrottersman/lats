@@ -6,6 +6,9 @@ import (
 	"os"
 	"sync"
 	"testing"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
 func TestInitState(t *testing.T) {
@@ -52,12 +55,6 @@ func TestUpdateState(t *testing.T) {
 	}
 }
 
-func TestGetStateObject(t *testing.T) {
-	if false {
-		t.Errorf("ignore this")
-	}
-}
-
 func TestSyncState(t *testing.T) {
 	var mu sync.Mutex
 	var s []stateKV
@@ -85,4 +82,38 @@ func TestSyncState(t *testing.T) {
 		t.Errorf("got %s expected %s", sf[0].Object, obj)
 	}
 
+}
+
+func TestGetStateObject(t *testing.T) {
+	filename := "/tmp/foo"
+	snap := types.DBSnapshot{
+		AllocatedStorage:     1000,
+		Encrypted:            true,
+		PercentProgress:      100,
+		DBInstanceIdentifier: aws.String("foobar"),
+	}
+
+	r := EncodeRDSSnapshotOutput(&snap)
+	_, err := WriteOutput(filename, r)
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+
+	var mu sync.Mutex
+	var s []stateKV
+	kv := stateKV{
+		Object:       "foo",
+		FileLocation: filename,
+		ObjectType:   "RDSSnapshot",
+	}
+	s = Append(s, kv)
+	sm := StateManager{
+		mu,
+		s,
+	}
+
+	result := sm.GetStateObject("foo")
+	if *result.DBInstanceIdentifier != "foobar" {
+		t.Errorf("got %s expected foobar", *result.DBInstanceIdentifier)
+	}
 }
