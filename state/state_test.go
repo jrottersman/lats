@@ -61,8 +61,9 @@ func TestSyncState(t *testing.T) {
 
 	filename := "/tmp/foo"
 	obj := "boo"
+	ot := "baz"
 	defer os.Remove(filename)
-	sm.UpdateState(obj, filename)
+	sm.UpdateState(obj, filename, ot)
 	sm.SyncState(filename)
 	f, err := os.ReadFile(filename)
 	if err != nil {
