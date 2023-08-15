@@ -44,6 +44,10 @@ func (s *StateManager) SyncState(filename string) error {
 	return nil
 }
 
+func (s *StateManager) GetFile(object string) interface{} {
+	return nil
+}
+
 func InitState(filename string) error {
 	initStr := []string{}
 	m, err := json.Marshal(initStr)
