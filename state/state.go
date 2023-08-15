@@ -49,7 +49,7 @@ func (s *StateManager) SyncState(filename string) error {
 	return nil
 }
 
-func (s *StateManager) GetFile(object string) interface{} {
+func (s *StateManager) GetStateObject(object string) interface{} {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 

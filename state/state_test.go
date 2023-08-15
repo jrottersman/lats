@@ -45,9 +45,16 @@ func TestUpdateState(t *testing.T) {
 	}
 	filename := "/tmp/foo"
 	obj := "boo"
-	sm.UpdateState(obj, filename)
+	ot := "bar"
+	sm.UpdateState(obj, filename, ot)
 	if sm.StateLocations[0].Object != "boo" {
 		t.Errorf("got %s expected %s\n", sm.StateLocations[0].Object, obj)
+	}
+}
+
+func TestGetStateObject(t *testing.T) {
+	if false {
+		t.Errorf("ignore this")
 	}
 }
 
