@@ -51,6 +51,11 @@ func (m mockRDSClient) RestoreDBClusterFromSnapshot(ctx context.Context, params 
 	return r, nil
 }
 
+func (m mockRDSClient) RestoreDBInstanceFromDBSnapshot(ctx context.Context, params *rds.RestoreDBInstanceFromDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
+	r := &rds.RestoreDBInstanceFromDBSnapshotOutput{}
+	return r, nil
+}
+
 func TestGetInstance(t *testing.T) {
 	expected := "foo"
 	c := mockRDSClient{}
@@ -118,6 +123,20 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 		t.Errorf("got error: %s", err)
 	}
 	if reflect.TypeOf(resp) != reflect.TypeOf(&rds.RestoreDBClusterFromSnapshotOutput{}) {
+		t.Error()
+	}
+}
+
+func TestRestoreSnapshotInstance(t *testing.T) {
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	resp, err := dbi.restoreSnapshotInstance("foo")
+	if err != nil {
+		t.Errorf("got error: %s", err)
+	}
+	if reflect.TypeOf(resp) != reflect.TypeOf(&rds.RestoreDBInstanceFromDBSnapshotOutput{}) {
 		t.Error()
 	}
 }

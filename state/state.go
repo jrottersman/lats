@@ -1,16 +1,20 @@
 package state
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
 	"sync"
 )
 
+// THis whole approach might need some serious refactoring I should be using a map I think s
+
 // StateKV manages our state file and object location
 type stateKV struct {
 	Object       string `json:"object"`
 	FileLocation string `json:"fileLocation"`
+	ObjectType   string `json:"objectType"`
 }
 
 type StateManager struct {
@@ -18,12 +22,13 @@ type StateManager struct {
 	StateLocations []stateKV `json:"stateLocations"`
 }
 
-func (s *StateManager) UpdateState(name string, filename string) {
+func (s *StateManager) UpdateState(name string, filename string, ot string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	kv := stateKV{
 		Object:       name,
 		FileLocation: filename,
+		ObjectType:   ot,
 	}
 	s.StateLocations = append(s.StateLocations, kv)
 }
@@ -40,6 +45,27 @@ func (s *StateManager) SyncState(filename string) error {
 	if err != nil {
 		fmt.Printf("Error writing file %s", err)
 		return err
+	}
+	return nil
+}
+
+func (s *StateManager) GetStateObject(object string) interface{} {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	for i := range s.StateLocations {
+		if s.StateLocations[i].Object == object {
+			dat, err := os.ReadFile(s.StateLocations[i].FileLocation)
+			if err != nil {
+				fmt.Printf("error reading the file %s", err)
+			}
+			buf := bytes.NewBuffer(dat)
+			if s.StateLocations[i].ObjectType == "RDSSnapshot" {
+				snap := DecodeRDSSnapshotOutput(*buf)
+				return snap
+			}
+
+		}
 	}
 	return nil
 }

@@ -56,7 +56,7 @@ func run() {
 	if err != nil {
 		log.Fatalf("failed to write state file: %s\n", err)
 	}
-	sm.UpdateState(dbName, *f1)
+	sm.UpdateState(dbName, *f1, "RDSSnapshot")
 
 	// Copy Snapshot
 	snapName := helpers.SnapshotName(dbName)
@@ -72,6 +72,6 @@ func run() {
 	if err != nil {
 		log.Fatalf("failed to write state file: %s\n", err)
 	}
-	sm.UpdateState(*snap.DBSnapshotIdentifier, *f2)
+	sm.UpdateState(*snap.DBSnapshotIdentifier, *f2, "RDSSnapshot")
 	sm.SyncState(stateFileName)
 }

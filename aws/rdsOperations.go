@@ -17,6 +17,7 @@ type Client interface {
 	DescribeDBParameterGroups(ctx context.Context, params *rds.DescribeDBParameterGroupsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBParameterGroupsOutput, error)
 	CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBSnapshotOutput, error)
 	RestoreDBClusterFromSnapshot(ctx context.Context, params *rds.RestoreDBClusterFromSnapshotInput, optFns ...func(*rds.Options)) (*rds.RestoreDBClusterFromSnapshotOutput, error)
+	RestoreDBInstanceFromDBSnapshot(ctx context.Context, params *rds.RestoreDBInstanceFromDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error)
 }
 
 // DbInstances holds our RDS client that allows for operations in AWS
@@ -108,6 +109,20 @@ func (instances *DbInstances) restoreSnapshotCluster(snapshotID string) (*rds.Re
 	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(context.TODO(), &input)
 	if err != nil {
 		log.Printf("error creating snapshot cluster")
+		return nil, err
+	}
+	return output, nil
+}
+
+func (instances *DbInstances) restoreSnapshotInstance(snapshotID string) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
+	input := rds.RestoreDBInstanceFromDBSnapshotInput{ // TODO actually figure this out
+		DBInstanceIdentifier: aws.String("foo"),
+		DBSnapshotIdentifier: aws.String(snapshotID),
+	}
+
+	output, err := instances.RdsClient.RestoreDBInstanceFromDBSnapshot(context.TODO(), &input)
+	if err != nil {
+		log.Printf("error creating instance from snapshot %s", err)
 		return nil, err
 	}
 	return output, nil
