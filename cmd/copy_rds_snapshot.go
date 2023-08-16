@@ -83,7 +83,7 @@ func createSnapshot() {
 	if err != nil {
 		log.Fatalf("failed to write state file: %s\n", err)
 	}
-	sm.UpdateState(*snap.DBSnapshotIdentifier, *f2, "RDSSnapshot")
+	sm.UpdateState(*snap.DBSnapshotIdentifier, *f2, state.SnapshotType)
 	sm.SyncState(stateFileName)
 }
 
@@ -100,7 +100,7 @@ func createKMSKey(config Config, sm state.StateManager) string {
 	if err != nil {
 		log.Printf("Issues writing state %s", err)
 	}
-	sm.UpdateState(*kmsStruct.KeyId, *kf, "RDSSnapshot")
+	sm.UpdateState(*kmsStruct.KeyId, *kf, state.KMSKeyType)
 	return *kmsStruct.KeyId
 
 }
