@@ -106,14 +106,21 @@ func TestGetStateObject(t *testing.T) {
 		FileLocation: filename,
 		ObjectType:   "RDSSnapshot",
 	}
-	s = Append(s, kv)
+	s = append(s, kv)
 	sm := StateManager{
 		mu,
 		s,
 	}
 
 	result := sm.GetStateObject("foo")
-	if *result.DBInstanceIdentifier != "foobar" {
-		t.Errorf("got %s expected foobar", *result.DBInstanceIdentifier)
+	if result == nil {
+		t.Errorf("result is nil")
+	}
+	res, ok := result.(types.DBSnapshot)
+	if !ok {
+		t.Errorf("issue converting struct")
+	}
+	if *res.DBInstanceIdentifier != "foobar" {
+		t.Errorf("got %s expected foobar", *res.DBInstanceIdentifier)
 	}
 }

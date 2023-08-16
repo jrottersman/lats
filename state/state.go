@@ -62,11 +62,11 @@ func (s *StateManager) GetStateObject(object string) interface{} {
 				fmt.Printf("error reading the file %s", err)
 			}
 			buf := bytes.NewBuffer(dat)
-			if s.StateLocations[i].ObjectType == SnapshotType {
+			switch objType := s.StateLocations[i].ObjectType; objType {
+			case SnapshotType:
 				snap := DecodeRDSSnapshotOutput(*buf)
 				return snap
 			}
-
 		}
 	}
 	return nil
