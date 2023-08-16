@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/gob"
 	"os"
+	"sync"
 	"testing"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
@@ -99,5 +101,43 @@ func TestWriteOutput(t *testing.T) {
 	}
 	if n != expected {
 		t.Errorf("got: %d expected %d", n, expected)
+	}
+}
+
+func TestGetRDSSnapshotOutput(t *testing.T) {
+	filename := "/tmp/foo"
+	snap := types.DBSnapshot{
+		AllocatedStorage:     1000,
+		Encrypted:            true,
+		PercentProgress:      100,
+		DBInstanceIdentifier: aws.String("foobar"),
+	}
+
+	defer os.Remove(filename)
+	r := EncodeRDSSnapshotOutput(&snap)
+	_, err := WriteOutput(filename, r)
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+
+	var mu sync.Mutex
+	var s []stateKV
+	kv := stateKV{
+		Object:       "foo",
+		FileLocation: filename,
+		ObjectType:   "RDSSnapshot",
+	}
+	s = append(s, kv)
+	sm := StateManager{
+		mu,
+		s,
+	}
+	newSnap, err := GetRDSSnapshotOutput(sm, "foo")
+	if err != nil {
+		t.Errorf("got error: %s", err)
+	}
+
+	if *&newSnap.AllocatedStorage != 1000 {
+		t.Errorf("expected %d got 1000", *&newSnap.AllocatedStorage)
 	}
 }

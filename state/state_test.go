@@ -93,6 +93,7 @@ func TestGetStateObject(t *testing.T) {
 		DBInstanceIdentifier: aws.String("foobar"),
 	}
 
+	defer os.Remove(filename)
 	r := EncodeRDSSnapshotOutput(&snap)
 	_, err := WriteOutput(filename, r)
 	if err != nil {
