@@ -56,6 +56,16 @@ func GetRDSSnapshotOutput(s StateManager, snap string) (*types.DBSnapshot, error
 	return &snapshot, nil
 }
 
+func getDatabaseInstance(s StateManager, dbName string) (*types.DBInstance, error) {
+	i := s.GetStateObject(dbName)
+	dbi, ok := i.(types.DBInstance)
+	if !ok {
+		str := fmt.Sprintf("error decoding instance from interface %v", i)
+		return nil, errors.New(str)
+	}
+	return &dbi, nil
+}
+
 // DecodeRDSSnapshhotOutput takes a bytes buffer and returns it to a DbSnapshot type in preperation of restoring the database
 func DecodeRDSSnapshotOutput(b bytes.Buffer) types.DBSnapshot {
 	var dbSnapshot types.DBSnapshot
