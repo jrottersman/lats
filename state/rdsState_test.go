@@ -141,3 +141,39 @@ func TestGetRDSSnapshotOutput(t *testing.T) {
 		t.Errorf("expected %d got 1000", *&newSnap.AllocatedStorage)
 	}
 }
+
+func TestGetRDSInstanceOutput(t *testing.T) {
+	filename := "/tmp/foo"
+	dbi := types.DBInstance{
+		AllocatedStorage:     1000,
+		DBInstanceIdentifier: aws.String("foobar"),
+	}
+
+	defer os.Remove(filename)
+	r := EncodeRDSDatabaseOutput(&dbi)
+	_, err := WriteOutput(filename, r)
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+
+	var mu sync.Mutex
+	var s []stateKV
+	kv := stateKV{
+		Object:       "foo",
+		FileLocation: filename,
+		ObjectType:   RdsInstanceType,
+	}
+	s = append(s, kv)
+	sm := StateManager{
+		mu,
+		s,
+	}
+	newDbi, err := GetRDSDatabaseInstanceOutput(sm, "foo")
+	if err != nil {
+		t.Errorf("got error: %s", err)
+	}
+
+	if *&newDbi.AllocatedStorage != 1000 {
+		t.Errorf("expected %d got 1000", *&newDbi.AllocatedStorage)
+	}
+}

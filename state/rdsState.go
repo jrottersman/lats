@@ -56,7 +56,7 @@ func GetRDSSnapshotOutput(s StateManager, snap string) (*types.DBSnapshot, error
 	return &snapshot, nil
 }
 
-func getDatabaseInstance(s StateManager, dbName string) (*types.DBInstance, error) {
+func GetRDSDatabaseInstanceOutput(s StateManager, dbName string) (*types.DBInstance, error) {
 	i := s.GetStateObject(dbName)
 	dbi, ok := i.(types.DBInstance)
 	if !ok {
