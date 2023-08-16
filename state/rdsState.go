@@ -3,6 +3,8 @@ package state
 import (
 	"bytes"
 	"encoding/gob"
+	"errors"
+	"fmt"
 	"log"
 	"os"
 
@@ -42,6 +44,16 @@ func EncodeRDSSnapshotOutput(snapshot *types.DBSnapshot) bytes.Buffer {
 		log.Fatalf("Error encoding our snapshot: %s", err)
 	}
 	return encoder
+}
+
+func GetRDSSnapshotOutput(s StateManager, snap string) (*types.DBSnapshot, error) {
+	i := s.GetStateObject(snap)
+	snapshot, ok := i.(types.DBSnapshot)
+	if !ok {
+		str := fmt.Sprintf("error decoding snapshot from interface %v", i)
+		return nil, errors.New(str)
+	}
+	return &snapshot, nil
 }
 
 // DecodeRDSSnapshhotOutput takes a bytes buffer and returns it to a DbSnapshot type in preperation of restoring the database
