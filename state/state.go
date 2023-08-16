@@ -11,6 +11,7 @@ import (
 // THis whole approach might need some serious refactoring I should be using a map I think s
 
 const SnapshotType = "RDSSnapshot"
+const RdsInstance = "RDSInstance"
 
 // StateKV manages our state file and object location
 type stateKV struct {
@@ -66,6 +67,9 @@ func (s *StateManager) GetStateObject(object string) interface{} {
 			case SnapshotType:
 				snap := DecodeRDSSnapshotOutput(*buf)
 				return snap
+			case RdsInstance:
+				instance := DecodeRDSDatabaseOutput(*buf)
+				return instance
 			}
 		}
 	}
