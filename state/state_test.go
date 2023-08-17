@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	ktypes "github.com/aws/aws-sdk-go-v2/service/kms/types"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
@@ -163,5 +164,44 @@ func TestGetStateObjectInstance(t *testing.T) {
 	}
 	if *res.DBInstanceIdentifier != "foobar" {
 		t.Errorf("got %s expected foobar", *res.DBInstanceIdentifier)
+	}
+}
+
+func TestGetStateObjectKMS(t *testing.T) {
+	filename := "/tmp/foo"
+	key := ktypes.KeyMetadata{
+		KeyId: aws.String("foo"),
+	}
+
+	defer os.Remove(filename)
+	r := EncodeKmsOutput(&key)
+	_, err := WriteOutput(filename, r)
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+
+	var mu sync.Mutex
+	var s []stateKV
+	kv := stateKV{
+		Object:       "foo",
+		FileLocation: filename,
+		ObjectType:   KMSKeyType,
+	}
+	s = append(s, kv)
+	sm := StateManager{
+		mu,
+		s,
+	}
+
+	result := sm.GetStateObject("foo")
+	if result == nil {
+		t.Errorf("result is nil")
+	}
+	res, ok := result.(ktypes.KeyMetadata)
+	if !ok {
+		t.Errorf("issue converting struct")
+	}
+	if *res.KeyId != "foo" {
+		t.Errorf("got %s expected foo", *res.KeyId)
 	}
 }
