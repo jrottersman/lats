@@ -3,6 +3,8 @@ package state
 import (
 	"bytes"
 	"encoding/gob"
+	"errors"
+	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
@@ -28,4 +30,14 @@ func DecodeKmsOutput(b bytes.Buffer) types.KeyMetadata {
 		log.Fatalf("Error decoding state for KMS Key: %s", err)
 	}
 	return kmsMetadata
+}
+
+func GetKmsOutput(s StateManager, keyId string) (*types.KeyMetadata, error) {
+	i := s.GetStateObject(keyId)
+	key, ok := i.(types.KeyMetadata)
+	if !ok {
+		str := fmt.Sprintf("error decoding KMS key from interface %v", i)
+		return nil, errors.New(str)
+	}
+	return &key, nil
 }
