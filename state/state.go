@@ -71,6 +71,9 @@ func (s *StateManager) GetStateObject(object string) interface{} {
 			case RdsInstanceType:
 				instance := DecodeRDSDatabaseOutput(*buf)
 				return instance
+			case KMSKeyType:
+				key := DecodeKmsOutput(*buf)
+				return key
 			}
 		}
 	}
