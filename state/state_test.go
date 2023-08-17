@@ -125,3 +125,43 @@ func TestGetStateObject(t *testing.T) {
 		t.Errorf("got %s expected foobar", *res.DBInstanceIdentifier)
 	}
 }
+
+func TestGetStateObjectInstance(t *testing.T) {
+	filename := "/tmp/foo"
+	dbi := types.DBInstance{
+		AllocatedStorage:     1000,
+		DBInstanceIdentifier: aws.String("foobar"),
+	}
+
+	defer os.Remove(filename)
+	r := EncodeRDSDatabaseOutput(&dbi)
+	_, err := WriteOutput(filename, r)
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+
+	var mu sync.Mutex
+	var s []stateKV
+	kv := stateKV{
+		Object:       "foo",
+		FileLocation: filename,
+		ObjectType:   RdsInstanceType,
+	}
+	s = append(s, kv)
+	sm := StateManager{
+		mu,
+		s,
+	}
+
+	result := sm.GetStateObject("foo")
+	if result == nil {
+		t.Errorf("result is nil")
+	}
+	res, ok := result.(types.DBInstance)
+	if !ok {
+		t.Errorf("issue converting struct")
+	}
+	if *res.DBInstanceIdentifier != "foobar" {
+		t.Errorf("got %s expected foobar", *res.DBInstanceIdentifier)
+	}
+}
