@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
+	"github.com/jrottersman/lats/state"
 )
 
 // Client is used for mocking the AWS RDS instance for testing
@@ -114,10 +115,10 @@ func (instances *DbInstances) restoreSnapshotCluster(snapshotID string) (*rds.Re
 	return output, nil
 }
 
-func (instances *DbInstances) restoreSnapshotInstance(snapshotID string) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
+func (instances *DbInstances) restoreSnapshotInstance(store state.RDSRestorationStore) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
 	input := rds.RestoreDBInstanceFromDBSnapshotInput{ // TODO actually figure this out
 		DBInstanceIdentifier: aws.String("foo"),
-		DBSnapshotIdentifier: aws.String(snapshotID),
+		DBSnapshotIdentifier: aws.String(*store.Snapshot.DBSnapshotArn),
 	}
 
 	output, err := instances.RdsClient.RestoreDBInstanceFromDBSnapshot(context.TODO(), &input)
