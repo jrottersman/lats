@@ -29,9 +29,10 @@ func init() {
 }
 
 func RestoreSnapshot(stateKV state.StateManager, snapshotName string) error {
-	RestorationStore, err := state.RDSRestorationStoreBuilder(stateKV, snapshotName)
+	_, err := state.RDSRestorationStoreBuilder(stateKV, snapshotName)
 	if err != nil {
 		fmt.Printf("error getting restoration store %s", err)
 		return err
 	}
+	return nil
 }
