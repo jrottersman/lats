@@ -51,8 +51,8 @@ func TestGetKmsKeyOutput(t *testing.T) {
 	}
 
 	var mu sync.Mutex
-	var s []stateKV
-	kv := stateKV{
+	var s []StateKV
+	kv := StateKV{
 		Object:       "foo",
 		FileLocation: filename,
 		ObjectType:   KMSKeyType,

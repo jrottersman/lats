@@ -42,7 +42,7 @@ func TestReadState(t *testing.T) {
 
 func TestUpdateState(t *testing.T) {
 	var mu sync.Mutex
-	var s []stateKV
+	var s []StateKV
 	sm := StateManager{
 		mu,
 		s,
@@ -58,7 +58,7 @@ func TestUpdateState(t *testing.T) {
 
 func TestSyncState(t *testing.T) {
 	var mu sync.Mutex
-	var s []stateKV
+	var s []StateKV
 	sm := StateManager{
 		mu,
 		s,
@@ -74,7 +74,7 @@ func TestSyncState(t *testing.T) {
 	if err != nil {
 		t.Errorf("couldn't read file got %s", err)
 	}
-	var sf []stateKV
+	var sf []StateKV
 	err = json.Unmarshal(f, &sf)
 	if err != nil {
 		fmt.Printf("Couldn't unmarshall the json %s", err)
@@ -102,8 +102,8 @@ func TestGetStateObject(t *testing.T) {
 	}
 
 	var mu sync.Mutex
-	var s []stateKV
-	kv := stateKV{
+	var s []StateKV
+	kv := StateKV{
 		Object:       "foo",
 		FileLocation: filename,
 		ObjectType:   "RDSSnapshot",
@@ -142,8 +142,8 @@ func TestGetStateObjectInstance(t *testing.T) {
 	}
 
 	var mu sync.Mutex
-	var s []stateKV
-	kv := stateKV{
+	var s []StateKV
+	kv := StateKV{
 		Object:       "foo",
 		FileLocation: filename,
 		ObjectType:   RdsInstanceType,
@@ -181,8 +181,8 @@ func TestGetStateObjectKMS(t *testing.T) {
 	}
 
 	var mu sync.Mutex
-	var s []stateKV
-	kv := stateKV{
+	var s []StateKV
+	kv := StateKV{
 		Object:       "foo",
 		FileLocation: filename,
 		ObjectType:   KMSKeyType,

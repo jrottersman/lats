@@ -15,21 +15,21 @@ const RdsInstanceType = "RDSInstance"
 const KMSKeyType = "KMSKey"
 
 // StateKV manages our state file and object location
-type stateKV struct {
+type StateKV struct {
 	Object       string `json:"object"`
 	FileLocation string `json:"fileLocation"`
 	ObjectType   string `json:"objectType"`
 }
 
 type StateManager struct {
-	mu             sync.Mutex
-	StateLocations []stateKV `json:"stateLocations"`
+	Mu             sync.Mutex
+	StateLocations []StateKV `json:"stateLocations"`
 }
 
 func (s *StateManager) UpdateState(name string, filename string, ot string) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	kv := stateKV{
+	s.Mu.Lock()
+	defer s.Mu.Unlock()
+	kv := StateKV{
 		Object:       name,
 		FileLocation: filename,
 		ObjectType:   ot,
@@ -38,8 +38,8 @@ func (s *StateManager) UpdateState(name string, filename string, ot string) {
 }
 
 func (s *StateManager) SyncState(filename string) error {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+	s.Mu.Lock()
+	defer s.Mu.Unlock()
 	m, err := json.Marshal(s.StateLocations)
 	if err != nil {
 		fmt.Printf("Error creating json: %s", err)
@@ -54,8 +54,8 @@ func (s *StateManager) SyncState(filename string) error {
 }
 
 func (s *StateManager) GetStateObject(object string) interface{} {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+	s.Mu.Lock()
+	defer s.Mu.Unlock()
 
 	for i := range s.StateLocations {
 		if s.StateLocations[i].Object == object {
@@ -100,7 +100,7 @@ func ReadState(filename string) (StateManager, error) {
 	if err != nil {
 		fmt.Printf("Error reading the file %s", err)
 	}
-	var s []stateKV
+	var s []StateKV
 	err = json.Unmarshal(f, &s)
 	if err != nil {
 		fmt.Printf("Error reading the file %s", err)

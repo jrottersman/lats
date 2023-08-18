@@ -121,8 +121,8 @@ func TestGetRDSSnapshotOutput(t *testing.T) {
 	}
 
 	var mu sync.Mutex
-	var s []stateKV
-	kv := stateKV{
+	var s []StateKV
+	kv := StateKV{
 		Object:       "foo",
 		FileLocation: filename,
 		ObjectType:   "RDSSnapshot",
@@ -157,8 +157,8 @@ func TestGetRDSInstanceOutput(t *testing.T) {
 	}
 
 	var mu sync.Mutex
-	var s []stateKV
-	kv := stateKV{
+	var s []StateKV
+	kv := StateKV{
 		Object:       "foo",
 		FileLocation: filename,
 		ObjectType:   RdsInstanceType,

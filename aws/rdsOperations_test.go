@@ -2,11 +2,15 @@ package aws
 
 import (
 	"context"
+	"os"
 	"reflect"
+	"sync"
 	"testing"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
+	"github.com/jrottersman/lats/state"
 )
 
 type mockRDSClient struct{}
@@ -128,15 +132,69 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 }
 
 func TestRestoreSnapshotInstance(t *testing.T) {
+
+	filename := "/tmp/foo"
+	snap := types.DBSnapshot{
+		AllocatedStorage:     1000,
+		Encrypted:            true,
+		PercentProgress:      100,
+		DBInstanceIdentifier: aws.String("foobar"),
+		DBSnapshotArn:        aws.String("foo"),
+	}
+
+	defer os.Remove(filename)
+	r := state.EncodeRDSSnapshotOutput(&snap)
+	_, err := state.WriteOutput(filename, r)
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+
+	var mu sync.Mutex
+	var s []state.StateKV
+	kv := state.StateKV{
+		Object:       "foo",
+		FileLocation: filename,
+		ObjectType:   "RDSSnapshot",
+	}
+	s = append(s, kv)
+
+	filename2 := "/tmp/foo2"
+	dbz := types.DBInstance{
+		AllocatedStorage:     1000,
+		DBInstanceIdentifier: aws.String("foobar"),
+	}
+
+	defer os.Remove(filename2)
+	r2 := state.EncodeRDSDatabaseOutput(&dbz)
+	_, err = state.WriteOutput(filename2, r2)
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+	kv2 := state.StateKV{
+		Object:       "foobar",
+		FileLocation: filename2,
+		ObjectType:   state.RdsInstanceType,
+	}
+	s = append(s, kv2)
+	sm := state.StateManager{
+		mu,
+		s,
+	}
+
+	resp, err := state.RDSRestorationStoreBuilder(sm, "foo")
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+
 	c := mockRDSClient{}
 	dbi := DbInstances{
 		RdsClient: c,
 	}
-	resp, err := dbi.restoreSnapshotInstance("foo")
+	resp2, err := dbi.restoreSnapshotInstance(*resp)
 	if err != nil {
 		t.Errorf("got error: %s", err)
 	}
-	if reflect.TypeOf(resp) != reflect.TypeOf(&rds.RestoreDBInstanceFromDBSnapshotOutput{}) {
+	if reflect.TypeOf(resp2) != reflect.TypeOf(&rds.RestoreDBInstanceFromDBSnapshotOutput{}) {
 		t.Error()
 	}
 }

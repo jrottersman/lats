@@ -26,8 +26,8 @@ func TestRDSRestorationStoreBuilder(t *testing.T) {
 	}
 
 	var mu sync.Mutex
-	var s []stateKV
-	kv := stateKV{
+	var s []StateKV
+	kv := StateKV{
 		Object:       "foo",
 		FileLocation: filename,
 		ObjectType:   "RDSSnapshot",
@@ -46,7 +46,7 @@ func TestRDSRestorationStoreBuilder(t *testing.T) {
 	if err != nil {
 		t.Errorf("error writing file %s", err)
 	}
-	kv2 := stateKV{
+	kv2 := StateKV{
 		Object:       "foobar",
 		FileLocation: filename2,
 		ObjectType:   RdsInstanceType,
