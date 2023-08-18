@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
 )
@@ -28,11 +29,12 @@ func init() {
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&restoreDbName, "database-name", "d", "", "name of the database we want to restore the snapshot for")
 }
 
-func RestoreSnapshot(stateKV state.StateManager, snapshotName string) error {
-	_, err := state.RDSRestorationStoreBuilder(stateKV, snapshotName)
+func RestoreSnapshot(instances *aws.DbInstances, stateKV state.StateManager, snapshotName string) error {
+	RestorationBuilder, err := state.RDSRestorationStoreBuilder(stateKV, snapshotName)
 	if err != nil {
 		fmt.Printf("error getting restoration store %s", err)
 		return err
 	}
+	_, nil := instances.RestoreSnapshotInstance(*RestorationBuilder)
 	return nil
 }

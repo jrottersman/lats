@@ -190,7 +190,7 @@ func TestRestoreSnapshotInstance(t *testing.T) {
 	dbi := DbInstances{
 		RdsClient: c,
 	}
-	resp2, err := dbi.restoreSnapshotInstance(*resp)
+	resp2, err := dbi.RestoreSnapshotInstance(*resp)
 	if err != nil {
 		t.Errorf("got error: %s", err)
 	}

@@ -115,7 +115,7 @@ func (instances *DbInstances) restoreSnapshotCluster(snapshotID string) (*rds.Re
 	return output, nil
 }
 
-func (instances *DbInstances) restoreSnapshotInstance(store state.RDSRestorationStore) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
+func (instances *DbInstances) RestoreSnapshotInstance(store state.RDSRestorationStore) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
 	input := rds.RestoreDBInstanceFromDBSnapshotInput{ // TODO actually figure this out
 		DBInstanceIdentifier: aws.String("foo"),
 		DBSnapshotIdentifier: aws.String(*store.Snapshot.DBSnapshotArn),
