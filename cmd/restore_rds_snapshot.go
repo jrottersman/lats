@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
 )
 
@@ -25,4 +26,12 @@ var (
 func init() {
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&restoreSnapshotName, "snapshot-name", "s", "", "name of the snapshot we want to restore: choose one of snapshotName or db name")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&restoreDbName, "database-name", "d", "", "name of the database we want to restore the snapshot for")
+}
+
+func RestoreSnapshot(stateKV state.StateManager, snapshotName string) error {
+	RestorationStore, err := state.RDSRestorationStoreBuilder(stateKV, snapshotName)
+	if err != nil {
+		fmt.Printf("error getting restoration store %s", err)
+		return err
+	}
 }
