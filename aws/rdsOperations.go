@@ -3,6 +3,7 @@ package aws
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -116,8 +117,10 @@ func (instances *DbInstances) restoreSnapshotCluster(snapshotID string) (*rds.Re
 }
 
 func (instances *DbInstances) RestoreSnapshotInstance(store state.RDSRestorationStore) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
+
+	backupDbIden := fmt.Sprintf("%s-backup", *store.Instance.DBInstanceIdentifier)
 	input := rds.RestoreDBInstanceFromDBSnapshotInput{ // TODO actually figure this out
-		DBInstanceIdentifier: aws.String("foo"),
+		DBInstanceIdentifier: aws.String(backupDbIden),
 		DBSnapshotIdentifier: aws.String(*store.Snapshot.DBSnapshotArn),
 	}
 
