@@ -23,6 +23,28 @@ func EncodeRDSDatabaseOutput(db *types.DBInstance) bytes.Buffer {
 	return encoder
 }
 
+// DecodeRDSClusterOutput takes a bytes buffer and returns it to a DbCluster type in preperation of restoring the database
+func DecodeRDSClusterOutput(b bytes.Buffer) types.DBCluster {
+	var dbCluster types.DBCluster
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&dbCluster)
+	if err != nil {
+		log.Fatalf("Error decoding state for RDS Cluster: %s", err)
+	}
+	return dbCluster
+}
+
+func EncodeRDSClusterOutput(db *types.DBCluster) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(db)
+	if err != nil {
+		log.Fatalf("Error encoding our database: %s", err)
+	}
+	return encoder
+}
+
 // DecodeRDSDatabaseOutput takes a bytes buffer and returns it to a DbInstance type in preperation of restoring the database
 func DecodeRDSDatabaseOutput(b bytes.Buffer) types.DBInstance {
 	var dbInstance types.DBInstance
