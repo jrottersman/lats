@@ -9,6 +9,7 @@ import (
 type RDSRestorationStore struct {
 	Snapshot *types.DBSnapshot
 	Instance *types.DBInstance
+	Cluster  *types.DBCluster
 }
 
 func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSRestorationStore, error) {
