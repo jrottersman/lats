@@ -42,6 +42,26 @@ func TestDecodeRDSDBOutput(t *testing.T) {
 
 }
 
+func TestEncodeRDSClusterOutput(t *testing.T) {
+	var storage int32 = 1000
+	var retention int32 = 30
+
+	db := types.DBCluster{
+		AllocatedStorage:      &storage,
+		BackupRetentionPeriod: &retention,
+	}
+	r := EncodeRDSClusterOutput(&db)
+	var result types.DBCluster
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if *result.AllocatedStorage != storage {
+		t.Errorf("got %d expected %d", result.AllocatedStorage, storage)
+	}
+}
+
 func TestEncodeRDSSnapshotOutput(t *testing.T) {
 
 	snap := types.DBSnapshot{

@@ -97,7 +97,6 @@ func GetRDSDatabaseClusterOutput(s StateManager, dbName string) (*types.DBCluste
 	}
 	return &dbi, nil
 }
-}
 
 // DecodeRDSSnapshhotOutput takes a bytes buffer and returns it to a DbSnapshot type in preperation of restoring the database
 func DecodeRDSSnapshotOutput(b bytes.Buffer) types.DBSnapshot {
