@@ -213,3 +213,40 @@ func TestGetRDSInstanceOutput(t *testing.T) {
 		t.Errorf("expected %d got 1000", *&newDbi.AllocatedStorage)
 	}
 }
+
+func TestGetRDSClusterOutput(t *testing.T) {
+	var storage int32 = 1000
+	filename := "/tmp/foo"
+	dbi := types.DBCluster{
+		AllocatedStorage:    &storage,
+		DBClusterIdentifier: aws.String("foobar"),
+	}
+
+	defer os.Remove(filename)
+	r := EncodeRDSClusterOutput(&dbi)
+	_, err := WriteOutput(filename, r)
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+
+	var mu sync.Mutex
+	var s []StateKV
+	kv := StateKV{
+		Object:       "foo",
+		FileLocation: filename,
+		ObjectType:   RdsClusterType,
+	}
+	s = append(s, kv)
+	sm := StateManager{
+		mu,
+		s,
+	}
+	newDbi, err := GetRDSDatabaseClusterOutput(sm, "foo")
+	if err != nil {
+		t.Errorf("got error: %s", err)
+	}
+
+	if *newDbi.AllocatedStorage != storage {
+		t.Errorf("expected %d got 1000", *&newDbi.AllocatedStorage)
+	}
+}

@@ -13,6 +13,7 @@ import (
 const SnapshotType = "RDSSnapshot"
 const RdsInstanceType = "RDSInstance"
 const KMSKeyType = "KMSKey"
+const RdsClusterType = "RDSCluster"
 
 // StateKV manages our state file and object location
 type StateKV struct {
@@ -71,6 +72,9 @@ func (s *StateManager) GetStateObject(object string) interface{} {
 			case RdsInstanceType:
 				instance := DecodeRDSDatabaseOutput(*buf)
 				return instance
+			case RdsClusterType:
+				cluster := DecodeRDSClusterOutput(*buf)
+				return cluster
 			case KMSKeyType:
 				key := DecodeKmsOutput(*buf)
 				return key
