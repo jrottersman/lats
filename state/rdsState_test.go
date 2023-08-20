@@ -62,6 +62,22 @@ func TestEncodeRDSClusterOutput(t *testing.T) {
 	}
 }
 
+func TestDecodeRDSClusterOutput(t *testing.T) {
+	var storage int32 = 1000
+	var retention int32 = 30
+
+	db := types.DBCluster{
+		AllocatedStorage:      &storage,
+		BackupRetentionPeriod: &retention,
+	}
+	r := EncodeRDSClusterOutput(&db)
+	resp := DecodeRDSClusterOutput(r)
+	if *resp.AllocatedStorage != storage {
+		t.Errorf("Expected %d, got %d", *resp.AllocatedStorage, storage)
+	}
+
+}
+
 func TestEncodeRDSSnapshotOutput(t *testing.T) {
 
 	snap := types.DBSnapshot{
