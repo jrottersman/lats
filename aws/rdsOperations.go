@@ -122,6 +122,7 @@ func (instances *DbInstances) RestoreSnapshotInstance(store state.RDSRestoration
 	input := rds.RestoreDBInstanceFromDBSnapshotInput{ // TODO actually figure this out
 		DBInstanceIdentifier: aws.String(backupDbIden),
 		DBSnapshotIdentifier: aws.String(*store.Snapshot.DBSnapshotIdentifier),
+		AllocatedStorage:     &store.Snapshot.AllocatedStorage,
 	}
 
 	output, err := instances.RdsClient.RestoreDBInstanceFromDBSnapshot(context.TODO(), &input)
