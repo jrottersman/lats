@@ -103,10 +103,10 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 	}
 }
 
-func (instances *DbInstances) restoreSnapshotCluster(snapshotID string) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
+func (instances *DbInstances) restoreSnapshotCluster(store state.RDSRestorationStore) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
 	input := rds.RestoreDBClusterFromSnapshotInput{ // TODO Actually figure this out
 		DBClusterIdentifier: aws.String("foo"),
-		SnapshotIdentifier:  aws.String(snapshotID),
+		SnapshotIdentifier:  aws.String(*store.Snapshot.DBSnapshotIdentifier),
 	}
 	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(context.TODO(), &input)
 	if err != nil {
@@ -121,7 +121,7 @@ func (instances *DbInstances) RestoreSnapshotInstance(store state.RDSRestoration
 	backupDbIden := fmt.Sprintf("%s-backup", *store.Instance.DBInstanceIdentifier)
 	input := rds.RestoreDBInstanceFromDBSnapshotInput{ // TODO actually figure this out
 		DBInstanceIdentifier: aws.String(backupDbIden),
-		DBSnapshotIdentifier: aws.String(*store.Snapshot.DBSnapshotArn),
+		DBSnapshotIdentifier: aws.String(*store.Snapshot.DBSnapshotIdentifier),
 	}
 
 	output, err := instances.RdsClient.RestoreDBInstanceFromDBSnapshot(context.TODO(), &input)
