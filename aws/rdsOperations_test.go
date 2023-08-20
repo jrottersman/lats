@@ -148,7 +148,7 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 	var storage int32 = 1000
 	dbz := types.DBCluster{
 		AllocatedStorage:    &storage,
-		DBClusterIdentifier: aws.String("foobar"),
+		DBClusterIdentifier: aws.String("foobaz"),
 	}
 
 	defer os.Remove(filename2)
@@ -158,7 +158,7 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 		t.Errorf("error writing file %s", err)
 	}
 	kv2 := state.StateKV{
-		Object:       "foobar",
+		Object:       "foobaz",
 		FileLocation: filename2,
 		ObjectType:   state.RdsClusterType,
 	}
@@ -167,7 +167,7 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 	dbx := types.DBInstance{
 		AllocatedStorage:     1000,
 		DBInstanceIdentifier: aws.String("foobar"),
-		DBClusterIdentifier:  aws.String("foobar"),
+		DBClusterIdentifier:  aws.String("foobaz"),
 	}
 
 	defer os.Remove(filename2)
@@ -178,7 +178,7 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 	}
 	kv3 := state.StateKV{
 		Object:       "foobar",
-		FileLocation: filename2,
+		FileLocation: filename3,
 		ObjectType:   state.RdsInstanceType,
 	}
 	s = append(s, kv2)
