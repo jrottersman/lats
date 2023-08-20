@@ -145,13 +145,14 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 	s = append(s, kv)
 
 	filename2 := "/tmp/foo2"
-	dbz := types.DBInstance{
-		AllocatedStorage:     1000,
-		DBInstanceIdentifier: aws.String("foobar"),
+	var storage int32 = 1000
+	dbz := types.DBCluster{
+		AllocatedStorage:    &storage,
+		DBClusterIdentifier: aws.String("foobar"),
 	}
 
 	defer os.Remove(filename2)
-	r2 := state.EncodeRDSDatabaseOutput(&dbz)
+	r2 := state.EncodeRDSClusterOutput(&dbz)
 	_, err = state.WriteOutput(filename2, r2)
 	if err != nil {
 		t.Errorf("error writing file %s", err)
@@ -159,9 +160,29 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 	kv2 := state.StateKV{
 		Object:       "foobar",
 		FileLocation: filename2,
+		ObjectType:   state.RdsClusterType,
+	}
+
+	filename3 := "/tmp/foo3"
+	dbx := types.DBInstance{
+		AllocatedStorage:     1000,
+		DBInstanceIdentifier: aws.String("foobar"),
+		DBClusterIdentifier:  aws.String("foobar"),
+	}
+
+	defer os.Remove(filename2)
+	r3 := state.EncodeRDSDatabaseOutput(&dbx)
+	_, err = state.WriteOutput(filename3, r3)
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+	kv3 := state.StateKV{
+		Object:       "foobar",
+		FileLocation: filename2,
 		ObjectType:   state.RdsInstanceType,
 	}
 	s = append(s, kv2)
+	s = append(s, kv3)
 	sm := state.StateManager{
 		mu,
 		s,

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
+	"github.com/jrottersman/lats/helpers"
 )
 
 type RDSRestorationStore struct {
@@ -23,8 +24,22 @@ func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSResto
 	if err != nil {
 		fmt.Printf("error getting database %s", err)
 	}
+
+	cID := helpers.GetClusterId(*db)
+	if cID == nil {
+		return &RDSRestorationStore{
+			Snapshot: snap,
+			Instance: db,
+		}, nil
+	}
+	cluster, err := GetRDSDatabaseClusterOutput(sm, *cID)
+	if err != nil {
+		fmt.Printf("error getting cluster %s", err)
+	}
 	return &RDSRestorationStore{
 		Snapshot: snap,
 		Instance: db,
+		Cluster:  cluster,
 	}, nil
+
 }
