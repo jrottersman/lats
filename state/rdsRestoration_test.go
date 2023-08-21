@@ -66,3 +66,21 @@ func TestRDSRestorationStoreBuilder(t *testing.T) {
 		t.Errorf("oops WTF wanted 1000 got %d", resp.Snapshot.AllocatedStorage)
 	}
 }
+
+func TestGetNilStoreInstanceIdentifier(t *testing.T) {
+	NilStore := RDSRestorationStore{}
+	s := NilStore.GetInstanceIdentifier()
+	if s != nil {
+		t.Errorf("s should be nil it is %v", s)
+	}
+}
+
+func TestGetNilInstanceIDentifier(t *testing.T) {
+	Store := RDSRestorationStore{
+		Instance: &types.DBInstance{},
+	}
+	s := Store.GetInstanceIdentifier()
+	if s != nil {
+		t.Errorf("s should be nil it is %v", s)
+	}
+}

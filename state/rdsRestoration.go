@@ -13,6 +13,16 @@ type RDSRestorationStore struct {
 	Cluster  *types.DBCluster
 }
 
+func (r RDSRestorationStore) GetInstanceIdentifier() *string {
+	if r.Instance == nil {
+		return nil
+	}
+	if r.Instance.DBInstanceIdentifier == nil {
+		return nil
+	}
+	return r.Instance.DBInstanceIdentifier
+}
+
 func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSRestorationStore, error) {
 	snap, err := GetRDSSnapshotOutput(sm, snapshotName)
 	if err != nil {
