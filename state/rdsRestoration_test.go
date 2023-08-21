@@ -67,38 +67,6 @@ func TestRDSRestorationStoreBuilder(t *testing.T) {
 	}
 }
 
-func TestGetNilStoreInstanceIdentifier(t *testing.T) {
-	NilStore := RDSRestorationStore{}
-	s := NilStore.GetInstanceIdentifier()
-	if s != nil {
-		t.Errorf("s should be nil it is %v", s)
-	}
-}
-
-func TestGetNilInstanceIdentifier(t *testing.T) {
-	store := RDSRestorationStore{
-		Instance: &types.DBInstance{},
-	}
-	s := store.GetInstanceIdentifier()
-	if s != nil {
-		t.Errorf("s should be nil it is %v", s)
-	}
-}
-
-func TestGetValueInstanceIdentifier(t *testing.T) {
-	i := types.DBInstance{
-		DBInstanceIdentifier: aws.String("foo"),
-	}
-	store := RDSRestorationStore{
-		Instance: &i,
-	}
-	s := store.GetInstanceIdentifier()
-
-	if *s != "foo" {
-		t.Errorf("expected foo got %s", *s)
-	}
-}
-
 func TestGetNilStoreInstanceClass(t *testing.T) {
 	NilStore := RDSRestorationStore{}
 	s := NilStore.GetInstanceClass()
@@ -162,6 +130,42 @@ func TestRDSRestorationStore_GetAllocatedStorage(t *testing.T) {
 			} else {
 				if *got != *tt.want {
 					t.Errorf("RDSRestorationStore.GetAllocatedStorage() = %v, want %v", got, tt.want)
+				}
+			}
+		})
+	}
+}
+
+func TestRDSRestorationStore_GetInstanceIdentifier(t *testing.T) {
+	type fields struct {
+		Snapshot *types.DBSnapshot
+		Instance *types.DBInstance
+		Cluster  *types.DBCluster
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   *string
+	}{
+		{name: "totalNil", fields: fields{nil, nil, nil}, want: nil},
+		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil}, want: nil},
+		{name: "GetData", fields: fields{nil, &types.DBInstance{DBInstanceIdentifier: aws.String("foo")}, nil}, want: aws.String("foo")},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := RDSRestorationStore{
+				Snapshot: tt.fields.Snapshot,
+				Instance: tt.fields.Instance,
+				Cluster:  tt.fields.Cluster,
+			}
+			got := r.GetInstanceIdentifier()
+			if tt.want == nil {
+				if got != tt.want {
+					t.Errorf("RDSRestorationStore.GetInstanceIdentifier() = %v, want %v", got, tt.want)
+				}
+			} else {
+				if *got != *tt.want {
+					t.Errorf("RDSRestorationStore.GetInstanceIdentifier() = %v, want %v", *got, *tt.want)
 				}
 			}
 		})
