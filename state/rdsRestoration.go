@@ -23,6 +23,16 @@ func (r RDSRestorationStore) GetInstanceIdentifier() *string {
 	return r.Instance.DBInstanceIdentifier
 }
 
+func (r RDSRestorationStore) GetInstanceClass() *string {
+	if r.Instance == nil {
+		return nil
+	}
+	if r.Instance.DBInstanceClass == nil {
+		return nil
+	}
+	return r.Instance.DBInstanceClass
+}
+
 func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSRestorationStore, error) {
 	snap, err := GetRDSSnapshotOutput(sm, snapshotName)
 	if err != nil {
