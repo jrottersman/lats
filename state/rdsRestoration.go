@@ -33,6 +33,16 @@ func (r RDSRestorationStore) GetInstanceClass() *string {
 	return r.Instance.DBInstanceClass
 }
 
+func (r RDSRestorationStore) GetAllocatedStorage() *int32 {
+	if r.Snapshot == nil {
+		return nil
+	}
+	if r.Snapshot.AllocatedStorage == 0 {
+		return nil
+	}
+	return &r.Snapshot.AllocatedStorage
+}
+
 func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSRestorationStore, error) {
 	snap, err := GetRDSSnapshotOutput(sm, snapshotName)
 	if err != nil {
