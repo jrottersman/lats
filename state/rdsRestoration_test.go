@@ -75,12 +75,26 @@ func TestGetNilStoreInstanceIdentifier(t *testing.T) {
 	}
 }
 
-func TestGetNilInstanceIDentifier(t *testing.T) {
-	Store := RDSRestorationStore{
+func TestGetNilInstanceIdentifier(t *testing.T) {
+	store := RDSRestorationStore{
 		Instance: &types.DBInstance{},
 	}
-	s := Store.GetInstanceIdentifier()
+	s := store.GetInstanceIdentifier()
 	if s != nil {
 		t.Errorf("s should be nil it is %v", s)
+	}
+}
+
+func TestGetValueInstanceIdentifier(t *testing.T) {
+	i := types.DBInstance{
+		DBInstanceIdentifier: aws.String("foo"),
+	}
+	store := RDSRestorationStore{
+		Instance: &i,
+	}
+	s := store.GetInstanceIdentifier()
+
+	if *s != "foo" {
+		t.Errorf("expected foo got %s", *s)
 	}
 }
