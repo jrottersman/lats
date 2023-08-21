@@ -130,3 +130,40 @@ func TestGetValueInstanceClass(t *testing.T) {
 		t.Errorf("expected t3.micro got %s", *s)
 	}
 }
+
+func TestRDSRestorationStore_GetAllocatedStorage(t *testing.T) {
+	var valueExpected int32 = 1000
+	type fields struct {
+		Snapshot *types.DBSnapshot
+		Instance *types.DBInstance
+		Cluster  *types.DBCluster
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   *int32
+	}{
+		{name: "totalNil", fields: fields{nil, nil, nil}, want: nil},
+		{name: "RegularNil", fields: fields{&types.DBSnapshot{}, nil, nil}, want: nil},
+		{name: "Value", fields: fields{&types.DBSnapshot{AllocatedStorage: 1000}, nil, nil}, want: &valueExpected},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := RDSRestorationStore{
+				Snapshot: tt.fields.Snapshot,
+				Instance: tt.fields.Instance,
+				Cluster:  tt.fields.Cluster,
+			}
+			got := r.GetAllocatedStorage()
+			if tt.want == nil {
+				if got != nil {
+					t.Errorf("RDSRestorationStore.GetAllocatedStorage() = %v, want %v", got, tt.want)
+				}
+			} else {
+				if *got != *tt.want {
+					t.Errorf("RDSRestorationStore.GetAllocatedStorage() = %v, want %v", got, tt.want)
+				}
+			}
+		})
+	}
+}
