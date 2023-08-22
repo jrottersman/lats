@@ -121,9 +121,9 @@ func (instances *DbInstances) RestoreSnapshotInstance(store state.RDSRestoration
 
 	backupDbIden := fmt.Sprintf("%s-backup", *store.Instance.DBInstanceIdentifier)
 	input := rds.RestoreDBInstanceFromDBSnapshotInput{ // TODO actually figure this out
-		DBInstanceIdentifier: aws.String(backupDbIden),
-		DBSnapshotIdentifier: aws.String(*store.Snapshot.DBSnapshotIdentifier),
-		AllocatedStorage:     &store.Snapshot.AllocatedStorage,
+		DBInstanceIdentifier: store.GetInstanceIdentifier(),
+		DBSnapshotIdentifier: store.GetSnapshotIdentifier(),
+		AllocatedStorage:     store.GetAllocatedStorage(),
 	}
 
 	output, err := instances.RdsClient.RestoreDBInstanceFromDBSnapshot(context.TODO(), &input)
