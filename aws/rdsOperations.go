@@ -119,9 +119,9 @@ func (instances *DbInstances) restoreSnapshotCluster(store state.RDSRestorationS
 
 func (instances *DbInstances) RestoreSnapshotInstance(store state.RDSRestorationStore) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
 
-	backupDbIden := fmt.Sprintf("%s-backup", *store.Instance.DBInstanceIdentifier)
+	backupDbIden := fmt.Sprintf("%s-backup", *store.GetInstanceIdentifier())
 	input := rds.RestoreDBInstanceFromDBSnapshotInput{ // TODO actually figure this out
-		DBInstanceIdentifier: store.GetInstanceIdentifier(),
+		DBInstanceIdentifier: &backupDbIden,
 		DBSnapshotIdentifier: store.GetSnapshotIdentifier(),
 		AllocatedStorage:     store.GetAllocatedStorage(),
 	}
