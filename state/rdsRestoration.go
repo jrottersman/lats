@@ -43,6 +43,16 @@ func (r RDSRestorationStore) GetAllocatedStorage() *int32 {
 	return &r.Snapshot.AllocatedStorage
 }
 
+func (r RDSRestorationStore) GetSnapshotIdentifier() *string {
+	if r.Snapshot == nil {
+		return nil
+	}
+	if r.Snapshot.DBSnapshotIdentifier == nil {
+		return nil
+	}
+	return r.Snapshot.DBSnapshotIdentifier
+}
+
 func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSRestorationStore, error) {
 	snap, err := GetRDSSnapshotOutput(sm, snapshotName)
 	if err != nil {
