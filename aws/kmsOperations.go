@@ -8,20 +8,24 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
 )
 
+// KmsClient type for mocks
 type KmsClient interface {
 	CreateKey(ctx context.Context, params *kms.CreateKeyInput, optFns ...func(*kms.Options)) (*kms.CreateKeyOutput, error)
 }
 
+// KmsOperations struct with the KmsClient
 type KmsOperations struct {
 	Client KmsClient
 }
 
+// KmsConfig descripes our KmsConfig and they way it works
 type KmsConfig struct {
 	Description *string
 	Multiregion *bool
 	Policy      *string
 }
 
+// CreateKMSKey creates a new KMS key for multiregion deploys
 func (k KmsOperations) CreateKMSKey(cfg *KmsConfig) (*types.KeyMetadata, error) {
 	// TODO handle multiregion keys
 	// TODO handle key policies

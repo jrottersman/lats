@@ -18,6 +18,7 @@ func Init(region string) DbInstances {
 	}
 }
 
+// InitKms creates a KMS client
 func InitKms(region string) KmsOperations {
 	cfg := createConfig(region)
 	client := getKMSClient(cfg)

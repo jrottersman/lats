@@ -43,9 +43,8 @@ func (instances *DbInstances) GetInstance(instanceName string) (
 			log.Printf("Couldn't get instance %v: %v\n", instanceName, err)
 		}
 		return nil, err
-	} else {
-		return &output.DBInstances[0], nil
 	}
+	return &output.DBInstances[0], nil
 }
 
 // CreateSnapshot cretaes an AWS snapshot
@@ -82,7 +81,7 @@ func (instances *DbInstances) CopySnapshot(originalSnapshotName string, NewSnaps
 
 // TODO Copy Option Group
 
-// Get a Parameter Group we will use this for moving custom parameter groups around jumped the gun here but oh well
+// GetParameterGroup we will use this for moving custom parameter groups around jumped the gun here but oh well
 func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 	*types.DBParameterGroup, error) {
 	output, err := instances.RdsClient.DescribeDBParameterGroups(
@@ -98,9 +97,9 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 			log.Printf("Error getting parameter group %v: %v\n", parameterGroupName, err)
 		}
 		return nil, err
-	} else {
-		return &output.DBParameterGroups[0], err
 	}
+	return &output.DBParameterGroups[0], err
+
 }
 
 func (instances *DbInstances) restoreSnapshotCluster(store state.RDSRestorationStore) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
@@ -117,10 +116,11 @@ func (instances *DbInstances) restoreSnapshotCluster(store state.RDSRestorationS
 	return output, nil
 }
 
+// RestoreSnapshotInstance restores a single db instance from a snapshot
 func (instances *DbInstances) RestoreSnapshotInstance(store state.RDSRestorationStore) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
 
 	backupDbIden := fmt.Sprintf("%s-backup", *store.GetInstanceIdentifier())
-	input := rds.RestoreDBInstanceFromDBSnapshotInput{ // TODO actually figure this out
+	input := rds.RestoreDBInstanceFromDBSnapshotInput{
 		DBInstanceIdentifier: &backupDbIden,
 		DBSnapshotIdentifier: store.GetSnapshotIdentifier(),
 		AllocatedStorage:     store.GetAllocatedStorage(),
