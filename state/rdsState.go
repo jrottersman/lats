@@ -78,6 +78,17 @@ func GetRDSSnapshotOutput(s StateManager, snap string) (*types.DBSnapshot, error
 	return &snapshot, nil
 }
 
+func EncodeRDSClusterSnapshotOutput(snapshot *types.DBClusterSnapshot) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(snapshot)
+	if err != nil {
+		log.Fatalf("Error encoding our snapshot: %s", err)
+	}
+	return encoder
+}
+
 func GetRDSDatabaseInstanceOutput(s StateManager, dbName string) (*types.DBInstance, error) {
 	i := s.GetStateObject(dbName)
 	dbi, ok := i.(types.DBInstance)
