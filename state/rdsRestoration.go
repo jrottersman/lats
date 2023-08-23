@@ -8,9 +8,10 @@ import (
 )
 
 type RDSRestorationStore struct {
-	Snapshot *types.DBSnapshot
-	Instance *types.DBInstance
-	Cluster  *types.DBCluster
+	Snapshot        *types.DBSnapshot
+	Instance        *types.DBInstance
+	Cluster         *types.DBCluster
+	ClusterSnapshot *types.DBClusterSnapshot
 }
 
 func (r RDSRestorationStore) GetInstanceIdentifier() *string {
