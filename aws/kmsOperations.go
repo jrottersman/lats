@@ -27,8 +27,6 @@ type KmsConfig struct {
 
 // CreateKMSKey creates a new KMS key for multiregion deploys
 func (k KmsOperations) CreateKMSKey(cfg *KmsConfig) (*types.KeyMetadata, error) {
-	// TODO handle multiregion keys
-	// TODO handle key policies
 	input := &kms.CreateKeyInput{}
 	if cfg != nil {
 		input = handleKmsConfig(*cfg)
