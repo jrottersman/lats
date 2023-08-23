@@ -106,7 +106,7 @@ func (instances *DbInstances) restoreSnapshotCluster(store state.RDSRestorationS
 	backupClusterIden := fmt.Sprintf("%s-backup", *store.Cluster.DBClusterIdentifier)
 	input := rds.RestoreDBClusterFromSnapshotInput{ // TODO Actually figure this out
 		DBClusterIdentifier: aws.String(backupClusterIden),
-		SnapshotIdentifier:  aws.String(*store.Snapshot.DBSnapshotIdentifier),
+		SnapshotIdentifier:  store.GetSnapshotIdentifier(),
 	}
 	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(context.TODO(), &input)
 	if err != nil {
