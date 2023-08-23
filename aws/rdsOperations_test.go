@@ -18,7 +18,7 @@ type mockRDSClient struct{}
 func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput, optFns ...func(*rds.Options)) (*rds.DescribeDBInstancesOutput, error) {
 	f := "foo"
 	r := &rds.DescribeDBInstancesOutput{
-		DBInstances: []types.DBInstance{types.DBInstance{DBInstanceIdentifier: &f}},
+		DBInstances: []types.DBInstance{{DBInstanceIdentifier: &f}},
 	}
 	return r, nil
 }
@@ -36,7 +36,7 @@ func (m mockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateD
 func (m mockRDSClient) DescribeDBParameterGroups(ctx context.Context, params *rds.DescribeDBParameterGroupsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBParameterGroupsOutput, error) {
 	f := "foo"
 	r := rds.DescribeDBParameterGroupsOutput{
-		DBParameterGroups: []types.DBParameterGroup{types.DBParameterGroup{DBParameterGroupName: &f}},
+		DBParameterGroups: []types.DBParameterGroup{{DBParameterGroupName: &f}},
 	}
 	return &r, nil
 }
@@ -135,7 +135,6 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 		t.Errorf("error writing file %s", err)
 	}
 
-	var mu sync.Mutex
 	var s []state.StateKV
 	kv := state.StateKV{
 		Object:       "foo",
@@ -184,8 +183,8 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 	s = append(s, kv2)
 	s = append(s, kv3)
 	sm := state.StateManager{
-		mu,
-		s,
+		Mu:             sync.Mutex{},
+		StateLocations: s,
 	}
 
 	res, err := state.RDSRestorationStoreBuilder(sm, "foo")
@@ -223,7 +222,6 @@ func TestRestoreSnapshotInstance(t *testing.T) {
 		t.Errorf("error writing file %s", err)
 	}
 
-	var mu sync.Mutex
 	var s []state.StateKV
 	kv := state.StateKV{
 		Object:       "foo",
@@ -251,8 +249,8 @@ func TestRestoreSnapshotInstance(t *testing.T) {
 	}
 	s = append(s, kv2)
 	sm := state.StateManager{
-		mu,
-		s,
+		Mu:             sync.Mutex{},
+		StateLocations: s,
 	}
 
 	resp, err := state.RDSRestorationStoreBuilder(sm, "foo")
