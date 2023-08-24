@@ -99,6 +99,16 @@ func DecodeRDSClusterSnapshotOutput(b bytes.Buffer) types.DBClusterSnapshot {
 	return dbSnapshot
 }
 
+func GetRDSClusterSnapshotOutput(s StateManager, snap string) (*types.DBClusterSnapshot, error) {
+	i := s.GetStateObject(snap)
+	snapshot, ok := i.(types.DBClusterSnapshot)
+	if !ok {
+		str := fmt.Sprintf("error decoding cluster snapshot from interface %v", i)
+		return nil, errors.New(str)
+	}
+	return &snapshot, nil
+}
+
 func GetRDSDatabaseInstanceOutput(s StateManager, dbName string) (*types.DBInstance, error) {
 	i := s.GetStateObject(dbName)
 	dbi, ok := i.(types.DBInstance)
