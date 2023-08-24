@@ -111,6 +111,24 @@ func TestDecodeRDSSnapshotOutput(t *testing.T) {
 
 }
 
+func TestEncodeRDSClusterSnapshotOutput(t *testing.T) {
+
+	snap := types.DBClusterSnapshot{
+		AllocatedStorage: 1000,
+		PercentProgress:  100,
+	}
+	r := EncodeRDSClusterSnapshotOutput(&snap)
+	var result types.DBClusterSnapshot
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if result.AllocatedStorage != snap.AllocatedStorage {
+		t.Errorf("got %d expected %d", result.AllocatedStorage, snap.AllocatedStorage)
+	}
+}
+
 func TestWriteOutput(t *testing.T) {
 	type foo struct {
 		A string
