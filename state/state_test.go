@@ -127,6 +127,47 @@ func TestGetStateObject(t *testing.T) {
 	}
 }
 
+func TestGetStateObjectClusterSnapshot(t *testing.T) {
+	filename := "/tmp/foo"
+	snap := types.DBClusterSnapshot{
+		AllocatedStorage:    1000,
+		PercentProgress:     100,
+		DBClusterIdentifier: aws.String("foobar"),
+	}
+
+	defer os.Remove(filename)
+	r := EncodeRDSClusterSnapshotOutput(&snap)
+	_, err := WriteOutput(filename, r)
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+
+	var mu sync.Mutex
+	var s []StateKV
+	kv := StateKV{
+		Object:       "foo",
+		FileLocation: filename,
+		ObjectType:   ClusterSnapshotType,
+	}
+	s = append(s, kv)
+	sm := StateManager{
+		mu,
+		s,
+	}
+
+	result := sm.GetStateObject("foo")
+	if result == nil {
+		t.Errorf("result is nil")
+	}
+	res, ok := result.(types.DBClusterSnapshot)
+	if !ok {
+		t.Errorf("issue converting struct")
+	}
+	if *res.DBClusterIdentifier != "foobar" {
+		t.Errorf("got %s expected foobar", *res.DBClusterIdentifier)
+	}
+}
+
 func TestGetStateObjectInstance(t *testing.T) {
 	filename := "/tmp/foo"
 	dbi := types.DBInstance{
