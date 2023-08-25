@@ -54,6 +54,16 @@ func (r RDSRestorationStore) GetSnapshotIdentifier() *string {
 	return r.Snapshot.DBSnapshotIdentifier
 }
 
+func (r RDSRestorationStore) GetClusterSnapshotIdentifier() *string {
+	if r.ClusterSnapshot == nil {
+		return nil
+	}
+	if r.ClusterSnapshot.DBClusterSnapshotIdentifier == nil {
+		return nil
+	}
+	return r.ClusterSnapshot.DBClusterSnapshotIdentifier
+}
+
 func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSRestorationStore, error) {
 	snap, err := GetRDSSnapshotOutput(sm, snapshotName)
 	if err != nil {
