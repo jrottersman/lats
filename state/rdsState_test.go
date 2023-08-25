@@ -209,6 +209,43 @@ func TestGetRDSSnapshotOutput(t *testing.T) {
 	}
 }
 
+func TestGetRDSClusterSnapshotOutput(t *testing.T) {
+	filename := "/tmp/foo"
+	snap := types.DBClusterSnapshot{
+		AllocatedStorage:    1000,
+		PercentProgress:     100,
+		DBClusterIdentifier: aws.String("foobar"),
+	}
+
+	defer os.Remove(filename)
+	r := EncodeRDSClusterSnapshotOutput(&snap)
+	_, err := WriteOutput(filename, r)
+	if err != nil {
+		t.Errorf("error writing file %s", err)
+	}
+
+	var mu sync.Mutex
+	var s []StateKV
+	kv := StateKV{
+		Object:       "foo",
+		FileLocation: filename,
+		ObjectType:   ClusterSnapshotType,
+	}
+	s = append(s, kv)
+	sm := StateManager{
+		mu,
+		s,
+	}
+	newSnap, err := GetRDSClusterSnapshotOutput(sm, "foo")
+	if err != nil {
+		t.Errorf("got error: %s", err)
+	}
+
+	if *&newSnap.AllocatedStorage != 1000 {
+		t.Errorf("expected %d got 1000", *&newSnap.AllocatedStorage)
+	}
+}
+
 func TestGetRDSInstanceOutput(t *testing.T) {
 	filename := "/tmp/foo"
 	dbi := types.DBInstance{
