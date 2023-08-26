@@ -94,6 +94,16 @@ func (r RDSRestorationStore) GetKmsKey() *string {
 	return r.ClusterSnapshot.KmsKeyId
 }
 
+func (r RDSRestorationStore) GetClusterAZs() *[]string {
+	if r.ClusterSnapshot == nil {
+		return nil
+	}
+	if r.ClusterSnapshot.AvailabilityZones == nil {
+		return nil
+	}
+	return &r.ClusterSnapshot.AvailabilityZones
+}
+
 func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSRestorationStore, error) {
 	snap, err := GetRDSSnapshotOutput(sm, snapshotName)
 	if err != nil {
