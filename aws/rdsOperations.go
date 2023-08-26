@@ -104,10 +104,11 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 
 func (instances *DbInstances) restoreSnapshotCluster(store state.RDSRestorationStore) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
 	backupClusterIden := fmt.Sprintf("%s-backup", *store.Cluster.DBClusterIdentifier)
-	input := rds.RestoreDBClusterFromSnapshotInput{ // TODO Actually figure this out
+	input := rds.RestoreDBClusterFromSnapshotInput{
 		DBClusterIdentifier: aws.String(backupClusterIden),
 		SnapshotIdentifier:  store.GetClusterSnapshotIdentifier(),
 		Engine:              store.GetClusterEngine(),
+		AvailabilityZones:   *store.GetClusterAZs(),
 	}
 	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(context.TODO(), &input)
 	if err != nil {
