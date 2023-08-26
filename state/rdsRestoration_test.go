@@ -363,3 +363,46 @@ func TestRDSRestorationStore_GetKmsKey(t *testing.T) {
 		})
 	}
 }
+
+func TestRDSRestorationStore_GetClusterAZs(t *testing.T) {
+	type fields struct {
+		Snapshot        *types.DBSnapshot
+		Instance        *types.DBInstance
+		Cluster         *types.DBCluster
+		ClusterSnapshot *types.DBClusterSnapshot
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   *[]string
+	}{
+		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
+		{name: "RegularNil", fields: fields{nil, nil, nil, &types.DBClusterSnapshot{}}, want: nil},
+		{name: "Value", fields: fields{nil, nil, nil, &types.DBClusterSnapshot{AvailabilityZones: []string{"foo"}}}, want: &[]string{"foo"}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := RDSRestorationStore{
+				Snapshot:        tt.fields.Snapshot,
+				Instance:        tt.fields.Instance,
+				Cluster:         tt.fields.Cluster,
+				ClusterSnapshot: tt.fields.ClusterSnapshot,
+			}
+			got := r.GetClusterAZs()
+			if tt.want == nil {
+				if got != tt.want {
+					t.Errorf("RDSRestorationStore.GetClusterAZs() = %v, want %v", got, tt.want)
+				}
+			} else {
+				gotSlice := *got
+				gotZero := gotSlice[0]
+
+				wantSlice := *tt.want
+				wantZero := wantSlice[0]
+				if gotZero != wantZero {
+					t.Errorf("RDSRestorationStore.GetClusterAZs() = %v, want %v", got, tt.want)
+				}
+			}
+		})
+	}
+}
