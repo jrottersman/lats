@@ -129,6 +129,15 @@ func GetRDSDatabaseClusterOutput(s StateManager, dbName string) (*types.DBCluste
 	return &dbi, nil
 }
 
+func GetClusterInstances(s StateManager, clusterIdentifier string) ([]*types.DBInstance, error) {
+	for _, v := range s.StateLocations {
+		if v.ObjectType == RdsInstanceType {
+			return nil, nil
+		}
+	}
+	return nil, nil
+}
+
 // DecodeRDSSnapshhotOutput takes a bytes buffer and returns it to a DbSnapshot type in preperation of restoring the database
 func DecodeRDSSnapshotOutput(b bytes.Buffer) types.DBSnapshot {
 	var dbSnapshot types.DBSnapshot
