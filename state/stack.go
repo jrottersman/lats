@@ -27,6 +27,8 @@ func NewStack(name string, restorationObjectName string, objects []Object) Stack
 		_, ok := objs[order]
 		if !ok {
 			objs[order] = []Object{v}
+		} else {
+			objs[order] = append(objs[order], v)
 		}
 	}
 
