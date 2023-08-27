@@ -1,8 +1,17 @@
 package state
 
 type Object struct {
-	Object interface{}
-	Order  int
+	Object  interface{}
+	Order   int
+	ObjType string
+}
+
+func NewObject(obj interface{}, order int, objtype string) Object {
+	return Object{
+		Object:  obj,
+		Order:   order,
+		ObjType: objtype,
+	}
 }
 
 type Stack struct {
