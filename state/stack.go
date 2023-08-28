@@ -1,5 +1,11 @@
 package state
 
+import (
+	"bytes"
+	"encoding/gob"
+	"log"
+)
+
 type Object struct {
 	Object  interface{}
 	Order   int
@@ -18,6 +24,18 @@ type Stack struct {
 	Name                  string
 	RestorationObjectName string
 	Objects               map[int][]Object //int is the order in which we restore
+}
+
+func (s Stack) Encoder(filelocation string) (*bytes.Buffer, error) {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(s)
+	if err != nil {
+		log.Fatalf("Error encoding our snapshot: %s", err)
+		return nil, err
+	}
+	return &encoder, nil
 }
 
 func NewStack(name string, restorationObjectName string, objects []Object) Stack {
