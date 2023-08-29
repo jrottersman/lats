@@ -38,6 +38,20 @@ func (s Stack) Encoder() (*bytes.Buffer, error) {
 	return &encoder, nil
 }
 
+func (s Stack) Write(filename string) error {
+	b, err := s.Encoder()
+	if err != nil {
+		log.Fatalf("Error creating bytes %s", err)
+		return err
+	}
+	_, err = WriteOutput(filename, *b)
+	if err != nil {
+		log.Fatalf("error wrting output %s", err)
+		return err
+	}
+	return nil
+}
+
 func NewStack(name string, restorationObjectName string, objects []Object) Stack {
 	objs := make(map[int][]Object)
 	for _, v := range objects {
