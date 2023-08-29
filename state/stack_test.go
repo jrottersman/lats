@@ -2,6 +2,7 @@ package state
 
 import (
 	"encoding/gob"
+	"os"
 	"testing"
 )
 
@@ -70,5 +71,31 @@ func Test_Encoder(t *testing.T) {
 	}
 	if result.Name != stack.Name {
 		t.Errorf("got %s expected %s", result.Name, stack.Name)
+	}
+}
+
+func Test_Write(t *testing.T) {
+	name := "foo"
+	roname := "bar"
+
+	o1 := Object{
+		"tmp/foo",
+		1,
+		"RDSCluster",
+	}
+
+	o2 := Object{
+		"tmp/bar",
+		1,
+		"RDSCluster",
+	}
+	objects := []Object{o1, o2}
+
+	stack := NewStack(name, roname, objects)
+	filename := "/tmp/foobar"
+	defer os.Remove(filename)
+	err := stack.Write(filename)
+	if err != nil {
+		t.Errorf("got %s expected nil", err)
 	}
 }
