@@ -7,16 +7,16 @@ import (
 )
 
 type Object struct {
-	Object  interface{}
-	Order   int
-	ObjType string
+	FileName string
+	Order    int
+	ObjType  string
 }
 
-func NewObject(obj interface{}, order int, objtype string) Object {
+func NewObject(filename string, order int, objtype string) Object {
 	return Object{
-		Object:  obj,
-		Order:   order,
-		ObjType: objtype,
+		FileName: filename,
+		Order:    order,
+		ObjType:  objtype,
 	}
 }
 
@@ -26,7 +26,7 @@ type Stack struct {
 	Objects               map[int][]Object //int is the order in which we restore
 }
 
-func (s Stack) Encoder(filelocation string) (*bytes.Buffer, error) {
+func (s Stack) Encoder() (*bytes.Buffer, error) {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
 

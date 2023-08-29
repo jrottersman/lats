@@ -2,16 +2,14 @@ package state
 
 import (
 	"testing"
-
-	"github.com/aws/aws-sdk-go-v2/service/rds"
 )
 
 func Test_NewObject(t *testing.T) {
-	obj := rds.RestoreDBClusterFromSnapshotInput{}
+	filename := "/tmp/foo"
 	order := 5
 	objType := "rdsInstance"
 
-	resp := NewObject(obj, order, objType)
+	resp := NewObject(filename, order, objType)
 	if resp.Order != order {
 		t.Errorf("NewObject order expected %d got %d", resp.Order, order)
 	}
@@ -22,13 +20,13 @@ func Test_NewStack(t *testing.T) {
 	roname := "bar"
 
 	o1 := Object{
-		rds.RestoreDBClusterFromSnapshotInput{},
+		"tmp/foo",
 		1,
 		"RDSCluster",
 	}
 
 	o2 := Object{
-		rds.RestoreDBClusterFromS3Input{},
+		"tmp/bar",
 		1,
 		"RDSCluster",
 	}
