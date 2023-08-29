@@ -70,3 +70,7 @@ func NewStack(name string, restorationObjectName string, objects []Object) Stack
 		Objects:               objs,
 	}
 }
+
+func ReadStack(filename string) (*Stack, error) {
+	return nil, nil
+}
