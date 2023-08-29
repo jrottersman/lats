@@ -3,7 +3,9 @@ package state
 import (
 	"bytes"
 	"encoding/gob"
+	"fmt"
 	"log"
+	"os"
 )
 
 type Object struct {
@@ -72,5 +74,18 @@ func NewStack(name string, restorationObjectName string, objects []Object) Stack
 }
 
 func ReadStack(filename string) (*Stack, error) {
-	return nil, nil
+	f, err := os.ReadFile(filename)
+	if err != nil {
+		fmt.Printf("Error reading the file %s", err)
+		return nil, err
+	}
+	buf := bytes.NewBuffer(f)
+	var stack Stack
+	dec := gob.NewDecoder(buf)
+	err = dec.Decode(&stack)
+	if err != nil {
+		fmt.Printf("error decoding the gob %s", err)
+		return nil, err
+	}
+	return &stack, nil
 }
