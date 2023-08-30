@@ -34,7 +34,7 @@ func (s Stack) Encoder() (*bytes.Buffer, error) {
 
 	err := enc.Encode(s)
 	if err != nil {
-		log.Fatalf("Error encoding our snapshot: %s", err)
+		log.Fatalf("Error encoding our stack: %s", err)
 		return nil, err
 	}
 	return &encoder, nil
