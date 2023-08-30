@@ -24,8 +24,8 @@ type StateKV struct {
 }
 
 type StackLookup struct {
-	Name string `json:name`
-	File string `json:file`
+	Name string `json:"name"`
+	File string `json:"file"`
 }
 
 type StateManager struct {
