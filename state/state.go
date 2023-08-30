@@ -23,6 +23,11 @@ type StateKV struct {
 	ObjectType   string `json:"objectType"`
 }
 
+type StackLookup struct {
+	Name string `json:name`
+	File string `json:file`
+}
+
 type StateManager struct {
 	Mu             sync.Mutex
 	StateLocations []StateKV `json:"stateLocations"`
