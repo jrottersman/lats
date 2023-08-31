@@ -161,3 +161,20 @@ func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 	}
 	return n, err
 }
+
+func CheckSnasphotType(snapshot interface{}) {
+	switch snapshot.(type) {
+	case types.DBClusterSnapshot:
+		GenerateRDSClusterStack()
+	case types.DBSnapshot:
+		GenerateRDSInstanceStack()
+	}
+}
+
+func GenerateRDSClusterStack() {
+	fmt.Println("TODO: implement cluster type")
+}
+
+func GenerateRDSInstanceStack() {
+	fmt.Println("TODO: Implement instance type")
+}
