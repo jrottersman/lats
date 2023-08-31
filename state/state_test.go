@@ -274,3 +274,34 @@ func TestAppendStack(t *testing.T) {
 		t.Errorf("length should be 1 is %d", len(sf.Stacks))
 	}
 }
+
+func TestGetStack(t *testing.T) {
+	filename := "/tmp/bar"
+	stackName := "bar"
+	defer os.Remove(filename)
+
+	sf := StackFiles{
+		Stacks: []StackLookup{},
+	}
+	sl := StackLookup{
+		Name: stackName,
+		File: filename,
+	}
+	sf.AppendStackLookup(sl)
+
+	st := Stack{
+		Name: stackName,
+	}
+	err := st.Write(filename)
+	if err != nil {
+		t.Errorf("err should be nil it's %s", err)
+	}
+	s, err := sf.GetStack(filename)
+	if err != nil {
+		t.Errorf("stack error should be nil it's %s", err)
+	}
+	if s.Name != stackName {
+		t.Errorf("expected %s got %s", stackName, s.Name)
+	}
+
+}

@@ -58,8 +58,8 @@ func (sf *StackFiles) GetStack(name string) (*Stack, error) {
 			}
 			return stack, err
 		}
-		return nil, fmt.Errorf("Stack with name %s doesn't exist", name)
 	}
+	return nil, fmt.Errorf("Stack with name %s doesn't exist", name)
 }
 
 // StateKV manages our state file and object location
