@@ -42,6 +42,10 @@ type StackFiles struct {
 	Stacks []StackLookup
 }
 
+func (sf StackFiles) AppendStackLookup(sl StackLookup) {
+	sf.Stacks = append(sf.Stacks, sl)
+}
+
 // StateKV manages our state file and object location
 type StateKV struct {
 	Object       string `json:"object"`
