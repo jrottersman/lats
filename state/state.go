@@ -38,11 +38,13 @@ func CreateStackLookUp(stack Stack, filename ...string) StackLookup {
 	}
 }
 
+//StackFiles stores the locations of our stacks
 type StackFiles struct {
 	Stacks []StackLookup
 }
 
-func (sf StackFiles) AppendStackLookup(sl StackLookup) {
+//Append to our StackFiles
+func (sf *StackFiles) AppendStackLookup(sl StackLookup) {
 	sf.Stacks = append(sf.Stacks, sl)
 }
 

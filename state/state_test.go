@@ -260,3 +260,17 @@ func TestCreateStackLookUp(t *testing.T) {
 		t.Errorf("expected %s got %s", filename, resp.File)
 	}
 }
+
+func TestAppendStack(t *testing.T) {
+	sf := StackFiles{
+		Stacks: []StackLookup{},
+	}
+	sl := StackLookup{
+		Name: "bar",
+		File: "/tmp/bar",
+	}
+	sf.AppendStackLookup(sl)
+	if len(sf.Stacks) != 1 {
+		t.Errorf("length should be 1 is %d", len(sf.Stacks))
+	}
+}
