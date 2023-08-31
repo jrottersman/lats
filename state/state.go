@@ -48,6 +48,20 @@ func (sf *StackFiles) AppendStackLookup(sl StackLookup) {
 	sf.Stacks = append(sf.Stacks, sl)
 }
 
+//GetStack get's a single stack from our stack list
+func (sf *StackFiles) GetStack(name string) (*Stack, error) {
+	for _, v := range sf.Stacks {
+		if v.Name == name {
+			stack, err := ReadStack(v.File)
+			if err != nil {
+				return nil, err
+			}
+			return stack, err
+		}
+		return nil, fmt.Errorf("Stack with name %s doesn't exist", name)
+	}
+}
+
 // StateKV manages our state file and object location
 type StateKV struct {
 	Object       string `json:"object"`
