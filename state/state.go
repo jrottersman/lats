@@ -24,15 +24,17 @@ type StackLookup struct {
 }
 
 //CreateStackLookUp writes a stack to disk and creates a LookUp for that stack
-func CreateStackLookUp(stack Stack) StackLookup {
-	filename := helpers.RandomStateFileName()
-	err := stack.Write(*filename)
+func CreateStackLookUp(stack Stack, filename ...string) StackLookup {
+	if filename == nil {
+		filename[0] = *helpers.RandomStateFileName()
+	}
+	err := stack.Write(filename[0])
 	if err != nil {
 		fmt.Printf("error creating stack %s", err)
 	}
 	return StackLookup{
 		Name: stack.Name,
-		File: *filename,
+		File: filename[0],
 	}
 }
 

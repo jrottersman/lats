@@ -246,3 +246,17 @@ func TestGetStateObjectKMS(t *testing.T) {
 		t.Errorf("got %s expected foo", *res.KeyId)
 	}
 }
+
+func TestCreateStackLookUp(t *testing.T) {
+	filename := "/tmp/foo"
+	defer os.Remove(filename)
+
+	s := Stack{
+		Name: "bar",
+	}
+
+	resp := CreateStackLookUp(s, filename)
+	if resp.File != filename {
+		t.Errorf("expected %s got %s", filename, resp.File)
+	}
+}
