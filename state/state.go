@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"sync"
+
+	"github.com/jrottersman/lats/helpers"
 )
 
 // THis whole approach might need some serious refactoring I should be using a map I think s
@@ -16,16 +18,33 @@ const KMSKeyType = "KMSKey"
 const RdsClusterType = "RDSCluster"
 const ClusterSnapshotType = "RDSClusterSnapshot"
 
+type StackLookup struct {
+	Name string `json:"name"`
+	File string `json:"file"`
+}
+
+//CreateStackLookUp writes a stack to disk and creates a LookUp for that stack
+func CreateStackLookUp(stack Stack) StackLookup {
+	filename := helpers.RandomStateFileName()
+	err := stack.Write(*filename)
+	if err != nil {
+		fmt.Printf("error creating stack %s", err)
+	}
+	return StackLookup{
+		Name: stack.Name,
+		File: *filename,
+	}
+}
+
+type StackFiles struct {
+	Stacks []StackLookup
+}
+
 // StateKV manages our state file and object location
 type StateKV struct {
 	Object       string `json:"object"`
 	FileLocation string `json:"fileLocation"`
 	ObjectType   string `json:"objectType"`
-}
-
-type StackLookup struct {
-	Name string `json:"name"`
-	File string `json:"file"`
 }
 
 type StateManager struct {
