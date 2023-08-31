@@ -296,7 +296,7 @@ func TestGetStack(t *testing.T) {
 	if err != nil {
 		t.Errorf("err should be nil it's %s", err)
 	}
-	s, err := sf.GetStack(filename)
+	s, err := sf.GetStack(stackName)
 	if err != nil {
 		t.Errorf("stack error should be nil it's %s", err)
 	}
