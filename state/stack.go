@@ -89,3 +89,7 @@ func ReadStack(filename string) (*Stack, error) {
 	}
 	return &stack, nil
 }
+
+func DeleteStack(filename string) {
+	os.Remove(filename)
+}
