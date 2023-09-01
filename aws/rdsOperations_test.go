@@ -67,6 +67,20 @@ func (m mockRDSClient) RestoreDBInstanceFromDBSnapshot(ctx context.Context, para
 	return r, nil
 }
 
+func TestGetCluster(t *testing.T) {
+	expected := "foo"
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	resp, err := dbi.GetCluster(expected)
+	if err != nil {
+		t.Errorf("got error %s", err)
+	}
+	if *resp.DBClusterIdentifier != expected {
+		t.Errorf("got %s expected %s", *resp.DBClusterIdentifier, expected)
+	}
+}
 func TestGetInstance(t *testing.T) {
 	expected := "foo"
 	c := mockRDSClient{}
