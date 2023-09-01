@@ -62,6 +62,15 @@ func (sf *StackFiles) GetStack(name string) (*Stack, error) {
 	return nil, fmt.Errorf("Stack with name %s doesn't exist", name)
 }
 
+func (sf *StackFiles) RemoveStack(name string) {
+	for i, v := range sf.Stacks {
+		if v.Name == name {
+			DeleteStack(v.File)
+			sf.Stacks = append(sf.Stacks[:i], sf.Stacks[i+1:]...)
+		}
+	}
+}
+
 // StateKV manages our state file and object location
 type StateKV struct {
 	Object       string `json:"object"`
