@@ -305,3 +305,29 @@ func TestGetStack(t *testing.T) {
 	}
 
 }
+
+func TestRemoveStack(t *testing.T) {
+	filename := "/tmp/bar"
+	stackName := "bar"
+
+	sf := StackFiles{
+		Stacks: []StackLookup{},
+	}
+	sl := StackLookup{
+		Name: stackName,
+		File: filename,
+	}
+	sf.AppendStackLookup(sl)
+
+	st := Stack{
+		Name: stackName,
+	}
+	err := st.Write(filename)
+	if err != nil {
+		t.Errorf("failed to write %s", err)
+	}
+	sf.RemoveStack(stackName)
+	if len(sf.Stacks) != 0 {
+		t.Errorf("length should be 0 is %d", len(sf.Stacks))
+	}
+}
