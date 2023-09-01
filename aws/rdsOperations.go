@@ -14,6 +14,7 @@ import (
 
 // Client is used for mocking the AWS RDS instance for testing
 type Client interface {
+	DescribeDBClusters(ctx context.Context, params *rds.DescribeDBClustersInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClustersOutput, error)
 	DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput, optFns ...func(*rds.Options)) (*rds.DescribeDBInstancesOutput, error)
 	CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error)
 	DescribeDBParameterGroups(ctx context.Context, params *rds.DescribeDBParameterGroupsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBParameterGroupsOutput, error)
@@ -45,6 +46,24 @@ func (instances *DbInstances) GetInstance(instanceName string) (
 		return nil, err
 	}
 	return &output.DBInstances[0], nil
+}
+
+func (instances *DbInstances) GetCluster(clusterName string) (*types.DBCluster, error) {
+	output, err := instances.RdsClient.DescribeDBClusters(context.TODO(),
+		&rds.DescribeDBClustersInput{
+			DBClusterIdentifier: aws.String(clusterName),
+		})
+	if err != nil {
+		var notFoundError *types.DBClusterNotFoundFault
+		if errors.As(err, &notFoundError) {
+			log.Printf("DB cluster %v does not exist.\n", clusterName)
+			err = nil
+		} else {
+			log.Printf("Couldn't get DB cluster %v: %v\n", clusterName, err)
+		}
+		return nil, err
+	}
+	return &output.DBClusters[0], err
 }
 
 // CreateSnapshot cretaes an AWS snapshot
