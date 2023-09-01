@@ -66,6 +66,21 @@ func (instances *DbInstances) GetCluster(clusterName string) (*types.DBCluster, 
 	return &output.DBClusters[0], err
 }
 
+func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]types.DBInstance, error) {
+	if c.DBClusterMembers == nil {
+		return nil, nil
+	}
+	dbs := []types.DBInstance{}
+	for _, v := range c.DBClusterMembers {
+		db, err := instances.GetInstance(*v.DBInstanceIdentifier)
+		if err != nil {
+			log.Printf("error with get instance %s", err)
+		}
+		dbs = append(dbs, *db)
+	}
+	return dbs, nil
+}
+
 // CreateSnapshot cretaes an AWS snapshot
 // :instanceName - name of the database we want to backup
 // :snapShotName name of the backup we are creating
