@@ -15,6 +15,14 @@ import (
 
 type mockRDSClient struct{}
 
+func (m mockRDSClient) DescribeDBClusters(ctx context.Context, params *rds.DescribeDBClustersInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClustersOutput, error) {
+	f := "foo"
+	r := &rds.DescribeDBClustersOutput{
+		DBClusters: []types.DBCluster{{DBClusterIdentifier: &f}},
+	}
+	return r, nil
+}
+
 func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput, optFns ...func(*rds.Options)) (*rds.DescribeDBInstancesOutput, error) {
 	f := "foo"
 	r := &rds.DescribeDBInstancesOutput{
@@ -23,7 +31,6 @@ func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.Descr
 	return r, nil
 }
 
-// TODO create mock CreateSnapshot function
 func (m mockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error) {
 	r := &rds.CreateDBSnapshotOutput{
 		DBSnapshot: &types.DBSnapshot{
