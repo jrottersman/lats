@@ -132,3 +132,32 @@ func Test_ReadStack(t *testing.T) {
 		t.Errorf("got %s expected %s", sp.Name, stack.Name)
 	}
 }
+
+func Test_DeleteStack(t *testing.T) {
+	name := "foo"
+	roname := "bar"
+
+	o1 := Object{
+		"tmp/foo",
+		1,
+		"RDSCluster",
+	}
+
+	o2 := Object{
+		"tmp/bar",
+		1,
+		"RDSCluster",
+	}
+	objects := []Object{o1, o2}
+
+	stack := NewStack(name, roname, objects)
+	filename := "/tmp/foobar"
+	err := stack.Write(filename)
+	if err != nil {
+		t.Errorf("writing got %s expected nil", err)
+	}
+	fe := DeleteStack(filename)
+	if fe != nil {
+		t.Errorf("delete stack error %s", fe)
+	}
+}

@@ -90,6 +90,7 @@ func ReadStack(filename string) (*Stack, error) {
 	return &stack, nil
 }
 
-func DeleteStack(filename string) {
-	os.Remove(filename)
+func DeleteStack(filename string) error {
+	err := os.Remove(filename)
+	return err
 }
