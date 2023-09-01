@@ -18,7 +18,7 @@ type mockRDSClient struct{}
 func (m mockRDSClient) DescribeDBClusters(ctx context.Context, params *rds.DescribeDBClustersInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClustersOutput, error) {
 	f := "foo"
 	r := &rds.DescribeDBClustersOutput{
-		DBClusters: []types.DBCluster{{DBClusterIdentifier: &f}},
+		DBClusters: []types.DBCluster{{DBClusterIdentifier: &f, DBClusterMembers: []types.DBClusterMember{{DBInstanceIdentifier: &f}}}},
 	}
 	return r, nil
 }
@@ -93,6 +93,25 @@ func TestGetInstance(t *testing.T) {
 	}
 	if *resp.DBInstanceIdentifier != expected {
 		t.Errorf("got %s expected %s", *resp.DBInstanceIdentifier, expected)
+	}
+}
+
+func TestGetInstanceFromCluster(t *testing.T) {
+	expected := "foo"
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	resp, err := dbi.GetCluster(expected)
+	if err != nil {
+		t.Errorf("got error %s", err)
+	}
+	r, err := dbi.GetInstancesFromCluster(resp)
+	if err != nil {
+		t.Errorf("got error %s", err)
+	}
+	if *r[0].DBInstanceIdentifier != expected {
+		t.Errorf("got %s expected %s", *r[0].DBInstanceIdentifier, expected)
 	}
 }
 
