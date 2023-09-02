@@ -75,6 +75,13 @@ func (r RDSRestorationStore) GetSnapshotIdentifier() *string {
 	return r.Snapshot.DBSnapshotIdentifier
 }
 
+func (r RDSRestorationStore) GetEnabledCloudwatchLogsExports() []string {
+	if r.Instance == nil {
+		return []string{}
+	}
+	return r.Instance.EnabledCloudwatchLogsExports
+}
+
 func (r RDSRestorationStore) GetClusterSnapshotIdentifier() *string {
 	if r.ClusterSnapshot == nil {
 		return nil
