@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
@@ -87,6 +88,18 @@ func EncodeRDSClusterSnapshotOutput(snapshot *types.DBClusterSnapshot) bytes.Buf
 		log.Fatalf("Error encoding our snapshot: %s", err)
 	}
 	return encoder
+}
+
+func GenerateRestoreDBInstanceFromDBSnapshotInput(instance *types.DBInstance, snapshot *types.DBSnapshot) *rds.RestoreDBInstanceFromDBSnapshotInput {
+	id := instance.DBInstanceClass
+	allocatedStorage := snapshot.AllocatedStorage
+	AutoMinorVersionUpgrade := instance.AutoMinorVersionUpgrade
+	backupTarget := instance.BackupTarget
+	instanceClass := instance.DBInstanceClass
+	dbSnapshotId := snapshot.DBSnapshotIdentifier
+	deleteProtection := instance.DeletionProtection
+	cloudwatchLogs := instance.EnabledCloudwatchLogsExports
+	return &rds.RestoreDBInstanceFromDBSnapshotInput{}
 }
 
 func DecodeRDSClusterSnapshotOutput(b bytes.Buffer) types.DBClusterSnapshot {
