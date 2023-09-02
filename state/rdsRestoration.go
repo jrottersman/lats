@@ -58,6 +58,13 @@ func (r RDSRestorationStore) GetBackupTarget() *string {
 	return r.Instance.BackupTarget
 }
 
+func (r RDSRestorationStore) GetDeleteProtection() bool {
+	if r.Instance == nil {
+		return false
+	}
+	return r.Instance.DeletionProtection
+}
+
 func (r RDSRestorationStore) GetSnapshotIdentifier() *string {
 	if r.Snapshot == nil {
 		return nil
