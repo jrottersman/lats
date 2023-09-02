@@ -406,3 +406,33 @@ func TestRDSRestorationStore_GetClusterAZs(t *testing.T) {
 		})
 	}
 }
+
+func TestRDSRestorationStore_GetAutoMinorVersionUpgrade(t *testing.T) {
+	type fields struct {
+		Snapshot        *types.DBSnapshot
+		Instance        *types.DBInstance
+		Cluster         *types.DBCluster
+		ClusterSnapshot *types.DBClusterSnapshot
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   bool
+	}{
+		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil, nil}, want: false},
+		{name: "GetData", fields: fields{nil, &types.DBInstance{AutoMinorVersionUpgrade: true}, nil, nil}, want: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := RDSRestorationStore{
+				Snapshot:        tt.fields.Snapshot,
+				Instance:        tt.fields.Instance,
+				Cluster:         tt.fields.Cluster,
+				ClusterSnapshot: tt.fields.ClusterSnapshot,
+			}
+			if got := r.GetAutoMinorVersionUpgrade(); got != tt.want {
+				t.Errorf("RDSRestorationStore.GetAutoMinorVersionUpgrade() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
