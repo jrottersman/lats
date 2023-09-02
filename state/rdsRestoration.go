@@ -44,6 +44,10 @@ func (r RDSRestorationStore) GetAllocatedStorage() *int32 {
 	return &r.Snapshot.AllocatedStorage
 }
 
+func (r RDSRestorationStore) GetAutoMinorVersionUpgrade() bool {
+	return r.Instance.AutoMinorVersionUpgrade
+}
+
 func (r RDSRestorationStore) GetSnapshotIdentifier() *string {
 	if r.Snapshot == nil {
 		return nil

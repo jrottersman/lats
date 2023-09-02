@@ -90,15 +90,15 @@ func EncodeRDSClusterSnapshotOutput(snapshot *types.DBClusterSnapshot) bytes.Buf
 	return encoder
 }
 
-func GenerateRestoreDBInstanceFromDBSnapshotInput(instance *types.DBInstance, snapshot *types.DBSnapshot) *rds.RestoreDBInstanceFromDBSnapshotInput {
-	id := instance.DBInstanceClass
-	allocatedStorage := snapshot.AllocatedStorage
-	AutoMinorVersionUpgrade := instance.AutoMinorVersionUpgrade
-	backupTarget := instance.BackupTarget
-	instanceClass := instance.DBInstanceClass
-	dbSnapshotId := snapshot.DBSnapshotIdentifier
-	deleteProtection := instance.DeletionProtection
-	cloudwatchLogs := instance.EnabledCloudwatchLogsExports
+func GenerateRestoreDBInstanceFromDBSnapshotInput(r RDSRestorationStore) *rds.RestoreDBInstanceFromDBSnapshotInput {
+	// id := instance.DBInstanceClass //have this gettewrr
+	// allocatedStorage := snapshot.AllocatedStorage // have this getter
+	// AutoMinorVersionUpgrade := instance.AutoMinorVersionUpgrade
+	// backupTarget := instance.BackupTarget
+	// instanceClass := instance.DBInstanceClass
+	// dbSnapshotId := snapshot.DBSnapshotIdentifier
+	// deleteProtection := instance.DeletionProtection
+	// cloudwatchLogs := instance.EnabledCloudwatchLogsExports
 	return &rds.RestoreDBInstanceFromDBSnapshotInput{}
 }
 
