@@ -419,6 +419,7 @@ func TestRDSRestorationStore_GetAutoMinorVersionUpgrade(t *testing.T) {
 		fields fields
 		want   bool
 	}{
+		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: false},
 		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil, nil}, want: false},
 		{name: "GetData", fields: fields{nil, &types.DBInstance{AutoMinorVersionUpgrade: true}, nil, nil}, want: true},
 	}
@@ -432,6 +433,44 @@ func TestRDSRestorationStore_GetAutoMinorVersionUpgrade(t *testing.T) {
 			}
 			if got := r.GetAutoMinorVersionUpgrade(); got != tt.want {
 				t.Errorf("RDSRestorationStore.GetAutoMinorVersionUpgrade() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRDSRestorationStore_GetBackupTarget(t *testing.T) {
+	type fields struct {
+		Snapshot        *types.DBSnapshot
+		Instance        *types.DBInstance
+		Cluster         *types.DBCluster
+		ClusterSnapshot *types.DBClusterSnapshot
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   *string
+	}{
+		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
+		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil, nil}, want: nil},
+		{name: "GetData", fields: fields{nil, &types.DBInstance{BackupTarget: aws.String("foo")}, nil, nil}, want: aws.String("foo")},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := RDSRestorationStore{
+				Snapshot:        tt.fields.Snapshot,
+				Instance:        tt.fields.Instance,
+				Cluster:         tt.fields.Cluster,
+				ClusterSnapshot: tt.fields.ClusterSnapshot,
+			}
+			got := r.GetBackupTarget()
+			if got == nil {
+				if got != tt.want {
+					t.Errorf("RDSRestorationStore.GetBackupTarget() = %v, want %v", got, tt.want)
+				}
+			} else {
+				if *got != *tt.want {
+					t.Errorf("RDSRestorationStore.GetBackupTarget() = %v, want %v", *got, *tt.want)
+				}
 			}
 		})
 	}
