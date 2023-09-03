@@ -2,6 +2,7 @@ package state
 
 import (
 	"os"
+	"reflect"
 	"sync"
 	"testing"
 
@@ -502,6 +503,37 @@ func TestRDSRestorationStore_GetDeleteProtection(t *testing.T) {
 			}
 			if got := r.GetDeleteProtection(); got != tt.want {
 				t.Errorf("RDSRestorationStore.GetDeleteProtection() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRDSRestorationStore_GetEnabledCloudwatchLogsExports(t *testing.T) {
+	type fields struct {
+		Snapshot        *types.DBSnapshot
+		Instance        *types.DBInstance
+		Cluster         *types.DBCluster
+		ClusterSnapshot *types.DBClusterSnapshot
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   []string
+	}{
+		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: []string{}},
+		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil, nil}, want: []string{}},
+		{name: "GetData", fields: fields{nil, &types.DBInstance{EnabledCloudwatchLogsExports: []string{"error"}}, nil, nil}, want: []string{"error"}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := RDSRestorationStore{
+				Snapshot:        tt.fields.Snapshot,
+				Instance:        tt.fields.Instance,
+				Cluster:         tt.fields.Cluster,
+				ClusterSnapshot: tt.fields.ClusterSnapshot,
+			}
+			if got := r.GetEnabledCloudwatchLogsExports(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RDSRestorationStore.GetEnabledCloudwatchLogsExports() = %v, want %v", got, tt.want)
 			}
 		})
 	}

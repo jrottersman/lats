@@ -79,6 +79,9 @@ func (r RDSRestorationStore) GetEnabledCloudwatchLogsExports() []string {
 	if r.Instance == nil {
 		return []string{}
 	}
+	if len(r.Instance.EnabledCloudwatchLogsExports) == 0 {
+		return []string{}
+	}
 	return r.Instance.EnabledCloudwatchLogsExports
 }
 
