@@ -103,6 +103,19 @@ func GenerateRestoreDBInstanceFromDBSnapshotInput(r RDSRestorationStore) *rds.Re
 	}
 }
 
+func GenerateRestoreDBInstanceFromDBClusterSnapshotInput(r RDSRestorationStore) *rds.RestoreDBInstanceFromDBSnapshotInput {
+	return &rds.RestoreDBInstanceFromDBSnapshotInput{
+		DBInstanceClass:             r.GetInstanceClass(),
+		DBInstanceIdentifier:        r.GetInstanceIdentifier(),
+		AutoMinorVersionUpgrade:     r.GetAutoMinorVersionUpgrade(),
+		AllocatedStorage:            r.GetAllocatedStorage(),
+		BackupTarget:                r.GetBackupTarget(),
+		DBClusterSnapshotIdentifier: r.GetClusterSnapshotIdentifier(),
+		DeletionProtection:          r.GetDeleteProtection(),
+		EnableCloudwatchLogsExports: r.GetEnabledCloudwatchLogsExports(),
+	}
+}
+
 func DecodeRDSClusterSnapshotOutput(b bytes.Buffer) types.DBClusterSnapshot {
 	var dbSnapshot types.DBClusterSnapshot
 	dec := gob.NewDecoder(&b)
