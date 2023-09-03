@@ -44,11 +44,11 @@ func (r RDSRestorationStore) GetAllocatedStorage() *int32 {
 	return &r.Snapshot.AllocatedStorage
 }
 
-func (r RDSRestorationStore) GetAutoMinorVersionUpgrade() bool {
+func (r RDSRestorationStore) GetAutoMinorVersionUpgrade() *bool {
 	if r.Instance == nil {
-		return false
+		return nil
 	}
-	return r.Instance.AutoMinorVersionUpgrade
+	return &r.Instance.AutoMinorVersionUpgrade
 }
 
 func (r RDSRestorationStore) GetBackupTarget() *string {

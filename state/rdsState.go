@@ -91,12 +91,11 @@ func EncodeRDSClusterSnapshotOutput(snapshot *types.DBClusterSnapshot) bytes.Buf
 }
 
 func GenerateRestoreDBInstanceFromDBSnapshotInput(r RDSRestorationStore) *rds.RestoreDBInstanceFromDBSnapshotInput {
-	autominorversion := r.GetAutoMinorVersionUpgrade()
 	deleteprotection := r.GetDeleteProtection()
 	return &rds.RestoreDBInstanceFromDBSnapshotInput{
 		DBInstanceClass:             r.GetInstanceClass(),
 		DBInstanceIdentifier:        r.GetInstanceIdentifier(),
-		AutoMinorVersionUpgrade:     &autominorversion, // Think about refactoring function to return a *bool
+		AutoMinorVersionUpgrade:     r.GetAutoMinorVersionUpgrade(),
 		AllocatedStorage:            r.GetAllocatedStorage(),
 		BackupTarget:                r.GetBackupTarget(),
 		DBSnapshotIdentifier:        r.GetSnapshotIdentifier(),
