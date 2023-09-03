@@ -318,3 +318,15 @@ func TestGetRDSClusterOutput(t *testing.T) {
 		t.Errorf("expected %d got 1000", *&newDbi.AllocatedStorage)
 	}
 }
+
+func TestGenerateRestoreDBInstanceFromDBSnapshotInput(t *testing.T) {
+	rStore := RDSRestorationStore{
+		Snapshot: &types.DBSnapshot{DBSnapshotIdentifier: aws.String("boo")},
+		Instance: &types.DBInstance{},
+	}
+
+	resp := GenerateRestoreDBInstanceFromDBSnapshotInput(rStore)
+	if *resp.DBSnapshotIdentifier != "boo" {
+		t.Errorf("expected boo got %s", *resp.DBSnapshotIdentifier)
+	}
+}
