@@ -91,14 +91,6 @@ func EncodeRDSClusterSnapshotOutput(snapshot *types.DBClusterSnapshot) bytes.Buf
 }
 
 func GenerateRestoreDBInstanceFromDBSnapshotInput(r RDSRestorationStore) *rds.RestoreDBInstanceFromDBSnapshotInput {
-	// id := instance.DBInstanceClass //have this gettewrr
-	// allocatedStorage := snapshot.AllocatedStorage // have this getter
-	// AutoMinorVersionUpgrade := instance.AutoMinorVersionUpgrade
-	// backupTarget := instance.BackupTarget
-	// instanceClass := instance.DBInstanceClass
-	// dbSnapshotId := snapshot.DBSnapshotIdentifier
-	// deleteProtection := instance.DeletionProtection
-	// cloudwatchLogs := instance.EnabledCloudwatchLogsExports
 	autominorversion := r.GetAutoMinorVersionUpgrade()
 	deleteprotection := r.GetDeleteProtection()
 	return &rds.RestoreDBInstanceFromDBSnapshotInput{
@@ -108,7 +100,7 @@ func GenerateRestoreDBInstanceFromDBSnapshotInput(r RDSRestorationStore) *rds.Re
 		AllocatedStorage:            r.GetAllocatedStorage(),
 		BackupTarget:                r.GetBackupTarget(),
 		DBSnapshotIdentifier:        r.GetSnapshotIdentifier(),
-		DeletionProtection:          &deleteprotection,
+		DeletionProtection:          &deleteprotection, // Think about refactoring function to return a *bool
 		EnableCloudwatchLogsExports: r.GetEnabledCloudwatchLogsExports(),
 	}
 }
