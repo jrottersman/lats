@@ -487,6 +487,8 @@ func TestRDSRestorationStore_GetBackupTarget(t *testing.T) {
 }
 
 func TestRDSRestorationStore_GetDeleteProtection(t *testing.T) {
+	pFalse := false
+	pTrue := true
 	type fields struct {
 		Snapshot        *types.DBSnapshot
 		Instance        *types.DBInstance
@@ -496,11 +498,11 @@ func TestRDSRestorationStore_GetDeleteProtection(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-		want   bool
+		want   *bool
 	}{
-		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: false},
-		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil, nil}, want: false},
-		{name: "GetData", fields: fields{nil, &types.DBInstance{DeletionProtection: true}, nil, nil}, want: true},
+		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
+		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil, nil}, want: &pFalse},
+		{name: "GetData", fields: fields{nil, &types.DBInstance{DeletionProtection: true}, nil, nil}, want: &pTrue},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -510,8 +512,15 @@ func TestRDSRestorationStore_GetDeleteProtection(t *testing.T) {
 				Cluster:         tt.fields.Cluster,
 				ClusterSnapshot: tt.fields.ClusterSnapshot,
 			}
-			if got := r.GetDeleteProtection(); got != tt.want {
-				t.Errorf("RDSRestorationStore.GetDeleteProtection() = %v, want %v", got, tt.want)
+			got := r.GetDeleteProtection()
+			if got == nil {
+				if got != tt.want {
+					t.Errorf("RDSRestorationStore.GetDeleteProtection() = %v, want %v", got, tt.want)
+				}
+			} else {
+				if *got != *tt.want {
+					t.Errorf("RDSRestorationStore.GetDeleteProtection() = %v, want %v", *got, *tt.want)
+				}
 			}
 		})
 	}
