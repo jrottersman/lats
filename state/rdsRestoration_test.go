@@ -409,6 +409,8 @@ func TestRDSRestorationStore_GetClusterAZs(t *testing.T) {
 }
 
 func TestRDSRestorationStore_GetAutoMinorVersionUpgrade(t *testing.T) {
+	pFalse := false
+	pTrue := true
 	type fields struct {
 		Snapshot        *types.DBSnapshot
 		Instance        *types.DBInstance
@@ -421,8 +423,8 @@ func TestRDSRestorationStore_GetAutoMinorVersionUpgrade(t *testing.T) {
 		want   *bool
 	}{
 		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
-		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil, nil}, want: nil},
-		// {name: "GetData", fields: fields{nil, &types.DBInstance{AutoMinorVersionUpgrade: true}, nil, nil}, want: true},
+		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil, nil}, want: &pFalse},
+		{name: "GetData", fields: fields{nil, &types.DBInstance{AutoMinorVersionUpgrade: true}, nil, nil}, want: &pTrue},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -432,8 +434,15 @@ func TestRDSRestorationStore_GetAutoMinorVersionUpgrade(t *testing.T) {
 				Cluster:         tt.fields.Cluster,
 				ClusterSnapshot: tt.fields.ClusterSnapshot,
 			}
-			if got := r.GetAutoMinorVersionUpgrade(); got != tt.want {
-				t.Errorf("RDSRestorationStore.GetAutoMinorVersionUpgrade() = %v, want %v", got, tt.want)
+			got := r.GetAutoMinorVersionUpgrade()
+			if got == nil {
+				if got != tt.want {
+					t.Errorf("RDSRestorationStore.GetAutoMinorVersionUpgrade() = %v, want %v", got, tt.want)
+				}
+			} else {
+				if *got != *tt.want {
+					t.Errorf("RDSRestorationStore.GetAutoMinorVersionUpgrade() = %v, want %v", *got, *tt.want)
+				}
 			}
 		})
 	}
