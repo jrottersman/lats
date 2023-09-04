@@ -153,14 +153,7 @@ func (instances *DbInstances) restoreSnapshotCluster(store state.RDSRestorationS
 }
 
 // RestoreSnapshotInstance restores a single db instance from a snapshot
-func (instances *DbInstances) RestoreSnapshotInstance(store state.RDSRestorationStore) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
-
-	backupDbIden := fmt.Sprintf("%s-backup", *store.GetInstanceIdentifier())
-	input := rds.RestoreDBInstanceFromDBSnapshotInput{
-		DBInstanceIdentifier: &backupDbIden,
-		DBSnapshotIdentifier: store.GetSnapshotIdentifier(),
-		AllocatedStorage:     store.GetAllocatedStorage(),
-	}
+func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanceFromDBSnapshotInput) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
 
 	output, err := instances.RdsClient.RestoreDBInstanceFromDBSnapshot(context.TODO(), &input)
 	if err != nil {
