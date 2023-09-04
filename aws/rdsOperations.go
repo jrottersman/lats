@@ -134,7 +134,7 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 
 }
 
-func (instances *DbInstances) restoreSnapshotCluster(input rds.RestoreDBClusterFromSnapshotInput) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
+func (instances *DbInstances) RestoreSnapshotCluster(input rds.RestoreDBClusterFromSnapshotInput) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
 	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(context.TODO(), &input)
 	if err != nil {
 		log.Printf("error creating snapshot cluster")

@@ -35,6 +35,7 @@ func RestoreSnapshot(instances *aws.DbInstances, stateKV state.StateManager, sna
 		fmt.Printf("error getting restoration store %s", err)
 		return err
 	}
-	_, nil := instances.RestoreSnapshotInstance(*RestorationBuilder)
+	SnapshotInput := state.GenerateRestoreDBInstanceFromDBClusterSnapshotInput(*RestorationBuilder)
+	_, nil := instances.RestoreSnapshotInstance(*SnapshotInput)
 	return nil
 }

@@ -116,6 +116,14 @@ func GenerateRestoreDBInstanceFromDBClusterSnapshotInput(r RDSRestorationStore) 
 	}
 }
 
+func GenerateRestoreDBClusterFromSnapshotInput(r RDSRestorationStore) *rds.RestoreDBClusterFromSnapshotInput {
+	return &rds.RestoreDBClusterFromSnapshotInput{
+		DBClusterIdentifier: r.GetDBClusterIdentifier(),
+		Engine:              r.GetClusterEngine(),
+		SnapshotIdentifier:  r.GetClusterSnapshotIdentifier(),
+	}
+}
+
 func DecodeRDSClusterSnapshotOutput(b bytes.Buffer) types.DBClusterSnapshot {
 	var dbSnapshot types.DBClusterSnapshot
 	dec := gob.NewDecoder(&b)
