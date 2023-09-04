@@ -215,7 +215,8 @@ func TestRestoreSnapshotInstance(t *testing.T) {
 	dbi := DbInstances{
 		RdsClient: c,
 	}
-	resp2, err := dbi.RestoreSnapshotInstance(*resp)
+	input := state.GenerateRestoreDBInstanceFromDBSnapshotInput(*resp)
+	resp2, err := dbi.RestoreSnapshotInstance(*input)
 	if err != nil {
 		t.Errorf("got error: %s", err)
 	}
