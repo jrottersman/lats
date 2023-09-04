@@ -3,13 +3,11 @@ package aws
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
-	"github.com/jrottersman/lats/state"
 )
 
 // Client is used for mocking the AWS RDS instance for testing
@@ -136,14 +134,7 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 
 }
 
-func (instances *DbInstances) restoreSnapshotCluster(store state.RDSRestorationStore) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
-	backupClusterIden := fmt.Sprintf("%s-backup", *store.Cluster.DBClusterIdentifier)
-	input := rds.RestoreDBClusterFromSnapshotInput{
-		DBClusterIdentifier: aws.String(backupClusterIden),
-		SnapshotIdentifier:  store.GetClusterSnapshotIdentifier(),
-		Engine:              store.GetClusterEngine(),
-		AvailabilityZones:   *store.GetClusterAZs(),
-	}
+func (instances *DbInstances) restoreSnapshotCluster(input rds.RestoreDBClusterFromSnapshotInput) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
 	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(context.TODO(), &input)
 	if err != nil {
 		log.Printf("error creating snapshot cluster")
