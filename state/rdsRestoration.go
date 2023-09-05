@@ -145,6 +145,16 @@ func (r RDSRestorationStore) GetClusterAZs() *[]string {
 	return &r.ClusterSnapshot.AvailabilityZones
 }
 
+func (r RDSRestorationStore) GetDBClusterMembers() *[]types.DBClusterMember {
+	if r.Cluster == nil {
+		return nil
+	}
+	if len(r.Cluster.DBClusterMembers) == 0 {
+		return nil
+	}
+	return &r.Cluster.DBClusterMembers
+}
+
 func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSRestorationStore, error) {
 	snap, err := GetRDSSnapshotOutput(sm, snapshotName)
 	if err != nil {
