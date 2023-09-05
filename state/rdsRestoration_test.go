@@ -408,6 +408,44 @@ func TestRDSRestorationStore_GetClusterAZs(t *testing.T) {
 	}
 }
 
+func TestRDSRestorationStore_GetDBClusterInstanceClass(t *testing.T) {
+	type fields struct {
+		Snapshot        *types.DBSnapshot
+		Instance        *types.DBInstance
+		Cluster         *types.DBCluster
+		ClusterSnapshot *types.DBClusterSnapshot
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   *string
+	}{
+		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
+		{name: "RegularNil", fields: fields{nil, nil, nil, &types.DBClusterSnapshot{}}, want: nil},
+		{name: "Value", fields: fields{nil, nil, &types.DBCluster{DBClusterInstanceClass: aws.String("foo")}, nil}, want: aws.String("foo")},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := RDSRestorationStore{
+				Snapshot:        tt.fields.Snapshot,
+				Instance:        tt.fields.Instance,
+				Cluster:         tt.fields.Cluster,
+				ClusterSnapshot: tt.fields.ClusterSnapshot,
+			}
+			got := r.GetDBClusterInstanceClass()
+			if tt.want == nil {
+				if got != tt.want {
+					t.Errorf("RDSRestorationStore.GetDBClusterInstanceClass() = %v, want %v", got, tt.want)
+				}
+			} else {
+				if *got != *tt.want {
+					t.Errorf("RDSRestorationStore.GetDBClusterInstanceClass() = %v, want %v", *got, *tt.want)
+				}
+			}
+		})
+	}
+}
+
 func TestRDSRestorationStore_GetAutoMinorVersionUpgrade(t *testing.T) {
 	pFalse := false
 	pTrue := true
