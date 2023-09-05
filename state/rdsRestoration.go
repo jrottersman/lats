@@ -115,6 +115,16 @@ func (r RDSRestorationStore) GetClusterEngine() *string {
 	return r.ClusterSnapshot.Engine
 }
 
+func (r RDSRestorationStore) GetDBClusterInstanceClass() *string {
+	if r.Cluster == nil {
+		return nil
+	}
+	if r.Cluster.DBClusterInstanceClass == nil {
+		return nil
+	}
+	return r.Cluster.DBClusterInstanceClass
+}
+
 func (r RDSRestorationStore) GetKmsKey() *string {
 	if r.ClusterSnapshot == nil {
 		return nil
