@@ -224,3 +224,35 @@ func TestRestoreSnapshotInstance(t *testing.T) {
 		t.Error()
 	}
 }
+
+func TestRestoreSnapshotCluster(t *testing.T) {
+
+	snap := types.DBClusterSnapshot{
+		AllocatedStorage:            1000,
+		PercentProgress:             100,
+		DBClusterIdentifier:         aws.String("foobar"),
+		DBClusterSnapshotIdentifier: aws.String("foo"),
+	}
+
+	dbz := types.DBCluster{
+		DBClusterIdentifier: aws.String("foobar"),
+	}
+
+	store := state.RDSRestorationStore{
+		Cluster:         &dbz,
+		ClusterSnapshot: &snap,
+	}
+
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	input := state.GenerateRestoreDBInstanceFromDBClusterSnapshotInput(store)
+	resp, err := dbi.RestoreSnapshotInstance(*input)
+	if err != nil {
+		t.Errorf("got error: %s", err)
+	}
+	if reflect.TypeOf(resp) != reflect.TypeOf(&rds.RestoreDBInstanceFromDBSnapshotOutput{}) {
+		t.Errorf("got %T expected %T", resp, &rds.RestoreDBInstanceFromDBSnapshotOutput{})
+	}
+}
