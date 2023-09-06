@@ -197,19 +197,21 @@ func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 	return n, err
 }
 
-func CheckSnasphotType(snapshot interface{}) {
-	switch snapshot.(type) {
-	case types.DBClusterSnapshot:
-		GenerateRDSClusterStack()
-	case types.DBSnapshot:
-		GenerateRDSInstanceStack()
-	}
-}
-
-func GenerateRDSClusterStack() {
+func GenerateRDSClusterStack(r RDSRestorationStore) {
 	fmt.Println("TODO: implement cluster type")
 }
 
-func GenerateRDSInstanceStack() {
-	fmt.Println("TODO: Implement instance type")
+func GenerateRDSInstanceStack(r RDSRestorationStore, name string) (Stack, error) {
+	// DBInput := GenerateRestoreDBInstanceFromDBSnapshotInput(r)
+	// fn := helpers.RandomStateFileName()
+
+	//  Encode the RDS input
+	// Write the RDS Input
+	// Create the object
+	// put the object in a list
+
+	return Stack{
+		Name:                  name,
+		RestorationObjectName: "RDSInstance",
+	}, nil
 }
