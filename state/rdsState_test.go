@@ -29,6 +29,17 @@ func TestEncodeRestoreDBInstanceFromDBSnapshotInput(t *testing.T) {
 	}
 }
 
+func TestDecodeRestoreDBInstanceFromDBSnapshotInput(t *testing.T) {
+	db := rds.RestoreDBInstanceFromDBSnapshotInput{
+		DBInstanceIdentifier: aws.String("foo"),
+	}
+	r := EncodeRestoreDBInstanceFromDBSnapshotInput(&db)
+	resp := DecodeRestoreDBInstanceFromDBSnapshotInput((r))
+	if *resp.DBInstanceIdentifier != *db.DBInstanceIdentifier {
+		t.Errorf("got %s expected %s", *resp.DBInstanceIdentifier, *db.DBInstanceIdentifier)
+	}
+}
+
 func TestEncodeRDSDBOutput(t *testing.T) {
 
 	db := types.DBInstance{
