@@ -116,6 +116,17 @@ func GenerateRestoreDBInstanceFromDBClusterSnapshotInput(r RDSRestorationStore) 
 	}
 }
 
+func EncodeRestoreDBInstanceFromDBSnapshotInput(r *rds.RestoreDBInstanceFromDBSnapshotInput) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(r)
+	if err != nil {
+		log.Fatalf("Error encoding our snapshot: %s", err)
+	}
+	return encoder
+}
+
 func GenerateRestoreDBClusterFromSnapshotInput(r RDSRestorationStore) *rds.RestoreDBClusterFromSnapshotInput {
 	return &rds.RestoreDBClusterFromSnapshotInput{
 		DBClusterIdentifier: r.GetDBClusterIdentifier(),
