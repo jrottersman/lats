@@ -8,8 +8,26 @@ import (
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
+
+func TestEncodeRestoreDBInstanceFromDBSnapshotInput(t *testing.T) {
+
+	db := rds.RestoreDBInstanceFromDBSnapshotInput{
+		DBInstanceIdentifier: aws.String("foo"),
+	}
+	r := EncodeRestoreDBInstanceFromDBSnapshotInput(&db)
+	var result rds.RestoreDBInstanceFromDBSnapshotInput
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if *result.DBInstanceIdentifier != *db.DBInstanceIdentifier {
+		t.Errorf("got %s expected %s", *result.DBInstanceIdentifier, *db.DBInstanceIdentifier)
+	}
+}
 
 func TestEncodeRDSDBOutput(t *testing.T) {
 

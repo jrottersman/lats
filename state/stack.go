@@ -23,7 +23,7 @@ func NewObject(filename string, order int, objtype string) Object {
 }
 
 type Stack struct {
-	Name                  string
+	Name                  string //Name is the name of the stack
 	RestorationObjectName string
 	Objects               map[int][]Object //int is the order in which we restore
 }
