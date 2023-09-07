@@ -16,11 +16,13 @@ type Object struct {
 	ObjType  string
 }
 
+// ReadObject Read the file for the object
 func (o Object) ReadObject() interface{} {
-	buf, err := os.ReadFile(o.FileName)
+	dat, err := os.ReadFile(o.FileName)
 	if err != nil {
 		fmt.Printf("error reading object file %s", err)
 	}
+	buf := bytes.NewBuffer(dat)
 	switch o.ObjType {
 	case LoneInstance:
 		output := DecodeRestoreDBInstanceFromDBSnapshotInput(buf)
