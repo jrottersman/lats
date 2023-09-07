@@ -156,6 +156,16 @@ func EncodeRestoreDBClusterFromSnapshotInput(r *rds.RestoreDBClusterFromSnapshot
 	return encoder
 }
 
+func DecodeRestoreDBClusterFromDBSnapshotInput(b bytes.Buffer) *rds.RestoreDBClusterFromSnapshotInput {
+	var Restore rds.RestoreDBClusterFromSnapshotInput
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&Restore)
+	if err != nil {
+		log.Fatalf("Error decoding state for RestoreDBCluster struct: %s", err)
+	}
+	return &Restore
+}
+
 func DecodeRDSClusterSnapshotOutput(b bytes.Buffer) types.DBClusterSnapshot {
 	var dbSnapshot types.DBClusterSnapshot
 	dec := gob.NewDecoder(&b)
