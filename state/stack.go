@@ -9,6 +9,7 @@ import (
 )
 
 const LoneInstance = "SingleRDSInstance"
+const Cluster = "RDSCluster"
 
 type Object struct {
 	FileName string
@@ -25,8 +26,9 @@ func (o Object) ReadObject() interface{} {
 	buf := bytes.NewBuffer(dat)
 	switch o.ObjType {
 	case LoneInstance:
-		output := DecodeRestoreDBInstanceFromDBSnapshotInput(*buf)
-		return output
+		return DecodeRestoreDBInstanceFromDBSnapshotInput(*buf)
+	case Cluster:
+		return DecodeRestoreDBClusterFromSnapshotInput(*buf)
 	}
 	return nil
 }
