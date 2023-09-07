@@ -8,10 +8,25 @@ import (
 	"os"
 )
 
+const LoneInstance = "SingleRDSInstance"
+
 type Object struct {
 	FileName string
 	Order    int
 	ObjType  string
+}
+
+func (o Object) ReadObject() interface{} {
+	buf, err := os.ReadFile(o.FileName)
+	if err != nil {
+		fmt.Printf("error reading object file %s", err)
+	}
+	switch o.ObjType {
+	case LoneInstance:
+		output := DecodeRestoreDBInstanceFromDBSnapshotInput(buf)
+		return output
+	}
+	return nil
 }
 
 func NewObject(filename string, order int, objtype string) Object {
