@@ -10,6 +10,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
+	"github.com/jrottersman/lats/helpers"
 )
 
 // EncodeRDSDatabaseOutput converts a dbInstace to an array of bytes in preperation for wrtiing it to disk
@@ -244,16 +245,23 @@ func GenerateRDSClusterStack(r RDSRestorationStore) {
 }
 
 func GenerateRDSInstanceStack(r RDSRestorationStore, name string) (Stack, error) {
-	// DBInput := GenerateRestoreDBInstanceFromDBSnapshotInput(r)
-	// fn := helpers.RandomStateFileName()
+	DBInput := GenerateRestoreDBInstanceFromDBSnapshotInput(r)
+	fn := helpers.RandomStateFileName()
 
-	//  Encode the RDS input
-	// Write the RDS Input
-	// Create the object
-	// put the object in a list
+	b := EncodeRestoreDBInstanceFromDBSnapshotInput(DBInput)
+	WriteOutput(*fn, b)
+
+	obj := NewObject(*fn, 1, LoneInstance) // 1 is the order currently we just have the instance so this is 1 we will have to update it once we are handling parameter groups
+
+	var objects []Object
+	objects = append(objects, obj)
+
+	m := make(map[int][]Object)
+	m[1] = objects
 
 	return Stack{
 		Name:                  name,
 		RestorationObjectName: "RDSInstance",
+		Objects:               m,
 	}, nil
 }
