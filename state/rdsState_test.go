@@ -40,7 +40,7 @@ func TestDecodeRestoreDBInstanceFromDBSnapshotInput(t *testing.T) {
 	}
 }
 
-func TestEncodeRestoreDBClusterFromDBSnapshotInput(t *testing.T) {
+func TestEncodeRestoreDBClusterFromSnapshotInput(t *testing.T) {
 
 	db := rds.RestoreDBClusterFromSnapshotInput{
 		DBClusterIdentifier: aws.String("foo"),
@@ -54,6 +54,17 @@ func TestEncodeRestoreDBClusterFromDBSnapshotInput(t *testing.T) {
 	}
 	if *result.DBClusterIdentifier != *db.DBClusterIdentifier {
 		t.Errorf("got %s expected %s", *result.DBClusterIdentifier, *db.DBClusterIdentifier)
+	}
+}
+
+func TestDecodeRestoreDBClusterFromSnapshotInput(t *testing.T) {
+	db := rds.RestoreDBClusterFromSnapshotInput{
+		DBClusterIdentifier: aws.String("foo"),
+	}
+	r := EncodeRestoreDBClusterFromSnapshotInput(&db)
+	resp := DecodeRestoreDBClusterFromSnapshotInput((r))
+	if *resp.DBClusterIdentifier != *db.DBClusterIdentifier {
+		t.Errorf("got %s expected %s", *resp.DBClusterIdentifier, *db.DBClusterIdentifier)
 	}
 }
 

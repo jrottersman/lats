@@ -156,7 +156,7 @@ func EncodeRestoreDBClusterFromSnapshotInput(r *rds.RestoreDBClusterFromSnapshot
 	return encoder
 }
 
-func DecodeRestoreDBClusterFromDBSnapshotInput(b bytes.Buffer) *rds.RestoreDBClusterFromSnapshotInput {
+func DecodeRestoreDBClusterFromSnapshotInput(b bytes.Buffer) *rds.RestoreDBClusterFromSnapshotInput {
 	var Restore rds.RestoreDBClusterFromSnapshotInput
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&Restore)
