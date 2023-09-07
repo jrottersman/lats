@@ -25,7 +25,7 @@ func (o Object) ReadObject() interface{} {
 	buf := bytes.NewBuffer(dat)
 	switch o.ObjType {
 	case LoneInstance:
-		output := DecodeRestoreDBInstanceFromDBSnapshotInput(buf)
+		output := DecodeRestoreDBInstanceFromDBSnapshotInput(*buf)
 		return output
 	}
 	return nil

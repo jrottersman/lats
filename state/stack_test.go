@@ -4,7 +4,33 @@ import (
 	"encoding/gob"
 	"os"
 	"testing"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/rds"
 )
+
+func Test_ReadObject(t *testing.T) {
+	filename := "/tmp/foo"
+	order := 5
+	objType := LoneInstance
+
+	defer os.Remove(filename)
+	db := rds.RestoreDBInstanceFromDBSnapshotInput{
+		DBInstanceIdentifier: aws.String("foo"),
+	}
+	r := EncodeRestoreDBInstanceFromDBSnapshotInput(&db)
+	_, err := WriteOutput(filename, r)
+	if err != nil {
+		t.Errorf("failed to write output, %s", err)
+	}
+
+	resp := NewObject(filename, order, objType)
+	i := resp.ReadObject()
+	_, ok := i.(*rds.RestoreDBInstanceFromDBSnapshotInput)
+	if !ok {
+		t.Errorf("this should have been ok")
+	}
+}
 
 func Test_NewObject(t *testing.T) {
 	filename := "/tmp/foo"
