@@ -40,6 +40,23 @@ func TestDecodeRestoreDBInstanceFromDBSnapshotInput(t *testing.T) {
 	}
 }
 
+func TestEncodeRestoreDBClusterFromDBSnapshotInput(t *testing.T) {
+
+	db := rds.RestoreDBClusterFromSnapshotInput{
+		DBClusterIdentifier: aws.String("foo"),
+	}
+	r := EncodeRestoreDBClusterFromSnapshotInput(&db)
+	var result rds.RestoreDBClusterFromSnapshotInput
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if *result.DBClusterIdentifier != *db.DBClusterIdentifier {
+		t.Errorf("got %s expected %s", *result.DBClusterIdentifier, *db.DBClusterIdentifier)
+	}
+}
+
 func TestEncodeRDSDBOutput(t *testing.T) {
 
 	db := types.DBInstance{
