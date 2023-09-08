@@ -153,3 +153,7 @@ func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanc
 	}
 	return output, nil
 }
+
+func (instances *DbInstances) CreateInstanceInput(i *types.DBInstance) (*types.DBInstance, error) {
+	log.Printf("implement me")
+}
