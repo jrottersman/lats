@@ -261,6 +261,10 @@ func GenerateRDSClusterStack(r RDSRestorationStore, name string, fn *string) (*S
 	return nil, nil
 }
 
+func ClusterInstancesToObjects(t *types.DBCluster) ([]Object, error) {
+	return nil, nil
+}
+
 func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
 	if fn == nil {
 		fn = helpers.RandomStateFileName()
