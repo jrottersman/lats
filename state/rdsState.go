@@ -244,9 +244,11 @@ func GenerateRDSClusterStack(r RDSRestorationStore) {
 	fmt.Println("TODO: implement cluster type")
 }
 
-func GenerateRDSInstanceStack(r RDSRestorationStore, name string) (*Stack, error) {
+func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
 	DBInput := GenerateRestoreDBInstanceFromDBSnapshotInput(r)
-	fn := helpers.RandomStateFileName()
+	if fn == nil {
+		fn = helpers.RandomStateFileName()
+	}
 
 	b := EncodeRestoreDBInstanceFromDBSnapshotInput(DBInput)
 	_, err := WriteOutput(*fn, b)
