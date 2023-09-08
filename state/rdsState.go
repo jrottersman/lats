@@ -244,12 +244,15 @@ func GenerateRDSClusterStack(r RDSRestorationStore) {
 	fmt.Println("TODO: implement cluster type")
 }
 
-func GenerateRDSInstanceStack(r RDSRestorationStore, name string) (Stack, error) {
+func GenerateRDSInstanceStack(r RDSRestorationStore, name string) (*Stack, error) {
 	DBInput := GenerateRestoreDBInstanceFromDBSnapshotInput(r)
 	fn := helpers.RandomStateFileName()
 
 	b := EncodeRestoreDBInstanceFromDBSnapshotInput(DBInput)
-	WriteOutput(*fn, b)
+	_, err := WriteOutput(*fn, b)
+	if err != nil {
+		return nil, err
+	}
 
 	obj := NewObject(*fn, 1, LoneInstance) // 1 is the order currently we just have the instance so this is 1 we will have to update it once we are handling parameter groups
 
@@ -259,9 +262,9 @@ func GenerateRDSInstanceStack(r RDSRestorationStore, name string) (Stack, error)
 	m := make(map[int][]Object)
 	m[1] = objects
 
-	return Stack{
+	return &Stack{
 		Name:                  name,
-		RestorationObjectName: "RDSInstance",
+		RestorationObjectName: LoneInstance,
 		Objects:               m,
 	}, nil
 }
