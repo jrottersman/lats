@@ -240,15 +240,33 @@ func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 	return n, err
 }
 
-func GenerateRDSClusterStack(r RDSRestorationStore) {
-	fmt.Println("TODO: implement cluster type")
-}
-
-func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
-	DBInput := GenerateRestoreDBInstanceFromDBSnapshotInput(r)
+func GenerateRDSClusterStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
 	if fn == nil {
 		fn = helpers.RandomStateFileName()
 	}
+
+	ClusterInput := GenerateRestoreDBClusterFromSnapshotInput(r)
+
+	// This is the cluster
+	bc := EncodeRestoreDBClusterFromSnapshotInput(ClusterInput)
+	_, err := WriteOutput(*fn, bc)
+	if err != nil {
+		return nil, err
+	}
+	clusterObj := NewObject(*fn, 1, Cluster)
+	var firstObjects []Object
+	firstObjects = append(firstObjects, clusterObj)
+
+	// TODO figure out how to handle the instances
+	return nil, nil
+}
+
+func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
+	if fn == nil {
+		fn = helpers.RandomStateFileName()
+	}
+
+	DBInput := GenerateRestoreDBInstanceFromDBSnapshotInput(r)
 
 	b := EncodeRestoreDBInstanceFromDBSnapshotInput(DBInput)
 	_, err := WriteOutput(*fn, b)

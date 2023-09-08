@@ -10,6 +10,7 @@ import (
 
 const LoneInstance = "SingleRDSInstance"
 const Cluster = "RDSCluster"
+const Instance = "ClusterInstance"
 
 type Object struct {
 	FileName string
