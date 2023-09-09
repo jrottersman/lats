@@ -82,7 +82,29 @@ func TestClusterInstancesToObjects(t *testing.T) {
 		f:     "/tmp/foo",
 		order: 2,
 	}
+	id := "foo"
 
+	// Create DB Cluster Member
+	mem := []types.DBClusterMember{}
+	one := types.DBClusterMember{
+		DBInstanceIdentifier: &id,
+	}
+	mem = append(mem, one)
+
+	//Want object
+	objs := []state.Object{}
+	fo := state.Object{
+		FileName: "/tmp/foo",
+		Order:    2,
+		ObjType:  state.RdsInstanceType,
+	}
+	objs = append(objs, fo)
+	arg := args{
+		t:     &types.DBCluster{DBClusterIdentifier: &id, DBClusterMembers: mem},
+		c:     cl,
+		f:     "/tmp/foo",
+		order: 2,
+	}
 	tests := []struct {
 		name    string
 		args    args
@@ -90,6 +112,7 @@ func TestClusterInstancesToObjects(t *testing.T) {
 		wantErr bool
 	}{
 		{name: "nil", args: nilArg, want: nil, wantErr: false},
+		{name: "one", args: arg, want: objs, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
