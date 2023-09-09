@@ -8,6 +8,7 @@ import (
 	"github.com/jrottersman/lats/state"
 )
 
+// ClusterInstancesToObjects makes a list of instances as objects for our stack
 func ClusterInstancesToObjects(t *types.DBCluster, c aws.DbInstances) ([]state.Object, error) {
 	// Cluster is empty
 	if len(t.DBClusterMembers) == 0 {
@@ -19,7 +20,7 @@ func ClusterInstancesToObjects(t *types.DBCluster, c aws.DbInstances) ([]state.O
 		if err != nil {
 			fmt.Printf("error %s getting instance %s", err, *v.DBInstanceIdentifier)
 		}
-		state.CreateInstanceInput(inst)
+		state.CreateInstanceInput(inst, t.DBClusterIdentifier)
 	}
 	return nil, nil
 }

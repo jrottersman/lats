@@ -261,7 +261,8 @@ func GenerateRDSClusterStack(r RDSRestorationStore, name string, fn *string) (*S
 	return nil, nil
 }
 
-func CreateInstanceInput(i *types.DBInstance) *rds.CreateDBInstanceInput {
+// CreateInstanceInput creates an instance to prep for creating our Cluster
+func CreateInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanceInput {
 	return &rds.CreateDBInstanceInput{
 		DBInstanceIdentifier: i.DBInstanceIdentifier,
 		DBName:               i.DBName,
@@ -269,8 +270,20 @@ func CreateInstanceInput(i *types.DBInstance) *rds.CreateDBInstanceInput {
 		EngineVersion:        i.EngineVersion,
 		DBInstanceClass:      i.DBInstanceClass,
 		StorageType:          i.StorageType,
+		DBClusterIdentifier:  ci,
 		AllocatedStorage:     &i.AllocatedStorage,
 	}
+}
+
+func EncodeCreateDBInstanceInput(c *rds.CreateDBInstanceInput) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(&c)
+	if err != nil {
+		log.Fatalf("Error encoding our database: %s", err)
+	}
+	return encoder
 }
 
 func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {

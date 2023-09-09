@@ -463,7 +463,7 @@ func Test_CreateInstanceInput(t *testing.T) {
 		StorageType:          aws.String("bat"),
 		AllocatedStorage:     1000,
 	}
-	result := CreateInstanceInput(&i)
+	result := CreateInstanceInput(&i, nil)
 	if *result.AllocatedStorage != 1000 {
 		t.Errorf("got %d expected 1000", *result.AllocatedStorage)
 	}
