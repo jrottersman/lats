@@ -273,9 +273,21 @@ func ClusterInstancesToObjects(t *types.DBCluster, c aws.DbInstances) ([]Object,
 		if err != nil {
 			fmt.Printf("error %s getting instance %s", err, *v.DBInstanceIdentifier)
 		}
-		aws.CreateInstanceInput(inst)
+		CreateInstanceInput(inst)
 	}
 	return nil, nil
+}
+
+func CreateInstanceInput(i *types.DBInstance) *rds.CreateDBInstanceInput {
+	return &rds.CreateDBInstanceInput{
+		DBInstanceIdentifier: i.DBInstanceIdentifier,
+		DBName:               i.DBName,
+		Engine:               i.Engine,
+		EngineVersion:        i.EngineVersion,
+		DBInstanceClass:      i.DBInstanceClass,
+		StorageType:          i.StorageType,
+		AllocatedStorage:     &i.AllocatedStorage,
+	}
 }
 
 func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {

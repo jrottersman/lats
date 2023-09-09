@@ -153,15 +153,3 @@ func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanc
 	}
 	return output, nil
 }
-
-func CreateInstanceInput(i *types.DBInstance) *rds.CreateDBInstanceInput {
-	return &rds.CreateDBInstanceInput{
-		DBInstanceIdentifier: i.DBInstanceIdentifier,
-		DBName:               i.DBName,
-		Engine:               i.Engine,
-		EngineVersion:        i.EngineVersion,
-		DBInstanceClass:      i.DBInstanceClass,
-		StorageType:          i.StorageType,
-		AllocatedStorage:     &i.AllocatedStorage,
-	}
-}
