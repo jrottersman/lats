@@ -452,3 +452,19 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 		})
 	}
 }
+
+func Test_CreateInstanceInput(t *testing.T) {
+	i := types.DBInstance{
+		DBInstanceIdentifier: aws.String("foo"),
+		DBName:               aws.String("bar"),
+		Engine:               aws.String("mysql"),
+		EngineVersion:        aws.String("8"),
+		DBInstanceClass:      aws.String("baz"),
+		StorageType:          aws.String("bat"),
+		AllocatedStorage:     1000,
+	}
+	result := CreateInstanceInput(&i)
+	if *result.AllocatedStorage != 1000 {
+		t.Errorf("got %d expected 1000", *result.AllocatedStorage)
+	}
+}
