@@ -275,6 +275,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 	}
 }
 
+//EncodeCreateDBInstanceInput bytes buffer for create
 func EncodeCreateDBInstanceInput(c *rds.CreateDBInstanceInput) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
@@ -286,6 +287,18 @@ func EncodeCreateDBInstanceInput(c *rds.CreateDBInstanceInput) bytes.Buffer {
 	return encoder
 }
 
+//DecodeCreateDBInstanceInput creates the instance from our bytes buffer when we want to replay
+func DecodeCreateDBInstanceInput(b bytes.Buffer) *rds.CreateDBInstanceInput {
+	var dbCluster rds.CreateDBInstanceInput
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&dbCluster)
+	if err != nil {
+		log.Fatalf("Error decoding state for RDS Cluster: %s", err)
+	}
+	return &dbCluster
+}
+
+// GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
 func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
 	if fn == nil {
 		fn = helpers.RandomStateFileName()
