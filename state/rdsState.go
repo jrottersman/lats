@@ -262,7 +262,7 @@ func GenerateRDSClusterStack(r RDSRestorationStore, name string, fn *string) (*S
 }
 
 // CreateInstanceInput creates an instance to prep for creating our Cluster
-func CreateInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanceInput {
+func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanceInput {
 	return &rds.CreateDBInstanceInput{
 		DBInstanceIdentifier: i.DBInstanceIdentifier,
 		DBName:               i.DBName,

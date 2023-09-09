@@ -20,7 +20,7 @@ func ClusterInstancesToObjects(t *types.DBCluster, c aws.DbInstances) ([]state.O
 		if err != nil {
 			fmt.Printf("error %s getting instance %s", err, *v.DBInstanceIdentifier)
 		}
-		state.CreateInstanceInput(inst, t.DBClusterIdentifier)
+		state.CreateDbInstanceInput(inst, t.DBClusterIdentifier)
 	}
 	return nil, nil
 }
