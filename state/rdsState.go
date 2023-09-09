@@ -298,7 +298,7 @@ func DecodeCreateDBInstanceInput(b bytes.Buffer) *rds.CreateDBInstanceInput {
 	return &dbCluster
 }
 
-// GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
+//GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
 func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
 	if fn == nil {
 		fn = helpers.RandomStateFileName()
