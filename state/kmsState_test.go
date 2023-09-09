@@ -62,7 +62,7 @@ func TestGetKmsKeyOutput(t *testing.T) {
 		mu,
 		s,
 	}
-	newKmd, err := GetKmsOutput(sm, "foo")
+	newKmd, err := GetKmsOutput(&sm, "foo")
 	if err != nil {
 		t.Errorf("got error: %s", err)
 	}

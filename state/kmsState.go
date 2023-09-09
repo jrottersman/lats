@@ -22,6 +22,7 @@ func EncodeKmsOutput(kmd *types.KeyMetadata) bytes.Buffer {
 	return encoder
 }
 
+// DecodeKmsOutput takes bytes and turns them into KeyMetadata
 func DecodeKmsOutput(b bytes.Buffer) types.KeyMetadata {
 	var kmsMetadata types.KeyMetadata
 	dec := gob.NewDecoder(&b)
@@ -32,7 +33,7 @@ func DecodeKmsOutput(b bytes.Buffer) types.KeyMetadata {
 	return kmsMetadata
 }
 
-func GetKmsOutput(s StateManager, keyId string) (*types.KeyMetadata, error) {
+func GetKmsOutput(s *StateManager, keyId string) (*types.KeyMetadata, error) {
 	i := s.GetStateObject(keyId)
 	key, ok := i.(types.KeyMetadata)
 	if !ok {
