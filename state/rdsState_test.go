@@ -468,3 +468,20 @@ func Test_CreateInstanceInput(t *testing.T) {
 		t.Errorf("got %d expected 1000", *result.AllocatedStorage)
 	}
 }
+
+func Test_EncodeCreateDBInstanceInput(t *testing.T) {
+
+	db := rds.CreateDBInstanceInput{
+		DBInstanceIdentifier: aws.String("foo"),
+	}
+	r := EncodeCreateDBInstanceInput(&db)
+	var result rds.CreateDBInstanceInput
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if *result.DBInstanceIdentifier != *db.DBInstanceIdentifier {
+		t.Errorf("got %s expected %s", *result.DBInstanceIdentifier, *db.DBInstanceIdentifier)
+	}
+}
