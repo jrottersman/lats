@@ -485,3 +485,15 @@ func Test_EncodeCreateDBInstanceInput(t *testing.T) {
 		t.Errorf("got %s expected %s", *result.DBInstanceIdentifier, *db.DBInstanceIdentifier)
 	}
 }
+
+func Test_DecodeCreateDBInstanceInput(t *testing.T) {
+
+	db := rds.CreateDBInstanceInput{
+		DBInstanceIdentifier: aws.String("foo"),
+	}
+	r := EncodeCreateDBInstanceInput(&db)
+	resp := DecodeCreateDBInstanceInput((r))
+	if *resp.DBInstanceIdentifier != *db.DBInstanceIdentifier {
+		t.Errorf("got %s expected %s", *resp.DBInstanceIdentifier, *db.DBInstanceIdentifier)
+	}
+}
