@@ -240,27 +240,6 @@ func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 	return n, err
 }
 
-func GenerateRDSClusterStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
-	if fn == nil {
-		fn = helpers.RandomStateFileName()
-	}
-
-	ClusterInput := GenerateRestoreDBClusterFromSnapshotInput(r)
-
-	// This is the cluster
-	bc := EncodeRestoreDBClusterFromSnapshotInput(ClusterInput)
-	_, err := WriteOutput(*fn, bc)
-	if err != nil {
-		return nil, err
-	}
-	clusterObj := NewObject(*fn, 1, Cluster)
-	var firstObjects []Object
-	firstObjects = append(firstObjects, clusterObj)
-
-	// TODO figure out how to handle the instances
-	return nil, nil
-}
-
 // CreateInstanceInput creates an instance to prep for creating our Cluster
 func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanceInput {
 	return &rds.CreateDBInstanceInput{
@@ -279,7 +258,6 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 func EncodeCreateDBInstanceInput(c *rds.CreateDBInstanceInput) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
-
 	err := enc.Encode(&c)
 	if err != nil {
 		log.Fatalf("Error encoding our database: %s", err)

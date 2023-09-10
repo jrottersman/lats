@@ -1,4 +1,4 @@
-package rds
+package rdsState_test
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
+	"github.com/jrottersman/lats/rdsState"
 	"github.com/jrottersman/lats/state"
 )
 
@@ -116,7 +117,7 @@ func TestClusterInstancesToObjects(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ClusterInstancesToObjects(tt.args.t, tt.args.c, tt.args.f, tt.args.order)
+			got, err := rdsState.ClusterInstancesToObjects(tt.args.t, tt.args.c, tt.args.f, tt.args.order)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ClusterInstancesToObjects() error = %v, wantErr %v", err, tt.wantErr)
 				return
