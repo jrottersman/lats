@@ -96,6 +96,19 @@ func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName s
 	return output.DBSnapshot, nil
 }
 
+func (instances *DbInstances) CreateClusterSnapshot(clusterName string, snapshotName string) 
+(*types.DBClusterSnapshot, error) {
+	output, err := instance.RdsClient.CreateDBClusterSnapshot(context.TODO(), &rds.CreateDBClusterSnapshotInput{
+		DBClusterIdentifier: aws.String(clusterName),
+		DBClusterSnaphotIdentifer: aws.String(snapshotName),
+	})
+	if err != nil {
+		log.Printf("Couldn't create snapshot %s: because of %s\n", snapshotName, err)
+		return nil, err
+	}
+	return output.DBClusterSnapshot, nil
+}
+
 // CopySnapshot copies a snapshot to a new region note it needs to run from the destination region so it needs a different client then CreateSnapshot!
 func (instances *DbInstances) CopySnapshot(originalSnapshotName string, NewSnapshotName string, sourceRegion string, KmsKey string) (
 	*types.DBSnapshot, error) {
