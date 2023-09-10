@@ -9,7 +9,7 @@ import (
 )
 
 // ClusterInstancesToObjects makes a list of instances as objects for our stack
-func ClusterInstancesToObjects(t *types.DBCluster, c aws.DbInstances, f string, order int) ([]state.Object, error) {
+func ClusterInstancesToObjects(t *types.DBCluster, c aws.DbInstances, folder string, order int) ([]state.Object, error) {
 	// Cluster is empty
 	if len(t.DBClusterMembers) == 0 {
 		return nil, nil
@@ -23,9 +23,10 @@ func ClusterInstancesToObjects(t *types.DBCluster, c aws.DbInstances, f string, 
 		}
 		input := state.CreateDbInstanceInput(inst, t.DBClusterIdentifier)
 		b := state.EncodeCreateDBInstanceInput(input)
-		state.WriteOutput(f, b)
+		fName := fmt.Sprintf("%s/%s.gob", folder, *v.DBInstanceIdentifier)
+		state.WriteOutput(fName, b)
 		obj := state.Object{
-			FileName: f,
+			FileName: fName,
 			Order:    order,
 			ObjType:  state.RdsInstanceType,
 		}

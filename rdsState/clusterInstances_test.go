@@ -2,6 +2,7 @@ package rdsState_test
 
 import (
 	"context"
+	"os"
 	"reflect"
 	"testing"
 
@@ -84,7 +85,7 @@ func TestClusterInstancesToObjects(t *testing.T) {
 		order: 2,
 	}
 	id := "foo"
-
+	defer os.Remove("/tmp/foo.gob")
 	// Create DB Cluster Member
 	mem := []types.DBClusterMember{}
 	one := types.DBClusterMember{
@@ -95,7 +96,7 @@ func TestClusterInstancesToObjects(t *testing.T) {
 	//Want object
 	objs := []state.Object{}
 	fo := state.Object{
-		FileName: "/tmp/foo",
+		FileName: "/tmp/foo.gob",
 		Order:    2,
 		ObjType:  state.RdsInstanceType,
 	}
@@ -103,7 +104,7 @@ func TestClusterInstancesToObjects(t *testing.T) {
 	arg := args{
 		t:     &types.DBCluster{DBClusterIdentifier: &id, DBClusterMembers: mem},
 		c:     cl,
-		f:     "/tmp/foo",
+		f:     "/tmp",
 		order: 2,
 	}
 	tests := []struct {
