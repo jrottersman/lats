@@ -67,6 +67,15 @@ func (m mockRDSClient) RestoreDBInstanceFromDBSnapshot(ctx context.Context, para
 	return r, nil
 }
 
+func (m mockRDSClient) CreateDBClusterSnapshot(ctx context.Context, params *rds.CreateDBClusterSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBClusterSnapshotOutput, error) {
+	r := rds.CreateDBClusterSnapshotOutput{
+		DBClusterSnapshot: &types.DBClusterSnapshot{
+			AllocatedStorage: 1000,
+		},
+	}
+	return &r, nil
+}
+
 func TestGetCluster(t *testing.T) {
 	expected := "foo"
 	c := mockRDSClient{}
