@@ -6,11 +6,12 @@ import (
 	"github.com/jrottersman/lats/state"
 )
 
+//GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.
 func GenerateRDSClusterStack(r state.RDSRestorationStore, name string, fn *string, client aws.DbInstances, folder string) (*state.Stack, error) {
 	if fn == nil {
 		fn = helpers.RandomStateFileName()
 	}
-	objMap := make(map[int][]Objects)
+	objMap := make(map[int][]state.Object)
 	ClusterInput := state.GenerateRestoreDBClusterFromSnapshotInput(r)
 
 	// This is the cluster
@@ -21,20 +22,18 @@ func GenerateRDSClusterStack(r state.RDSRestorationStore, name string, fn *strin
 	}
 	clusterObj := state.NewObject(*fn, 1, state.Cluster)
 	var clusterObjects []state.Object
-	clusterObjects = append(clustertObjects, clusterObj)
+	clusterObjects = append(clusterObjects, clusterObj)
 	objMap[1] = clusterObjects
 
-	// TODO figure out how to handle the instances
 	instanceObjects, err := ClusterInstancesToObjects(r.Cluster, client, folder, 2)
 	if err != nil {
 		return nil, err
 	}
 	objMap[2] = instanceObjects
-	
-	return state.Stack{
-		Name: name,
-		RestorationObjectName: state.Cluster,
-		Objects: objMap
 
+	return &state.Stack{
+		Name:                  name,
+		RestorationObjectName: state.Cluster,
+		Objects:               objMap,
 	}, nil
 }
