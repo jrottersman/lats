@@ -37,13 +37,29 @@ func TestGenerateRDSClusterStack(t *testing.T) {
 		folder: "/tmp",
 	}
 
+	objs := make(map[int][]state.Object)
+	tObjs := []state.Object{}
+	obj := state.Object{
+		FileName: "/tmp/bar",
+		Order:    1,
+		ObjType:  state.Cluster,
+	}
+	tObjs = append(tObjs, obj)
+	objs[1] = tObjs
+	objs[2] = nil
+	wanted := state.Stack{
+		Name:                  "foo",
+		RestorationObjectName: state.Cluster,
+		Objects:               objs,
+	}
+
 	tests := []struct {
 		name    string
 		args    args
 		want    *state.Stack
 		wantErr bool
 	}{
-		{"test", arg, nil, false},
+		{"test", arg, &wanted, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
