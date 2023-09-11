@@ -138,6 +138,20 @@ func TestCreateSnapshot(t *testing.T) {
 	}
 }
 
+func TestCreateClusterSnapshot(t *testing.T) {
+	c := mockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	resp, err := dbi.CreateClusterSnapshot("foo", "bar")
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
+	if resp.AllocatedStorage != 1000 {
+		t.Errorf("got %d expected 1000", resp.AllocatedStorage)
+	}
+}
+
 func TestDescribeParameterGroup(t *testing.T) {
 	c := mockRDSClient{}
 	dbi := DbInstances{
