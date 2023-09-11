@@ -5,6 +5,7 @@ import (
 
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
+	"github.com/jrottersman/lats/rdsState"
 	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
 )
@@ -85,6 +86,16 @@ func CreateSnapshot() {
 	if cluster == nil && err == nil {
 		CreateSnasphotForInstance()
 	}
+	snapshot, err := dbi.CreateClusterSnapshot(dbName, snapshotName)
+	if err != nil {
+		log.Fatalf("error creating snapshot %s", err)
+	}
+	// create a stack
+	store := state.RDSRestorationStore{
+		Cluster:         cluster,
+		ClusterSnapshot: snapshot,
+	}
+	rdsState.GenerateRDSClusterStack(store, dbName, nil, dbi, ".state")
 }
 
 func CreateSnasphotForInstance() {
