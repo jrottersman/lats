@@ -96,11 +96,10 @@ func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName s
 	return output.DBSnapshot, nil
 }
 
-func (instances *DbInstances) CreateClusterSnapshot(clusterName string, snapshotName string) 
-(*types.DBClusterSnapshot, error) {
-	output, err := instance.RdsClient.CreateDBClusterSnapshot(context.TODO(), &rds.CreateDBClusterSnapshotInput{
-		DBClusterIdentifier: aws.String(clusterName),
-		DBClusterSnaphotIdentifer: aws.String(snapshotName),
+func (instances *DbInstances) CreateClusterSnapshot(clusterName string, snapshotName string) (*types.DBClusterSnapshot, error) {
+	output, err := instances.RdsClient.CreateDBClusterSnapshot(context.TODO(), &rds.CreateDBClusterSnapshotInput{
+		DBClusterIdentifier:         aws.String(clusterName),
+		DBClusterSnapshotIdentifier: aws.String(snapshotName),
 	})
 	if err != nil {
 		log.Printf("Couldn't create snapshot %s: because of %s\n", snapshotName, err)
