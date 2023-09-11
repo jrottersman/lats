@@ -75,3 +75,18 @@ func run() {
 	sm.UpdateState(*snap.DBSnapshotIdentifier, *f2, state.SnapshotType)
 	sm.SyncState(stateFileName)
 }
+
+func CreateSnapshot() {
+	dbi := aws.Init("us-east-1")
+	cluster, err := dbi.GetCluster(dbName)
+	if err != nil {
+		log.Fatalf("error with step 1 get cluster %s", err)
+	}
+	if cluster == nil && err == nil {
+		CreateSnasphotForInstance()
+	}
+}
+
+func CreateSnasphotForInstance() {
+	log.Printf("implement me")
+}
