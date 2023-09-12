@@ -22,60 +22,13 @@ var (
 		Short:   "Creates a snapshot for a given DB",
 		Long:    "Creates a snapshot for an RDS or Aurora database",
 		Run: func(cmd *cobra.Command, args []string) {
-			run()
+			CreateSnapshot()
 		},
 	}
 )
 
 func init() {
 	CreateRDSSnapshotCmd.Flags().StringVarP(&dbName, "database-name", "d", "", "Database name we want to create the snapshot for")
-}
-
-func run() {
-	//Get Config and state
-	config, err := readConfig(".latsConfig.json")
-	if err != nil {
-		log.Fatalf("Error reading config %s", err)
-	}
-	stateFileName := config.StateFileName
-	sm, err := state.ReadState(stateFileName)
-	if err != nil {
-		log.Fatalf("Error reading state %s", err)
-	}
-	// Create an RDS client
-	dbi := aws.Init(config.MainRegion)
-
-	// Get Instance
-	i, err := dbi.GetInstance(dbName)
-	if err != nil {
-		log.Fatalf("Error %s trying to retrive instance %s\n", err, dbName)
-	}
-
-	// Update state with instance
-	b := state.EncodeRDSDatabaseOutput(i)
-	f1 := helpers.RandomStateFileName()
-	_, err = state.WriteOutput(*f1, b)
-	if err != nil {
-		log.Fatalf("failed to write state file: %s\n", err)
-	}
-	sm.UpdateState(dbName, *f1, "RDSSnapshot")
-
-	// Copy Snapshot
-	snapName := helpers.SnapshotName(dbName)
-	snap, err := dbi.CreateSnapshot(dbName, snapName)
-	if err != nil {
-		log.Fatalf("failed to create snapshot %s\n", err)
-	}
-
-	// Update State with snapshot
-	f2 := helpers.RandomStateFileName()
-	b2 := state.EncodeRDSSnapshotOutput(snap)
-	_, err = state.WriteOutput(*f2, b2)
-	if err != nil {
-		log.Fatalf("failed to write state file: %s\n", err)
-	}
-	sm.UpdateState(*snap.DBSnapshotIdentifier, *f2, state.SnapshotType)
-	sm.SyncState(stateFileName)
 }
 
 func CreateSnapshot() {
