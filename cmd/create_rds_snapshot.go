@@ -116,5 +116,24 @@ func CreateSnapshot() {
 }
 
 func CreateSnasphotForInstance(dbi aws.DbInstances, sm state.StateManager) {
-	log.Printf("implement me")
+	db, err := dbi.GetInstance(dbName)
+	if err != nil {
+		log.Printf("didn't get instance %s", err)
+	}
+	snapshot, err := dbi.CreateSnapshot(dbName, snapshotName)
+	if err != nil {
+		log.Fatalf("error creating snapshot: %s", err)
+	}
+
+	store := state.RDSRestorationStore{
+		Instance: db,
+		Snapshot: snapshot,
+	}
+	stack, err := state.GenerateRDSInstanceStack(store, *store.GetInstanceIdentifier(), helpers.RandomStateFileName())
+	if err != nil {
+		log.Printf("error generating stack %s", err)
+	}
+	stackFn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
+	stack.Write(stackFn)
+	sm.UpdateState(snapshotName, stackFn, "stack")
 }
