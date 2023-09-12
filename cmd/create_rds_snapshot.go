@@ -95,7 +95,7 @@ func CreateSnapshot() {
 		log.Fatalf("error with step 1 get cluster %s", err)
 	}
 	if cluster == nil && err == nil {
-		CreateSnasphotForInstance()
+		CreateSnasphotForInstance(dbi, sm)
 	}
 	snapshot, err := dbi.CreateClusterSnapshot(dbName, snapshotName)
 	if err != nil {
@@ -115,6 +115,6 @@ func CreateSnapshot() {
 	sm.UpdateState(snapshotName, stackFn, "stack")
 }
 
-func CreateSnasphotForInstance() {
+func CreateSnasphotForInstance(dbi aws.DbInstances, sm state.StateManager) {
 	log.Printf("implement me")
 }
