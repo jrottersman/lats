@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/jrottersman/lats/aws"
@@ -78,6 +79,16 @@ func run() {
 }
 
 func CreateSnapshot() {
+	//Get Config and state
+	config, err := readConfig(".latsConfig.json")
+	if err != nil {
+		log.Fatalf("Error reading config %s", err)
+	}
+	stateFileName := config.StateFileName
+	sm, err := state.ReadState(stateFileName)
+	if err != nil {
+		log.Fatalf("Error reading state %s", err)
+	}
 	dbi := aws.Init("us-east-1")
 	cluster, err := dbi.GetCluster(dbName)
 	if err != nil {
@@ -95,7 +106,13 @@ func CreateSnapshot() {
 		Cluster:         cluster,
 		ClusterSnapshot: snapshot,
 	}
-	rdsState.GenerateRDSClusterStack(store, dbName, nil, dbi, ".state")
+	stack, err := rdsState.GenerateRDSClusterStack(store, dbName, nil, dbi, ".state")
+	if err != nil {
+		log.Printf("error generating stack %s", err)
+	}
+	stackFn := fmt.Sprintf(".state/%s", helpers.RandomStateFileName())
+	stack.Write(stackFn)
+	sm.UpdateState(snapshotName, stackFn, "stack")
 }
 
 func CreateSnasphotForInstance() {
