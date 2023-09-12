@@ -110,7 +110,7 @@ func CreateSnapshot() {
 	if err != nil {
 		log.Printf("error generating stack %s", err)
 	}
-	stackFn := fmt.Sprintf(".state/%s", helpers.RandomStateFileName())
+	stackFn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	stack.Write(stackFn)
 	sm.UpdateState(snapshotName, stackFn, "stack")
 }
