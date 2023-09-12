@@ -18,10 +18,6 @@ const KMSKeyType = "KMSKey"
 const RdsClusterType = "RDSCluster"
 const ClusterSnapshotType = "RDSClusterSnapshot"
 
-type StackStore struct {
-	Store []StackLookup `json:"store"`
-}
-
 type StackLookup struct {
 	Name string `json:"name"`
 	File string `json:"file"`
