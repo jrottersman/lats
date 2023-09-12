@@ -44,7 +44,7 @@ func TestUpdateState(t *testing.T) {
 	var mu sync.Mutex
 	var s []StateKV
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 	filename := "/tmp/foo"
@@ -60,7 +60,7 @@ func TestSyncState(t *testing.T) {
 	var mu sync.Mutex
 	var s []StateKV
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 
@@ -110,7 +110,7 @@ func TestGetStateObject(t *testing.T) {
 	}
 	s = append(s, kv)
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 
@@ -151,7 +151,7 @@ func TestGetStateObjectClusterSnapshot(t *testing.T) {
 	}
 	s = append(s, kv)
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 
@@ -191,7 +191,7 @@ func TestGetStateObjectInstance(t *testing.T) {
 	}
 	s = append(s, kv)
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 
@@ -230,7 +230,7 @@ func TestGetStateObjectKMS(t *testing.T) {
 	}
 	s = append(s, kv)
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 

@@ -54,7 +54,7 @@ func TestRDSRestorationStoreBuilder(t *testing.T) {
 	}
 	s = append(s, kv2)
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 

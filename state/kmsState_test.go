@@ -59,7 +59,7 @@ func TestGetKmsKeyOutput(t *testing.T) {
 	}
 	s = append(s, kv)
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 	newKmd, err := GetKmsOutput(&sm, "foo")

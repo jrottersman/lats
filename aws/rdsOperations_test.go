@@ -225,7 +225,7 @@ func TestRestoreSnapshotInstance(t *testing.T) {
 	}
 	s = append(s, kv2)
 	sm := state.StateManager{
-		Mu:             sync.Mutex{},
+		Mu:             &sync.Mutex{},
 		StateLocations: s,
 	}
 

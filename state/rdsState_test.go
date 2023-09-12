@@ -254,7 +254,7 @@ func TestGetRDSSnapshotOutput(t *testing.T) {
 	}
 	s = append(s, kv)
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 	newSnap, err := GetRDSSnapshotOutput(sm, "foo")
@@ -291,7 +291,7 @@ func TestGetRDSClusterSnapshotOutput(t *testing.T) {
 	}
 	s = append(s, kv)
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 	newSnap, err := GetRDSClusterSnapshotOutput(sm, "foo")
@@ -327,7 +327,7 @@ func TestGetRDSInstanceOutput(t *testing.T) {
 	}
 	s = append(s, kv)
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 	newDbi, err := GetRDSDatabaseInstanceOutput(sm, "foo")
@@ -364,7 +364,7 @@ func TestGetRDSClusterOutput(t *testing.T) {
 	}
 	s = append(s, kv)
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 	newDbi, err := GetRDSDatabaseClusterOutput(sm, "foo")

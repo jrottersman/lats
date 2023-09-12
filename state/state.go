@@ -79,7 +79,7 @@ type StateKV struct {
 }
 
 type StateManager struct {
-	Mu             sync.Mutex
+	Mu             *sync.Mutex
 	StateLocations []StateKV `json:"stateLocations"`
 }
 
@@ -170,7 +170,7 @@ func ReadState(filename string) (StateManager, error) {
 	}
 	var mu sync.Mutex
 	sm := StateManager{
-		mu,
+		&mu,
 		s,
 	}
 	return sm, err
