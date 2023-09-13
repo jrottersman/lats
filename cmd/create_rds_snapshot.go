@@ -44,7 +44,7 @@ func CreateSnapshot() {
 	if err != nil {
 		log.Fatalf("Error reading state %s", err)
 	}
-	dbi := aws.Init("us-east-1")
+	dbi := aws.Init(config.MainRegion)
 	cluster, err := dbi.GetCluster(dbName)
 	if err != nil {
 		log.Fatalf("error with step 1 get cluster %s", err)
