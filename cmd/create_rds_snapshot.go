@@ -58,7 +58,7 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 		Cluster:         cluster,
 		ClusterSnapshot: snapshot,
 	}
-	stack, err := rdsState.GenerateRDSClusterStack(store, dbName, nil, dbi, ".state")
+	stack, err := rdsState.GenerateRDSClusterStack(store, snapshotName, nil, dbi, ".state")
 	if err != nil {
 		log.Printf("error generating stack %s", err)
 	}
@@ -81,7 +81,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager) {
 		Instance: db,
 		Snapshot: snapshot,
 	}
-	stack, err := state.GenerateRDSInstanceStack(store, *store.GetInstanceIdentifier(), helpers.RandomStateFileName())
+	stack, err := state.GenerateRDSInstanceStack(store, snapshotName, helpers.RandomStateFileName())
 	if err != nil {
 		log.Printf("error generating stack %s", err)
 	}
