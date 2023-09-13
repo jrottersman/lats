@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
 	"github.com/jrottersman/lats/rdsState"
@@ -48,8 +49,13 @@ func CreateSnapshot() {
 		log.Fatalf("error with step 1 get cluster %s", err)
 	}
 	if cluster == nil && err == nil {
-		CreateSnasphotForInstance(dbi, sm)
+		createSnapshotForInstance(dbi, sm)
+	} else {
+		createSnapshotForCluster(dbi, sm, cluster)
 	}
+}
+
+func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluster *types.DBCluster) {
 	snapshot, err := dbi.CreateClusterSnapshot(dbName, snapshotName)
 	if err != nil {
 		log.Fatalf("error creating snapshot %s", err)
@@ -68,7 +74,7 @@ func CreateSnapshot() {
 	sm.UpdateState(snapshotName, stackFn, "stack")
 }
 
-func CreateSnasphotForInstance(dbi aws.DbInstances, sm state.StateManager) {
+func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager) {
 	db, err := dbi.GetInstance(dbName)
 	if err != nil {
 		log.Printf("didn't get instance %s", err)
