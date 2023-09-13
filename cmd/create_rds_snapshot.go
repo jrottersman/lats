@@ -35,15 +35,7 @@ func init() {
 
 func CreateSnapshot() {
 	//Get Config and state
-	config, err := readConfig(".latsConfig.json")
-	if err != nil {
-		log.Fatalf("Error reading config %s", err)
-	}
-	stateFileName := config.StateFileName
-	sm, err := state.ReadState(stateFileName)
-	if err != nil {
-		log.Fatalf("Error reading state %s", err)
-	}
+	config, sm := GetState()
 	dbi := aws.Init(config.MainRegion)
 	cluster, err := dbi.GetCluster(dbName)
 	if err != nil {
@@ -96,4 +88,17 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager) {
 	stackFn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	stack.Write(stackFn)
 	sm.UpdateState(snapshotName, stackFn, "stack")
+}
+
+func GetState() (Config, state.StateManager) {
+	config, err := readConfig(".latsConfig.json")
+	if err != nil {
+		log.Fatalf("Error reading config %s", err)
+	}
+	stateFileName := config.StateFileName
+	sm, err := state.ReadState(stateFileName)
+	if err != nil {
+		log.Fatalf("Error reading state %s", err)
+	}
+	return config, sm
 }
