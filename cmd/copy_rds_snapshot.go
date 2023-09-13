@@ -25,7 +25,7 @@ var (
 		Short:   "Copies a snapshot for a given DB",
 		Long:    "Copies a snapshot for an RDS or Aurora database into a new region",
 		Run: func(cmd *cobra.Command, args []string) {
-			createSnapshot()
+			copySnapshot()
 		},
 	}
 )
@@ -37,7 +37,7 @@ func init() {
 	CopyRDSSnapshotCmd.Flags().StringVarP(&configFile, "config-file", "f", "", "Config file for the snapshot that we want to parse")
 }
 
-func createSnapshot() {
+func copySnapshot() {
 	config, err := readConfig(".latsConfig.json")
 	if err != nil {
 		log.Fatalf("Error reading config %s", err)
@@ -94,13 +94,6 @@ func createKMSKey(config Config, sm state.StateManager) string {
 	if err != nil {
 		log.Fatalf("failed creating KMS key %s", err)
 	}
-	kf := helpers.RandomStateFileName()
-	b := state.EncodeKmsOutput(kmsStruct)
-	_, err = state.WriteOutput(*kf, b)
-	if err != nil {
-		log.Printf("Issues writing state %s", err)
-	}
-	sm.UpdateState(*kmsStruct.KeyId, *kf, state.KMSKeyType)
 	return *kmsStruct.KeyId
 
 }
