@@ -97,3 +97,22 @@ func createKMSKey(config Config, sm state.StateManager) string {
 	return *kmsStruct.KeyId
 
 }
+
+func findStack(sm state.StateManager, snapshot string) *state.Stack {
+	sm.Mu.Lock()
+	defer sm.Mu.Unlock()
+
+	for _, v := range sm.StateLocations {
+		if v.ObjectType != "stack" {
+			continue
+		}
+		stack, err := state.ReadStack(v.FileLocation)
+		if err != nil {
+			log.Printf("error reading stack %s", err)
+		}
+		if stack.Name == snapshot {
+			return stack
+		}
+	}
+	return nil
+}
