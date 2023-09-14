@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	"sync"
 	"testing"
 
@@ -20,5 +21,15 @@ func TestFindStack(t *testing.T) {
 	if resp != nil {
 		t.Errorf("Expected nil got %v", resp)
 	}
-
+	stk := state.Stack{
+		Name:                  "foo",
+		RestorationObjectName: "stack",
+	}
+	stk.Write(filename)
+	defer os.Remove(filename)
+	sm.UpdateState("foo", filename, "stack")
+	exp := FindStack(sm, "foo")
+	if exp.Name != stk.Name {
+		t.Errorf("got %s expected %s", exp.Name, stk.Name)
+	}
 }
