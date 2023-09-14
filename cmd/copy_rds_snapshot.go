@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
+	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
 	"github.com/jrottersman/lats/state"
@@ -118,9 +119,34 @@ func FindStack(sm state.StateManager, snapshot string) *state.Stack {
 	return nil
 }
 
-func NewStack(oldStack state.Stack, append string) *state.Stack {
+func NewStack(oldStack state.Stack, ending string) *state.Stack {
+	objs := make(map[int][]state.Object)
+	for k, v := range oldStack.Objects {
+		objs[k] = []state.Object{}
+		for _, i := range v {
+			obj := i.ReadObject()
+			switch i.ObjType {
+			case state.LoneInstance:
+				obj2 := obj.(rds.RestoreDBInstanceFromDBSnapshotInput)
+				insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
+				obj2.DBInstanceIdentifier = &insID
+				b := state.EncodeRestoreDBInstanceFromDBSnapshotInput(&obj2)
+				fn := helpers.RandomStateFileName()
+				_, err := state.WriteOutput(*fn, b)
+				if err != nil {
+
+				}
+				s := state.Object{
+					FileName: *fn,
+					Order:    k,
+					ObjType:  state.LoneInstance,
+				}
+				objs[k] = append(objs[k], s)
+			}
+		}
+	}
 	return &state.Stack{
-		Name:                  fmt.Sprintf("%s-%s", oldStack.Name, append),
+		Name:                  fmt.Sprintf("%s-%s", oldStack.Name, ending),
 		RestorationObjectName: oldStack.RestorationObjectName,
 	}
 }
