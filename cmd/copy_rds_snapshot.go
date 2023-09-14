@@ -69,6 +69,7 @@ func copySnapshot() {
 	if kmsKey == "" {
 		kmsKey = createKMSKey(config, sm)
 	}
+
 	// Get RDS Client
 	dbi := aws.Init(config.BackupRegion)
 
@@ -98,7 +99,7 @@ func createKMSKey(config Config, sm state.StateManager) string {
 
 }
 
-func findStack(sm state.StateManager, snapshot string) *state.Stack {
+func FindStack(sm state.StateManager, snapshot string) *state.Stack {
 	sm.Mu.Lock()
 	defer sm.Mu.Unlock()
 
