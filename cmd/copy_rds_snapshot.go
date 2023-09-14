@@ -117,3 +117,10 @@ func FindStack(sm state.StateManager, snapshot string) *state.Stack {
 	}
 	return nil
 }
+
+func NewStack(oldStack state.Stack, append string) *state.Stack {
+	return &state.Stack{
+		Name:                  fmt.Sprintf("%s-%s", oldStack.Name, append),
+		RestorationObjectName: oldStack.RestorationObjectName,
+	}
+}
