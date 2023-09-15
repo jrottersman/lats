@@ -142,6 +142,7 @@ func getLoneInstanceObject(obj interface{}, ending string, order int) state.Obje
 	obj2 := obj.(rds.RestoreDBInstanceFromDBSnapshotInput)
 	insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
 	obj2.DBInstanceIdentifier = &insID
+	obj2.DBSnapshotIdentifier = &copySnapshotName
 	b := state.EncodeRestoreDBInstanceFromDBSnapshotInput(&obj2)
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
