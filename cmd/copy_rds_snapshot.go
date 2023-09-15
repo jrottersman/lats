@@ -75,18 +75,20 @@ func copySnapshot() {
 	dbi := aws.Init(config.BackupRegion)
 
 	// Copy Snapshot
-	snap, err := dbi.CopySnapshot(originalSnapshotName, copySnapshotName, config.MainRegion, kmsKey)
+	_, err = dbi.CopySnapshot(originalSnapshotName, copySnapshotName, config.MainRegion, kmsKey)
 	if err != nil {
 		log.Fatalf("Error copying snapshot %s", err)
 	}
-	f2 := helpers.RandomStateFileName()
-	b2 := state.EncodeRDSSnapshotOutput(snap)
-	_, err = state.WriteOutput(*f2, b2)
+	os := FindStack(sm, originalSnapshotName)
+	stack := NewStack(*os, config.BackupRegion)
+
+	fn := helpers.RandomStateFileName()
+	err = stack.Write(*fn)
 	if err != nil {
-		log.Fatalf("failed to write state file: %s\n", err)
+		fmt.Printf("error writing stack %s", err)
 	}
-	sm.UpdateState(*snap.DBSnapshotIdentifier, *f2, state.SnapshotType)
-	sm.SyncState(stateFileName)
+
+	sm.UpdateState(stack.Name, *fn, "stack")
 }
 
 func createKMSKey(config Config, sm state.StateManager) string {
