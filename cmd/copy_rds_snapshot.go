@@ -182,3 +182,22 @@ func getClusterObject(obj interface{}, ending string, order int) state.Object {
 		ObjType:  state.Cluster,
 	}
 }
+
+func getInstanceObject(obj interface{}, ending string, order int, clusterID string) state.Object {
+	obj2 := obj.(rds.CreateDBInstanceInput)
+	insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
+	obj2.DBInstanceIdentifier = &insID
+	obj2.DBClusterIdentifier = &clusterID
+	obj2.AvailabilityZone = nil
+	b := state.EncodeCreateDBInstanceInput(&obj2)
+	fn := helpers.RandomStateFileName()
+	_, err := state.WriteOutput(*fn, b)
+	if err != nil {
+		log.Fatalf("Error writing ouptut %s")
+	}
+	return state.Object{
+		FileName: *fn,
+		Order:    order,
+		ObjType:  state.Instance,
+	}
+}
