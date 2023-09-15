@@ -131,6 +131,9 @@ func NewStack(oldStack state.Stack, ending string) *state.Stack {
 			case state.LoneInstance:
 				s := getLoneInstanceObject(obj, ending, k)
 				objs[k] = append(objs[k], s)
+			case state.Cluster:
+				s := getClusterObject(obj, ending, k)
+				objs[k] = append(objs[k], s)
 			}
 		}
 	}
@@ -149,7 +152,7 @@ func getLoneInstanceObject(obj interface{}, ending string, order int) state.Obje
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
 	if err != nil {
-
+		log.Fatalf("Error writing ouptut %s")
 	}
 	s := state.Object{
 		FileName: *fn,
@@ -157,4 +160,22 @@ func getLoneInstanceObject(obj interface{}, ending string, order int) state.Obje
 		ObjType:  state.LoneInstance,
 	}
 	return s
+}
+
+func getClusterObject(obj interface{}, ending string, order int) state.Object {
+	obj2 := obj.(rds.RestoreDBClusterFromSnapshotInput)
+	clsID := fmt.Sprintf("%s-%s", *obj2.DBClusterIdentifier, ending)
+	obj2.DBClusterIdentifier = &clsID
+	obj2.SnapshotIdentifier = &copySnapshotName
+	b := state.EncodeRestoreDBClusterFromSnapshotInput(&obj2)
+	fn := helpers.RandomStateFileName()
+	_, err := state.WriteOutput(*fn, b)
+	if err != nil {
+		log.Fatalf("Error writing ouptut %s")
+	}
+	return state.Object{
+		FileName: *fn,
+		Order:    order,
+		ObjType:  state.Cluster,
+	}
 }
