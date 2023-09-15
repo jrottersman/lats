@@ -127,20 +127,7 @@ func NewStack(oldStack state.Stack, ending string) *state.Stack {
 			obj := i.ReadObject()
 			switch i.ObjType {
 			case state.LoneInstance:
-				obj2 := obj.(rds.RestoreDBInstanceFromDBSnapshotInput)
-				insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
-				obj2.DBInstanceIdentifier = &insID
-				b := state.EncodeRestoreDBInstanceFromDBSnapshotInput(&obj2)
-				fn := helpers.RandomStateFileName()
-				_, err := state.WriteOutput(*fn, b)
-				if err != nil {
-
-				}
-				s := state.Object{
-					FileName: *fn,
-					Order:    k,
-					ObjType:  state.LoneInstance,
-				}
+				s := getLoneInstanceObject(obj, ending, k)
 				objs[k] = append(objs[k], s)
 			}
 		}
@@ -149,4 +136,22 @@ func NewStack(oldStack state.Stack, ending string) *state.Stack {
 		Name:                  fmt.Sprintf("%s-%s", oldStack.Name, ending),
 		RestorationObjectName: oldStack.RestorationObjectName,
 	}
+}
+
+func getLoneInstanceObject(obj interface{}, ending string, order int) state.Object {
+	obj2 := obj.(rds.RestoreDBInstanceFromDBSnapshotInput)
+	insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
+	obj2.DBInstanceIdentifier = &insID
+	b := state.EncodeRestoreDBInstanceFromDBSnapshotInput(&obj2)
+	fn := helpers.RandomStateFileName()
+	_, err := state.WriteOutput(*fn, b)
+	if err != nil {
+
+	}
+	s := state.Object{
+		FileName: *fn,
+		Order:    order,
+		ObjType:  state.LoneInstance,
+	}
+	return s
 }
