@@ -23,7 +23,7 @@ func TestGenerateRDSClusterStack(t *testing.T) {
 	snapshotId := "bar"
 	filen := "/tmp/bar"
 	c := mockRDSClient{}
-	i := aws.DbInstances{c}
+	i := aws.DbInstances{RdsClient: c}
 
 	resto := state.RDSRestorationStore{
 		Cluster:         &types.DBCluster{DBClusterIdentifier: &clusterId},

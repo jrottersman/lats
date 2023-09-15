@@ -11,10 +11,11 @@ import (
 	"github.com/spf13/viper"
 )
 
+//Config tells us our regions and where the state file is
 type Config struct {
 	MainRegion    string `json:"mainRegion"`
 	BackupRegion  string `json:"backupRegion"`
-	StateFileName string `json:"stateFileName`
+	StateFileName string `json:"stateFileName"`
 }
 
 var (
@@ -36,7 +37,7 @@ var (
 				if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 					genConfigFile()
 				} else {
-					fmt.Errorf("Error parsing config file %s", err)
+					fmt.Printf("Error parsing config file %s", err)
 				}
 			}
 
@@ -60,8 +61,8 @@ func getMainRegion() string {
 	}
 
 	mainRegionPromptContent := helpers.PromptContent{
-		"Please provide an AWS region.",
-		"What is the AWS region your database is running in?",
+		ErrorMsg: "Please provide an AWS region.",
+		Label:    "What is the AWS region your database is running in?",
 	}
 	mainRegion = helpers.PromptGetInput(mainRegionPromptContent)
 	return mainRegion
@@ -72,8 +73,8 @@ func getBackupRegion() string {
 		return backupRegion
 	}
 	backupRegionPromptContent := helpers.PromptContent{
-		"Please provide an AWS region.",
-		"What is the AWS region your backup should be in?",
+		ErrorMsg: "Please provide an AWS region.",
+		Label:    "What is the AWS region your backup should be in?",
 	}
 	backupRegion := helpers.PromptGetInput(backupRegionPromptContent)
 	return backupRegion
@@ -101,7 +102,7 @@ func genConfig(mr, br func() string) Config {
 func writeConfig(c Config, filename string) error {
 	conf, err := json.Marshal(c)
 	if err != nil {
-		fmt.Errorf("Error writing config: %s", err)
+		fmt.Printf("Error writing config: %s", err)
 		return err
 	}
 	err = os.WriteFile(filename, conf, 0644)

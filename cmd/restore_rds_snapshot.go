@@ -13,6 +13,7 @@ var (
 	restoreSnapshotName string
 	restoreDbName       string
 
+	//RestoreRDSSnapshotCmd restores an RDS snapshot
 	RestoreRDSSnapshotCmd = &cobra.Command{
 		Use:     "restoreRDSSnapshot",
 		Aliases: []string{"RestoreSnapshot"},
@@ -29,6 +30,7 @@ func init() {
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&restoreDbName, "database-name", "d", "", "name of the database we want to restore the snapshot for")
 }
 
+//RestoreSnapshot is the function that restores a snapshot
 func RestoreSnapshot(instances *aws.DbInstances, stateKV state.StateManager, snapshotName string) error {
 	RestorationBuilder, err := state.RDSRestorationStoreBuilder(stateKV, snapshotName)
 	if err != nil {

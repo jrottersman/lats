@@ -86,7 +86,7 @@ func TestClusterInstancesToObjects(t *testing.T) {
 
 	// mock Client
 	m := mockRDSClient{}
-	cl := aws.DbInstances{m}
+	cl := aws.DbInstances{RdsClient: m}
 	nilArg := args{
 		t:     &types.DBCluster{},
 		c:     cl,

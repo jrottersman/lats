@@ -16,7 +16,7 @@ var (
 	// Variables used for flags
 	dbName       string
 	snapshotName string
-
+	//CreateRDSSnapshotCmd is the args for creating RDS snapshot call
 	CreateRDSSnapshotCmd = &cobra.Command{
 		Use:     "CreateRDSSnapshot",
 		Aliases: []string{"CreateSnapshot"},
@@ -33,6 +33,7 @@ func init() {
 	CreateRDSSnapshotCmd.Flags().StringVarP(&snapshotName, "snapshot-name", "s", "", "Snapshot name that we want to create our snapshot with")
 }
 
+//CreateSnapshot generates a snapshot in AWS
 func CreateSnapshot() {
 	//Get Config and state
 	config, sm := GetState()
@@ -90,6 +91,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager) {
 	sm.UpdateState(snapshotName, stackFn, "stack")
 }
 
+//GetState reads in our statefile and config for future processing
 func GetState() (Config, state.StateManager) {
 	config, err := readConfig(".latsConfig.json")
 	if err != nil {
