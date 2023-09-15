@@ -19,7 +19,7 @@ var (
 	originalSnapshotName string
 	copySnapshotName     string
 	configFile           string
-
+	//CopyRDSSnapshotCmd creates the copy snapshot command.
 	CopyRDSSnapshotCmd = &cobra.Command{
 		Use:     "CopyRDSSnapshot",
 		Aliases: []string{"CopySnapshot"},
@@ -54,7 +54,7 @@ func copySnapshot() {
 		viper.AddConfigPath(".")
 		err := viper.ReadInConfig() // Find and read the config file
 		if err != nil {             // Handle errors reading the config file
-			fmt.Errorf("Error reading config file: %w", err)
+			fmt.Printf("Error reading config file: %s", err)
 		}
 		getKey := fmt.Sprintf("%s", viper.Get("kmsKey"))
 		kmsKey = getKey
@@ -100,6 +100,7 @@ func createKMSKey(config Config, sm state.StateManager) string {
 
 }
 
+//FindStack get's a stack for creating our new stack when we copy the snapshot
 func FindStack(sm state.StateManager, snapshot string) *state.Stack {
 	sm.Mu.Lock()
 	defer sm.Mu.Unlock()
@@ -119,6 +120,7 @@ func FindStack(sm state.StateManager, snapshot string) *state.Stack {
 	return nil
 }
 
+// NewStack generates the new stack that we are going touse
 func NewStack(oldStack state.Stack, ending string) *state.Stack {
 	objs := make(map[int][]state.Object)
 	for k, v := range oldStack.Objects {
