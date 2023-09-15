@@ -134,6 +134,9 @@ func NewStack(oldStack state.Stack, ending string) *state.Stack {
 			case state.Cluster:
 				s := getClusterObject(obj, ending, k)
 				objs[k] = append(objs[k], s)
+			case state.Instance:
+				s := getInstanceObject(obj, ending, k)
+				objs[k] = append(objs[k], s)
 			}
 		}
 	}
