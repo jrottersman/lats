@@ -3,6 +3,7 @@ package state
 import (
 	"encoding/gob"
 	"os"
+	"reflect"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -185,5 +186,37 @@ func Test_DeleteStack(t *testing.T) {
 	fe := DeleteStack(filename)
 	if fe != nil {
 		t.Errorf("delete stack error %s", fe)
+	}
+}
+
+func TestStack_SortStack(t *testing.T) {
+	type fields struct {
+		Name                  string
+		RestorationObjectName string
+		Objects               map[int][]Object
+	}
+	objs := make(map[int][]Object)
+	objs[1] = []Object{}
+	objs[2] = []Object{}
+	objs[3] = []Object{}
+	expected := []int{1, 2, 3}
+	tests := []struct {
+		name   string
+		fields fields
+		want   *[]int
+	}{
+		{name: "Test", fields: fields{Objects: objs}, want: &expected},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := Stack{
+				Name:                  tt.fields.Name,
+				RestorationObjectName: tt.fields.RestorationObjectName,
+				Objects:               tt.fields.Objects,
+			}
+			if got := s.SortStack(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Stack.SortStack() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
