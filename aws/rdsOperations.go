@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 	"log"
+	"sort"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
+	"github.com/jrottersman/lats/state"
 )
 
 // Client is used for mocking the AWS RDS instance for testing
@@ -78,6 +80,18 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 		dbs = append(dbs, *db)
 	}
 	return dbs, nil
+}
+
+func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
+	// sort keys
+	keys := []int{}
+	for k, _ := range s.Objects {
+		keys = append(keys, k)
+	}
+	sort.Ints(keys)
+	// get the one which is the cluster and create it
+	// get two which is the instances create them in parrallel
+	return nil
 }
 
 // CreateSnapshot cretaes an AWS snapshot
