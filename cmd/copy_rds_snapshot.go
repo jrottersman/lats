@@ -172,6 +172,11 @@ func getClusterObject(obj interface{}, ending string, order int) state.Object {
 	clsID := fmt.Sprintf("%s-%s", *obj2.DBClusterIdentifier, ending)
 	obj2.DBClusterIdentifier = &clsID
 	obj2.SnapshotIdentifier = &copySnapshotName
+	obj2.AvailabilityZones = nil
+	obj2.DBClusterParameterGroupName = nil
+	obj2.DBSubnetGroupName = nil
+	obj2.KmsKeyId = nil
+	obj2.VpcSecurityGroupIds = nil
 	b := state.EncodeRestoreDBClusterFromSnapshotInput(&obj2)
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
