@@ -154,6 +154,11 @@ func getLoneInstanceObject(obj interface{}, ending string, order int) state.Obje
 	insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
 	obj2.DBInstanceIdentifier = &insID
 	obj2.DBSnapshotIdentifier = &copySnapshotName
+	obj2.AvailabilityZone = nil
+	obj2.DBParameterGroupName = nil
+	obj2.DBSubnetGroupName = nil
+	obj2.VpcSecurityGroupIds = nil
+	obj2.OptionGroupName = nil
 	b := state.EncodeRestoreDBInstanceFromDBSnapshotInput(&obj2)
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
