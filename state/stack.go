@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 )
 
 const LoneInstance = "SingleRDSInstance"
@@ -74,6 +75,15 @@ func (s Stack) Write(filename string) error {
 		return err
 	}
 	return nil
+}
+
+func (s Stack) SortStack() *[]int {
+	keys := []int{}
+	for k := range s.Objects {
+		keys = append(keys, k)
+	}
+	sort.Ints(keys)
+	return &keys
 }
 
 func NewStack(name string, restorationObjectName string, objects []Object) Stack {
