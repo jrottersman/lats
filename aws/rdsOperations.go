@@ -3,8 +3,8 @@ package aws
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
-	"sort"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
@@ -84,12 +84,14 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 
 func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 	// sort keys
-	keys := []int{}
-	for k, _ := range s.Objects {
-		keys = append(keys, k)
-	}
-	sort.Ints(keys)
+	sorted := s.SortStack()
 	// get the one which is the cluster and create it
+	for _, k := range *sorted {
+		objs := s.Objects[k]
+		for _, v := range objs {
+			fmt.Printf("do something with %v", v)
+		}
+	}
 	// get two which is the instances create them in parrallel
 	return nil
 }
