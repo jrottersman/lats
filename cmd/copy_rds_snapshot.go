@@ -191,6 +191,8 @@ func getInstanceObject(obj interface{}, ending string, order int, clusterID stri
 	obj2.DBInstanceIdentifier = &insID
 	obj2.DBClusterIdentifier = &clusterID
 	obj2.AvailabilityZone = nil
+	obj2.DBParameterGroupName = nil
+	obj2.DBSubnetGroupName = nil
 	b := state.EncodeCreateDBInstanceInput(&obj2)
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
