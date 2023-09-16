@@ -135,10 +135,10 @@ func NewStack(oldStack state.Stack, ending string) *state.Stack {
 				s := getLoneInstanceObject(obj, ending, k)
 				objs[k] = append(objs[k], s)
 			case state.Cluster:
-				s, clusterID := getClusterObject(obj, ending, k)
+				s := getClusterObject(obj, ending, k)
 				objs[k] = append(objs[k], s)
 			case state.Instance:
-				s := getInstanceObject(obj, ending, k, *clusterID)
+				s := getInstanceObject(obj, ending, k)
 				objs[k] = append(objs[k], s)
 			}
 		}
@@ -196,9 +196,10 @@ func getClusterObject(obj interface{}, ending string, order int) (state.Object, 
 	}, obj2.DBClusterIdentifier
 }
 
-func getInstanceObject(obj interface{}, ending string, order int, clusterID string) state.Object {
+func getInstanceObject(obj interface{}, ending string, order int) state.Object {
 	obj2 := obj.(rds.CreateDBInstanceInput)
 	insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
+	clusterID := fmt.Sprintf("%s-%s", obj2.DBClusterIdentifier, ending)
 	obj2.DBInstanceIdentifier = &insID
 	obj2.DBClusterIdentifier = &clusterID
 	obj2.AvailabilityZone = nil
