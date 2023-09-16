@@ -125,7 +125,6 @@ func FindStack(sm state.StateManager, snapshot string) *state.Stack {
 // NewStack generates the new stack that we are going touse
 func NewStack(oldStack state.Stack, ending string) *state.Stack {
 	objs := make(map[int][]state.Object)
-	var clusterID *string
 	for k, v := range oldStack.Objects {
 		objs[k] = []state.Object{}
 		for _, i := range v {
@@ -173,7 +172,7 @@ func getLoneInstanceObject(obj interface{}, ending string, order int) state.Obje
 	return s
 }
 
-func getClusterObject(obj interface{}, ending string, order int) (state.Object, *string) {
+func getClusterObject(obj interface{}, ending string, order int) state.Object {
 	obj2 := obj.(rds.RestoreDBClusterFromSnapshotInput)
 	clsID := fmt.Sprintf("%s-%s", *obj2.DBClusterIdentifier, ending)
 	obj2.DBClusterIdentifier = &clsID
@@ -193,7 +192,7 @@ func getClusterObject(obj interface{}, ending string, order int) (state.Object, 
 		FileName: *fn,
 		Order:    order,
 		ObjType:  state.Cluster,
-	}, obj2.DBClusterIdentifier
+	}
 }
 
 func getInstanceObject(obj interface{}, ending string, order int) state.Object {
