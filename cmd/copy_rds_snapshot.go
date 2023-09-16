@@ -162,7 +162,7 @@ func getLoneInstanceObject(obj interface{}, ending string, order int) state.Obje
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
 	if err != nil {
-		log.Fatalf("Error writing ouptut %s")
+		log.Fatalf("Error writing ouptut %s", err)
 	}
 	s := state.Object{
 		FileName: *fn,
@@ -186,7 +186,7 @@ func getClusterObject(obj interface{}, ending string, order int) state.Object {
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
 	if err != nil {
-		log.Fatalf("Error writing ouptut %s")
+		log.Fatalf("Error writing ouptut %s", err)
 	}
 	return state.Object{
 		FileName: *fn,
@@ -198,7 +198,7 @@ func getClusterObject(obj interface{}, ending string, order int) state.Object {
 func getInstanceObject(obj interface{}, ending string, order int) state.Object {
 	obj2 := obj.(rds.CreateDBInstanceInput)
 	insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
-	clusterID := fmt.Sprintf("%s-%s", obj2.DBClusterIdentifier, ending)
+	clusterID := fmt.Sprintf("%s-%s", *obj2.DBClusterIdentifier, ending)
 	obj2.DBInstanceIdentifier = &insID
 	obj2.DBClusterIdentifier = &clusterID
 	obj2.AvailabilityZone = nil
@@ -208,7 +208,7 @@ func getInstanceObject(obj interface{}, ending string, order int) state.Object {
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
 	if err != nil {
-		log.Fatalf("Error writing ouptut %s")
+		log.Fatalf("Error writing ouptut %s", err)
 	}
 	return state.Object{
 		FileName: *fn,
