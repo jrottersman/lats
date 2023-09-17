@@ -96,7 +96,12 @@ func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 }
 
 func (instances *DbInstances) getClusterStatus(name string) (*string, error) {
-	return nil, nil
+	cluster, err := instances.GetCluster(name)
+	if err != nil {
+		return nil, err
+	}
+	return cluster.Status, nil
+
 }
 
 // CreateSnapshot cretaes an AWS snapshot
