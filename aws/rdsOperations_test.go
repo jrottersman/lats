@@ -18,7 +18,7 @@ type mockRDSClient struct{}
 func (m mockRDSClient) DescribeDBClusters(ctx context.Context, params *rds.DescribeDBClustersInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClustersOutput, error) {
 	f := "foo"
 	r := &rds.DescribeDBClustersOutput{
-		DBClusters: []types.DBCluster{{DBClusterIdentifier: &f, DBClusterMembers: []types.DBClusterMember{{DBInstanceIdentifier: &f}}}},
+		DBClusters: []types.DBCluster{{DBClusterIdentifier: &f, Status: aws.String("creating"), DBClusterMembers: []types.DBClusterMember{{DBInstanceIdentifier: &f}}}},
 	}
 	return r, nil
 }
@@ -287,6 +287,7 @@ func TestDbInstances_getClusterStatus(t *testing.T) {
 	type args struct {
 		name string
 	}
+	m := mockRDSClient{}
 	tests := []struct {
 		name    string
 		fields  fields
@@ -294,7 +295,7 @@ func TestDbInstances_getClusterStatus(t *testing.T) {
 		want    *string
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{name: "test", fields: fields{RdsClient: m}, args: args{"foo"}, want: aws.String("creating"), wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -306,8 +307,8 @@ func TestDbInstances_getClusterStatus(t *testing.T) {
 				t.Errorf("DbInstances.getClusterStatus() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if got != tt.want {
-				t.Errorf("DbInstances.getClusterStatus() = %v, want %v", *got, *tt.want)
+			if *got != *tt.want {
+				t.Errorf("DbInstances.getClusterStatus() = %v want %v", *got, *tt.want)
 			}
 		})
 	}
