@@ -58,7 +58,7 @@ func (m mockRDSClient) CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSna
 }
 
 func (m mockRDSClient) RestoreDBClusterFromSnapshot(ctx context.Context, params *rds.RestoreDBClusterFromSnapshotInput, optFns ...func(*rds.Options)) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
-	r := &rds.RestoreDBClusterFromSnapshotOutput{}
+	r := &rds.RestoreDBClusterFromSnapshotOutput{DBCluster: &types.DBCluster{Status: aws.String("creating")}}
 	return r, nil
 }
 
