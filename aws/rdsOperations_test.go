@@ -279,3 +279,36 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 		t.Errorf("got %T expected %T", resp, &rds.RestoreDBInstanceFromDBSnapshotOutput{})
 	}
 }
+
+func TestDbInstances_getClusterStatus(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		name string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *string
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			got, err := instances.getClusterStatus(tt.args.name)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DbInstances.getClusterStatus() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("DbInstances.getClusterStatus() = %v, want %v", *got, *tt.want)
+			}
+		})
+	}
+}
