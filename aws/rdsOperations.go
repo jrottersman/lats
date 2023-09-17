@@ -3,7 +3,6 @@ package aws
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -89,11 +88,15 @@ func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 	for _, k := range *sorted {
 		objs := s.Objects[k]
 		for _, v := range objs {
-			fmt.Printf("do something with %v", v)
+			v.ReadObject()
 		}
 	}
 	// get two which is the instances create them in parrallel
 	return nil
+}
+
+func (instances *DbInstances) getClusterStatus(name string) (*string, error) {
+	return nil, nil
 }
 
 // CreateSnapshot cretaes an AWS snapshot
