@@ -88,7 +88,7 @@ func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 	// get the one which is the cluster and create it
 	first := s.Objects[1]
 	if len(first) != 1 {
-		fmt.Printf("warning more than one cluster which is weird")
+		return fmt.Errorf("Multiple clusters and there should only be one")
 	}
 	for _, v := range first {
 		b := v.ReadObject()
