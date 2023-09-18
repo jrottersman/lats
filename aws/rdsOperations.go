@@ -3,6 +3,7 @@ package aws
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -83,14 +84,21 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 
 func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 	// sort keys
-	sorted := s.SortStack()
+	// sorted := s.SortStack()
 	// get the one which is the cluster and create it
-	for _, k := range *sorted {
-		objs := s.Objects[k]
-		for _, v := range objs {
-			v.ReadObject()
+	first := s.Objects[1]
+	if len(first) != 1 {
+		fmt.Printf("warning more than one cluster which is weird")
+	}
+	for _, v := range first {
+		b := v.ReadObject()
+		dbi := b.(*rds.RestoreDBClusterFromSnapshotInput)
+		_, err := instaces.RestoreSnapshotCluster(*dbi) // we might need to do something with the output in which case this changes
+		if err != nil {
+			return err
 		}
 	}
+
 	// get two which is the instances create them in parrallel
 	return nil
 }
