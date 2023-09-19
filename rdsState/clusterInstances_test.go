@@ -23,12 +23,20 @@ func (m mockRDSClient) DescribeDBClusters(ctx context.Context, params *rds.Descr
 	return r, nil
 }
 
+func (m mockRDSClient) DescribeDBClusterSnapshots(ctx context.Context, params *rds.DescribeDBClusterSnapshotsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClusterSnapshotsOutput, error) {
+	return &rds.DescribeDBClusterSnapshotsOutput{}, nil
+}
+
 func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput, optFns ...func(*rds.Options)) (*rds.DescribeDBInstancesOutput, error) {
 	f := "foo"
 	r := &rds.DescribeDBInstancesOutput{
 		DBInstances: []types.DBInstance{{DBInstanceIdentifier: &f}},
 	}
 	return r, nil
+}
+
+func (m mockRDSClient) DescribeDBSnapshots(ctx context.Context, params *rds.DescribeDBSnapshotsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBSnapshotsOutput, error) {
+	return &rds.DescribeDBSnapshotsOutput{}, nil
 }
 
 func (m mockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error) {
