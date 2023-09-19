@@ -75,11 +75,12 @@ func copySnapshot() {
 	dbi := aws.Init(config.BackupRegion)
 
 	// Copy Snapshot
+	os := FindStack(sm, originalSnapshotName)
 	_, err = dbi.CopySnapshot(originalSnapshotName, copySnapshotName, config.MainRegion, kmsKey)
 	if err != nil {
 		log.Fatalf("Error copying snapshot %s", err)
 	}
-	os := FindStack(sm, originalSnapshotName)
+
 	stack := NewStack(*os, config.BackupRegion)
 
 	fn := helpers.RandomStateFileName()
