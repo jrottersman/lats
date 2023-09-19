@@ -200,3 +200,11 @@ func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanc
 	}
 	return output, nil
 }
+
+func (instances *DbInstances) GetSnapshotARN(name string) (*string, error) {
+	return nil, nil
+}
+
+func (instances *DbInstances) GetClusterSnapshotARN(name string) (*string, error) {
+	return nil, nil
+}
