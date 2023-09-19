@@ -220,6 +220,20 @@ func (instances *DbInstances) GetSnapshotARN(name string, marker *string) (*stri
 	return nil, fmt.Errorf("snapshot not found")
 }
 
-func (instances *DbInstances) GetClusterSnapshotARN(name string) (*string, error) {
-	return nil, nil
+func (instances *DbInstances) GetClusterSnapshotARN(name string, marker *string) (*string, error) {
+	output, err := instances.RdsClient.DescribeDBClusterSnapshots(context.TODO(), &rds.DescribeDBClusterSnapshotsInput{
+		Marker: marker,
+	})
+	if err != nil {
+		return nil, err
+	}
+	for _, v := range output.DBClusterSnapshots {
+		if *v.DBClusterSnapshotIdentifier == name {
+			return v.DBClusterSnapshotArn, nil
+		}
+	}
+	if output.Marker != nil {
+		instances.GetClusterSnapshotARN(name, output.Marker)
+	}
+	return nil, fmt.Errorf("cluster snapshot not found")
 }
