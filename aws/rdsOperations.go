@@ -201,8 +201,23 @@ func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanc
 	return output, nil
 }
 
-func (instances *DbInstances) GetSnapshotARN(name string) (*string, error) {
-	return nil, nil
+func (instances *DbInstances) GetSnapshotARN(name string, marker *string) (*string, error) {
+	output, err := instances.RdsClient.DescribeDBSnapshots(context.TODO(), &rds.DescribeDBSnapshotsInput{
+		Marker: marker,
+	})
+	if err != nil {
+		return nil, err
+	}
+	for _, v := range output.DBSnapshots {
+		if *v.DBSnapshotIdentifier == name {
+			return v.DBSnapshotArn, nil
+		}
+	}
+	if output.Marker != nil {
+		instances.GetSnapshotARN(name, output.Marker)
+
+	}
+	return nil, fmt.Errorf("snapshot not found")
 }
 
 func (instances *DbInstances) GetClusterSnapshotARN(name string) (*string, error) {
