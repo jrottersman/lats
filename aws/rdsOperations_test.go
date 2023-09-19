@@ -36,7 +36,15 @@ func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.Descr
 }
 
 func (m mockRDSClient) DescribeDBSnapshots(ctx context.Context, params *rds.DescribeDBSnapshotsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBSnapshotsOutput, error) {
-	return &rds.DescribeDBSnapshotsOutput{}, nil
+	snapshots := []types.DBSnapshot{}
+	snap := types.DBSnapshot{
+		DBSnapshotIdentifier: aws.String("foo"),
+		DBSnapshotArn:        aws.String("foo"),
+	}
+	snapshots = append(snapshots, snap)
+	return &rds.DescribeDBSnapshotsOutput{
+		DBSnapshots: snapshots,
+	}, nil
 }
 
 func (m mockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error) {
@@ -353,8 +361,8 @@ func TestDbInstances_GetSnapshotARN(t *testing.T) {
 				t.Errorf("DbInstances.GetSnapshotARN() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if got != tt.want {
-				t.Errorf("DbInstances.GetSnapshotARN() = %v, want %v", got, tt.want)
+			if *got != *tt.want {
+				t.Errorf("DbInstances.GetSnapshotARN() = %v, want %v", *got, *tt.want)
 			}
 		})
 	}
