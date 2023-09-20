@@ -457,3 +457,39 @@ func TestDbInstances_GetSnapshotARN(t *testing.T) {
 		})
 	}
 }
+
+func TestDbInstances_CopyClusterSnaphot(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		originalSnapshotName string
+		newSnapshotName      string
+		sourceRegion         string
+		kmsKey               string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *types.DBClusterSnapshot
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			got, err := instances.CopyClusterSnaphot(tt.args.originalSnapshotName, tt.args.newSnapshotName, tt.args.sourceRegion, tt.args.kmsKey)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DbInstances.CopyClusterSnaphot() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DbInstances.CopyClusterSnaphot() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
