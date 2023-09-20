@@ -144,19 +144,34 @@ func (instances *DbInstances) CreateClusterSnapshot(clusterName string, snapshot
 }
 
 // CopySnapshot copies a snapshot to a new region note it needs to run from the destination region so it needs a different client then CreateSnapshot!
-func (instances *DbInstances) CopySnapshot(originalSnapshotName string, NewSnapshotName string, sourceRegion string, KmsKey string) (
+func (instances *DbInstances) CopySnapshot(originalSnapshotName string, newSnapshotName string, sourceRegion string, KmsKey string) (
 	*types.DBSnapshot, error) {
 	output, err := instances.RdsClient.CopyDBSnapshot(context.TODO(), &rds.CopyDBSnapshotInput{
 		SourceDBSnapshotIdentifier: aws.String(originalSnapshotName),
-		TargetDBSnapshotIdentifier: aws.String(NewSnapshotName),
+		TargetDBSnapshotIdentifier: aws.String(newSnapshotName),
 		SourceRegion:               aws.String(sourceRegion), // this generates a presigned URL under the hood which enables cross region copies
 		KmsKeyId:                   aws.String(KmsKey),
 	})
 	if err != nil {
-		log.Printf("Couldn't copy snapshot %s: %s\n", NewSnapshotName, err)
+		log.Printf("Couldn't copy snapshot %s: %s\n", newSnapshotName, err)
 		return nil, err
 	}
 	return output.DBSnapshot, nil
+}
+
+func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, newSnapshotName string, sourceRegion string, kmsKey string) (
+	*types.DBClusterSnapshot, error) {
+	output, err := instances.RdsClient.CopyDBClusterSnapshot(context.TODO(), &rds.CopyDBClusterSnapshotInput{
+		SourceDBClusterSnapshotIdentifier: aws.String(originalSnapshotName),
+		TargetDBClusterSnapshotIdentifier: aws.String(newSnapshotName),
+		SourceRegion:                      aws.String(sourceRegion),
+		KmsKeyId:                          aws.String(kmsKey),
+	})
+	if err != nil {
+		log.Printf("Couldn't copy snapshot %s: %s\n", newSnapshotName, err)
+		return nil, err
+	}
+	return output.DBClusterSnapshot, nil
 }
 
 // TODO Copy Option Group
