@@ -339,7 +339,7 @@ func TestDbInstances_getClusterStatus(t *testing.T) {
 	}
 }
 
-func TestDbInstances_GetSnapshotARN(t *testing.T) {
+func TestDbInstances_GetInstanceSnapshotARN(t *testing.T) {
 	type fields struct {
 		RdsClient Client
 	}
@@ -365,7 +365,7 @@ func TestDbInstances_GetSnapshotARN(t *testing.T) {
 			instances := &DbInstances{
 				RdsClient: tt.fields.RdsClient,
 			}
-			got, err := instances.GetSnapshotARN(tt.args.name, tt.args.marker)
+			got, err := instances.GetInstanceSnapshotARN(tt.args.name, tt.args.marker)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("DbInstances.GetSnapshotARN() error = %v, wantErr %v", err, tt.wantErr)
 				return
