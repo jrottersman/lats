@@ -75,13 +75,21 @@ func copySnapshot() {
 	dbi := aws.Init(config.BackupRegion)
 
 	// Copy Snapshot
-	os := FindStack(sm, originalSnapshotName)
+	origStack := FindStack(sm, originalSnapshotName)
+	if origStack.RestorationObjectName == state.Cluster {
+		arn, err := dbi.GetSnapshotARN(originalSnapshotName, true)
+		if err != nil {
+			log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
+		}
+		log.Printf("our arn is %s we need to get a copy cluster snapshot silly goose", *arn)
+	}
+
 	_, err = dbi.CopySnapshot(originalSnapshotName, copySnapshotName, config.MainRegion, kmsKey)
 	if err != nil {
 		log.Fatalf("Error copying snapshot %s", err)
 	}
 
-	stack := NewStack(*os, config.BackupRegion)
+	stack := NewStack(*origStack, config.BackupRegion)
 
 	fn := helpers.RandomStateFileName()
 	err = stack.Write(*fn)
