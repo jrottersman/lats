@@ -24,7 +24,16 @@ func (m mockRDSClient) DescribeDBClusters(ctx context.Context, params *rds.Descr
 }
 
 func (m mockRDSClient) DescribeDBClusterSnapshots(ctx context.Context, params *rds.DescribeDBClusterSnapshotsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClusterSnapshotsOutput, error) {
-	return &rds.DescribeDBClusterSnapshotsOutput{}, nil
+	snapshots := []types.DBClusterSnapshot{}
+	snap := types.DBClusterSnapshot{
+		DBClusterSnapshotIdentifier: aws.String("foo"),
+		DBClusterSnapshotArn:        aws.String("foo"),
+	}
+	snapshots = append(snapshots, snap)
+
+	return &rds.DescribeDBClusterSnapshotsOutput{
+		DBClusterSnapshots: snapshots,
+	}, nil
 }
 
 func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput, optFns ...func(*rds.Options)) (*rds.DescribeDBInstancesOutput, error) {
@@ -400,8 +409,8 @@ func TestDbInstances_GetClusterSnapshotARN(t *testing.T) {
 				t.Errorf("DbInstances.GetClusterSnapshotARN() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if got != tt.want {
-				t.Errorf("DbInstances.GetClusterSnapshotARN() = %v, want %v", got, tt.want)
+			if *got != *tt.want {
+				t.Errorf("DbInstances.GetClusterSnapshotARN() = %v, want %v", *got, *tt.want)
 			}
 		})
 	}
