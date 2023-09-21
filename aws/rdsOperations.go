@@ -111,6 +111,14 @@ func (instances *DbInstances) CreateInstanceFromStack(s *state.Stack) error {
 	if len(instance) != 1 {
 		return fmt.Errorf("There should only be a single instance")
 	}
+	for _, v := range instance {
+		b := v.ReadObject()
+		ins := b.(*rds.RestoreDBInstanceFromDBSnapshotInput)
+		_, err := instances.RestoreSnapshotInstance(*ins)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
