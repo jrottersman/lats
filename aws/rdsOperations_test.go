@@ -73,7 +73,9 @@ func (m mockRDSClient) DescribeDBParameterGroups(ctx context.Context, params *rd
 	return &r, nil
 }
 func (m mockRDSClient) CopyDBClusterSnapshot(ctx context.Context, params *rds.CopyDBClusterSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBClusterSnapshotOutput, error) {
-	return &rds.CopyDBClusterSnapshotOutput{}, nil
+	return &rds.CopyDBClusterSnapshotOutput{
+		DBClusterSnapshot: &types.DBClusterSnapshot{},
+	}, nil
 }
 
 func (m mockRDSClient) CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBSnapshotOutput, error) {
@@ -468,6 +470,10 @@ func TestDbInstances_CopyClusterSnaphot(t *testing.T) {
 		sourceRegion         string
 		kmsKey               string
 	}
+	m := mockRDSClient{}
+	field := fields{RdsClient: m}
+	want := types.DBClusterSnapshot{}
+	arg := args{originalSnapshotName: "foo", newSnapshotName: "foo", sourceRegion: "baz", kmsKey: "bat"}
 	tests := []struct {
 		name    string
 		fields  fields
@@ -475,7 +481,7 @@ func TestDbInstances_CopyClusterSnaphot(t *testing.T) {
 		want    *types.DBClusterSnapshot
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{name: "test", fields: field, args: arg, want: &want, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
