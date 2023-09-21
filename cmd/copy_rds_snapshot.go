@@ -81,7 +81,7 @@ func copySnapshot() {
 		if err != nil {
 			log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
 		}
-		log.Printf("our arn is %s we need to get a copy cluster snapshot silly goose", *arn)
+		dbi.CopyClusterSnaphot(*arn, copySnapshotName, config.MainRegion, kmsKey)
 	}
 
 	_, err = dbi.CopySnapshot(originalSnapshotName, copySnapshotName, config.MainRegion, kmsKey)
