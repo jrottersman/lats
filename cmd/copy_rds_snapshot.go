@@ -76,19 +76,22 @@ func copySnapshot() {
 
 	// Copy Snapshot
 	origStack := FindStack(sm, originalSnapshotName)
-	if origStack.RestorationObjectName == state.Cluster {
-		arn, err := dbi.GetSnapshotARN(originalSnapshotName, true)
-		if err != nil {
-			log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
-		}
-		dbi.CopyClusterSnaphot(*arn, copySnapshotName, config.MainRegion, kmsKey)
-	}
-
-	_, err = dbi.CopySnapshot(originalSnapshotName, copySnapshotName, config.MainRegion, kmsKey)
+	arn, err := dbi.GetSnapshotARN(originalSnapshotName, true)
 	if err != nil {
-		log.Fatalf("Error copying snapshot %s", err)
+		log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
 	}
-
+	if origStack.RestorationObjectName == state.Cluster {
+		_, err = dbi.CopyClusterSnaphot(*arn, copySnapshotName, config.MainRegion, kmsKey)
+		if err != nil {
+			log.Fatalf("Error copying snapshot %s", err)
+		}
+	}
+	if origStack.RestorationObjectName == state.LoneInstance {
+		_, err = dbi.CopySnapshot(originalSnapshotName, copySnapshotName, config.MainRegion, kmsKey)
+		if err != nil {
+			log.Fatalf("Error copying snapshot %s", err)
+		}
+	}
 	stack := NewStack(*origStack, config.BackupRegion)
 
 	fn := helpers.RandomStateFileName()
