@@ -32,12 +32,10 @@ func init() {
 
 //RestoreSnapshot is the function that restores a snapshot
 func RestoreSnapshot(instances *aws.DbInstances, stateKV state.StateManager, snapshotName string) error {
-	RestorationBuilder, err := state.RDSRestorationStoreBuilder(stateKV, snapshotName)
-	if err != nil {
-		fmt.Printf("error getting restoration store %s", err)
-		return err
+	SnapshotStack := FindStack(stateKV, snapshotName)
+	if SnapshotStack.RestorationObjectName == state.Cluster {
+		fmt.Printf("restoring a cluster")
+	} else if SnapshotStack.RestorationObjectName == state.LoneInstance {
+		fmt.Printf("restoring an instance")
 	}
-	SnapshotInput := state.GenerateRestoreDBInstanceFromDBClusterSnapshotInput(*RestorationBuilder)
-	_, nil := instances.RestoreSnapshotInstance(*SnapshotInput)
-	return nil
 }
