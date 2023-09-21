@@ -38,4 +38,5 @@ func RestoreSnapshot(instances *aws.DbInstances, stateKV state.StateManager, sna
 	} else if SnapshotStack.RestorationObjectName == state.LoneInstance {
 		fmt.Printf("restoring an instance")
 	}
+	return nil
 }
