@@ -106,6 +106,10 @@ func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 	return nil
 }
 
+func (instances *DbInstances) CreateInstanceFromStack(s *state.Stack) error {
+	return nil
+}
+
 func (instances *DbInstances) getClusterStatus(name string) (*string, error) {
 	cluster, err := instances.GetCluster(name)
 	if err != nil {
