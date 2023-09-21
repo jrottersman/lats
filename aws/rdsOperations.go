@@ -107,6 +107,10 @@ func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 }
 
 func (instances *DbInstances) CreateInstanceFromStack(s *state.Stack) error {
+	instance := s.Objects[1]
+	if len(instance) != 1 {
+		return fmt.Errorf("There should only be a single instance")
+	}
 	return nil
 }
 
