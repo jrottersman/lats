@@ -103,6 +103,10 @@ func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 	}
 
 	// get two which is the instances create them in parrallel
+	second := s.Objects[2]
+	for _, i := range second {
+		fmt.Printf("%v", i)
+	}
 	return nil
 }
 
