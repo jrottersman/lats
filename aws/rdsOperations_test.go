@@ -507,13 +507,26 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 	type args struct {
 		s *state.Stack
 	}
+	field := fields{RdsClient: mockRDSClient{}}
+	// Create long args
+	objs := []state.Object{}
+	obj1 := state.Object{}
+	obj2 := state.Object{}
+	objs = append(objs, obj1)
+	objs = append(objs, obj2)
+	objects := make(map[int][]state.Object)
+	objects[1] = objs
+	longStack := state.Stack{
+		Objects: objects,
+	}
+	failArg := args{s: &longStack}
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{name: "fail", fields: field, args: failArg, wantErr: true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
