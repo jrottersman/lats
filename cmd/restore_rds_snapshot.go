@@ -40,8 +40,7 @@ func RestoreSnapshot(instances *aws.DbInstances, stateKV state.StateManager, sna
 		return dbi.CreateClusterFromStack(SnapshotStack)
 		// TODO finish create Cluster from stack
 	} else if SnapshotStack.RestorationObjectName == state.LoneInstance {
-		fmt.Printf("restoring an instance")
-		//TODO create CreateInstanceFromStack
+		return dbi.CreateInstanceFromStack(SnapshotStack)
 	}
 	return fmt.Errorf("Error invalid type of stack to restore a snapshot")
 }
