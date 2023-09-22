@@ -88,7 +88,7 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 	return dbs, nil
 }
 
-func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
+func (instances *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 	// sort keys
 	// sorted := s.SortStack()
 	// get the one which is the cluster and create it
@@ -99,7 +99,7 @@ func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 	for _, v := range first {
 		b := v.ReadObject()
 		dbi := b.(*rds.RestoreDBClusterFromSnapshotInput)
-		_, err := instaces.RestoreSnapshotCluster(*dbi) // we might need to do something with the output in which case this changes
+		_, err := instances.RestoreSnapshotCluster(*dbi) // we might need to do something with the output in which case this changes
 		if err != nil {
 			return err
 		}
@@ -107,8 +107,12 @@ func (instaces *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 
 	// get two which is the instances create them in parrallel
 	second := s.Objects[2]
+	waitChan := make(chan struct{}, MAX_CONCURRENT_JOBS)
 	for _, i := range second {
-		fmt.Printf("%v", i)
+		waitChan <- struct{}{}
+		go func() {
+			fmt.Printf("%v", i)
+		}()
 	}
 	return nil
 }
