@@ -12,6 +12,9 @@ import (
 	"github.com/jrottersman/lats/state"
 )
 
+// MAX number of operations to hit AWS with at the same time
+const MAX_CONCURRENT_JOBS = 3
+
 // Client is used for mocking the AWS RDS instance for testing
 type Client interface {
 	DescribeDBClusters(ctx context.Context, params *rds.DescribeDBClustersInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClustersOutput, error)
