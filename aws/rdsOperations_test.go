@@ -520,6 +520,31 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 		Objects: objects,
 	}
 	failArg := args{s: &longStack}
+
+	//Create a valid object and instance
+	filename := "/tmp/foo"
+	order := 1
+	objType := state.LoneInstance
+
+	defer os.Remove(filename)
+	db := rds.RestoreDBInstanceFromDBSnapshotInput{
+		DBInstanceIdentifier: aws.String("foo"),
+	}
+	r := state.EncodeRestoreDBInstanceFromDBSnapshotInput(&db)
+	_, err := state.WriteOutput(filename, r)
+	if err != nil {
+		t.Errorf("failed to write output, %s", err)
+	}
+	gObj := state.NewObject(filename, order, objType)
+	objs2 := []state.Object{}
+	objs2 = append(objs2, gObj)
+	object := make(map[int][]state.Object)
+	object[1] = objs2
+	goodstack := state.Stack{
+		Objects: object,
+	}
+	passArgs := args{s: &goodstack}
+
 	tests := []struct {
 		name    string
 		fields  fields
@@ -527,6 +552,7 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 		wantErr bool
 	}{
 		{name: "fail", fields: field, args: failArg, wantErr: true},
+		{name: "pass", fields: field, args: passArgs, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
