@@ -43,13 +43,13 @@ func CreateSnapshot() {
 		log.Fatalf("error with step 1 get cluster %s", err)
 	}
 	if cluster == nil && err == nil {
-		createSnapshotForInstance(dbi, sm)
+		createSnapshotForInstance(dbi, sm, config.StateFileName)
 	} else {
-		createSnapshotForCluster(dbi, sm, cluster)
+		createSnapshotForCluster(dbi, sm, cluster, config.StateFileName)
 	}
 }
 
-func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluster *types.DBCluster) {
+func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluster *types.DBCluster, sfn string) {
 	snapshot, err := dbi.CreateClusterSnapshot(dbName, snapshotName)
 	if err != nil {
 		log.Fatalf("error creating snapshot %s", err)
@@ -69,9 +69,10 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 		log.Fatalf("error writing stack %s", err)
 	}
 	sm.UpdateState(snapshotName, stackFn, "stack")
+	sm.SyncState(sfn)
 }
 
-func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager) {
+func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn string) {
 	db, err := dbi.GetInstance(dbName)
 	if err != nil {
 		log.Printf("didn't get instance %s", err)
@@ -95,6 +96,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager) {
 		log.Fatalf("error writing stack %s", err)
 	}
 	sm.UpdateState(snapshotName, stackFn, "stack")
+	sm.SyncState(sfn)
 }
 
 //GetState reads in our statefile and config for future processing
