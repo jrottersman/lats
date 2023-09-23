@@ -175,7 +175,7 @@ func NewStack(oldStack state.Stack, ending string) *state.Stack {
 }
 
 func getLoneInstanceObject(obj interface{}, ending string, order int) state.Object {
-	obj2 := obj.(rds.RestoreDBInstanceFromDBSnapshotInput)
+	obj2 := obj.(*rds.RestoreDBInstanceFromDBSnapshotInput)
 	insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
 	obj2.DBInstanceIdentifier = &insID
 	obj2.DBSnapshotIdentifier = &copySnapshotName
@@ -184,7 +184,7 @@ func getLoneInstanceObject(obj interface{}, ending string, order int) state.Obje
 	obj2.DBSubnetGroupName = nil
 	obj2.VpcSecurityGroupIds = nil
 	obj2.OptionGroupName = nil
-	b := state.EncodeRestoreDBInstanceFromDBSnapshotInput(&obj2)
+	b := state.EncodeRestoreDBInstanceFromDBSnapshotInput(obj2)
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
 	if err != nil {
