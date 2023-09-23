@@ -253,6 +253,7 @@ func (instances *DbInstances) GetInstanceSnapshotARN(name string, marker *string
 		return nil, err
 	}
 	for _, v := range output.DBSnapshots {
+		fmt.Printf("%v\n", v)
 		if *v.DBSnapshotIdentifier == name {
 			return v.DBSnapshotArn, nil
 		}
@@ -283,6 +284,7 @@ func (instances *DbInstances) GetClusterSnapshotARN(name string, marker *string)
 }
 
 func (instances *DbInstances) GetSnapshotARN(name string, cluster bool) (*string, error) {
+	fmt.Printf("getting snapshot ARN")
 	if cluster {
 		snap, err := instances.GetClusterSnapshotARN(name, nil)
 		return snap, err
