@@ -68,46 +68,46 @@ func copySnapshot() {
 	}
 
 	// Create KMS key
-	// if kmsKey == "" {
-	// 	kmsKey = createKMSKey(config, sm)
-	// }
+	if kmsKey == "" {
+		kmsKey = createKMSKey(config, sm)
+	}
 
 	// Get RDS Client
-	// dbi := aws.Init(config.BackupRegion)
+	dbi := aws.Init(config.BackupRegion)
 
 	// Copy Snapshot
 	origStack := FindStack(sm, originalSnapshotName)
 	fmt.Printf("orig stack is %v\n", origStack)
 
-	// if origStack.RestorationObjectName == state.Cluster {
-	// 	arn, err := dbi.GetSnapshotARN(originalSnapshotName, true)
-	// 	if err != nil {
-	// 		log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
-	// 	}
-	// 	_, err = dbi.CopyClusterSnaphot(*arn, copySnapshotName, config.MainRegion, kmsKey)
-	// 	if err != nil {
-	// 		log.Fatalf("Error copying snapshot %s", err)
-	// 	}
-	// }
-	// if origStack.RestorationObjectName == state.LoneInstance {
-	// 	iarn, err := dbi.GetSnapshotARN(originalSnapshotName, false)
-	// 	if err != nil {
-	// 		log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
-	// 	}
-	// 	_, err = dbi.CopySnapshot(*iarn, copySnapshotName, config.MainRegion, kmsKey)
-	// 	if err != nil {
-	// 		log.Fatalf("Error copying snapshot %s", err)
-	// 	}
-	// }
-	// stack := NewStack(*origStack, config.BackupRegion)
+	if origStack.RestorationObjectName == state.Cluster {
+		arn, err := dbi.GetSnapshotARN(originalSnapshotName, true)
+		if err != nil {
+			log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
+		}
+		_, err = dbi.CopyClusterSnaphot(*arn, copySnapshotName, config.MainRegion, kmsKey)
+		if err != nil {
+			log.Fatalf("Error copying snapshot %s", err)
+		}
+	}
+	if origStack.RestorationObjectName == state.LoneInstance {
+		iarn, err := dbi.GetSnapshotARN(originalSnapshotName, false)
+		if err != nil {
+			log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
+		}
+		_, err = dbi.CopySnapshot(*iarn, copySnapshotName, config.MainRegion, kmsKey)
+		if err != nil {
+			log.Fatalf("Error copying snapshot %s", err)
+		}
+	}
+	stack := NewStack(*origStack, config.BackupRegion)
 
-	// fn := helpers.RandomStateFileName()
-	// err = stack.Write(*fn)
-	// if err != nil {
-	// 	fmt.Printf("error writing stack %s", err)
-	// }
+	fn := helpers.RandomStateFileName()
+	err = stack.Write(*fn)
+	if err != nil {
+		fmt.Printf("error writing stack %s", err)
+	}
 
-	// sm.UpdateState(stack.Name, *fn, "stack")
+	sm.UpdateState(stack.Name, *fn, "stack")
 }
 
 func createKMSKey(config Config, sm state.StateManager) string {
