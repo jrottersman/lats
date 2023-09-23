@@ -127,6 +127,9 @@ func FindStack(sm state.StateManager, snapshot string) *state.Stack {
 	sm.Mu.Lock()
 	defer sm.Mu.Unlock()
 	fmt.Printf("sm state locations is %v\n", sm.StateLocations)
+	if len(sm.StateLocations) == 0 {
+		log.Fatalln("There are no state locations create a snapshot with Lats before attempting to copy it")
+	}
 	for _, v := range sm.StateLocations {
 		fmt.Printf("\n state location %v\n", v)
 		if v.ObjectType != "stack" {
