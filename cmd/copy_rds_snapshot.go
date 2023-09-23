@@ -74,13 +74,14 @@ func copySnapshot() {
 
 	// Get RDS Client
 	dbi := aws.Init(config.BackupRegion)
+	dbi2 := aws.Init(config.MainRegion)
 
 	// Copy Snapshot
 	origStack := FindStack(sm, originalSnapshotName)
 	fmt.Printf("orig stack is %v\n", origStack)
 
 	if origStack.RestorationObjectName == state.Cluster {
-		arn, err := dbi.GetSnapshotARN(originalSnapshotName, true)
+		arn, err := dbi2.GetSnapshotARN(originalSnapshotName, true)
 		if err != nil {
 			log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
 		}
@@ -90,7 +91,7 @@ func copySnapshot() {
 		}
 	}
 	if origStack.RestorationObjectName == state.LoneInstance {
-		iarn, err := dbi.GetSnapshotARN(originalSnapshotName, false)
+		iarn, err := dbi2.GetSnapshotARN(originalSnapshotName, false)
 		if err != nil {
 			log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
 		}

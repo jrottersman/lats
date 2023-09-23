@@ -248,11 +248,15 @@ func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanc
 func (instances *DbInstances) GetInstanceSnapshotARN(name string, marker *string) (*string, error) {
 	fmt.Printf("in instance snapshots\n\n")
 	output, err := instances.RdsClient.DescribeDBSnapshots(context.TODO(), &rds.DescribeDBSnapshotsInput{
-		Marker: marker,
+		// Marker: marker,
+		DBSnapshotIdentifier: aws.String(name),
 	})
 	if err != nil {
+		fmt.Printf("error with snapshots %s", err)
 		return nil, err
 	}
+	fmt.Printf("describe db snapshots: %v\n\n", output.DBSnapshots)
+	fmt.Printf("marker is %v", output.Marker)
 	for _, v := range output.DBSnapshots {
 		fmt.Printf("%v\n", v)
 		if *v.DBSnapshotIdentifier == name {
