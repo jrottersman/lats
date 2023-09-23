@@ -48,6 +48,7 @@ func copySnapshot() {
 	if err != nil {
 		log.Fatalf("Error reading state %s", err)
 	}
+	fmt.Printf("state file is %s", sm.StateLocations)
 
 	if configFile != "" {
 		viper.SetConfigFile(configFile)
@@ -67,40 +68,46 @@ func copySnapshot() {
 	}
 
 	// Create KMS key
-	if kmsKey == "" {
-		kmsKey = createKMSKey(config, sm)
-	}
+	// if kmsKey == "" {
+	// 	kmsKey = createKMSKey(config, sm)
+	// }
 
 	// Get RDS Client
-	dbi := aws.Init(config.BackupRegion)
+	// dbi := aws.Init(config.BackupRegion)
 
 	// Copy Snapshot
 	origStack := FindStack(sm, originalSnapshotName)
-	arn, err := dbi.GetSnapshotARN(originalSnapshotName, true)
-	if err != nil {
-		log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
-	}
-	if origStack.RestorationObjectName == state.Cluster {
-		_, err = dbi.CopyClusterSnaphot(*arn, copySnapshotName, config.MainRegion, kmsKey)
-		if err != nil {
-			log.Fatalf("Error copying snapshot %s", err)
-		}
-	}
-	if origStack.RestorationObjectName == state.LoneInstance {
-		_, err = dbi.CopySnapshot(originalSnapshotName, copySnapshotName, config.MainRegion, kmsKey)
-		if err != nil {
-			log.Fatalf("Error copying snapshot %s", err)
-		}
-	}
-	stack := NewStack(*origStack, config.BackupRegion)
+	fmt.Printf("orig stack is %v\n", origStack)
 
-	fn := helpers.RandomStateFileName()
-	err = stack.Write(*fn)
-	if err != nil {
-		fmt.Printf("error writing stack %s", err)
-	}
+	// if origStack.RestorationObjectName == state.Cluster {
+	// 	arn, err := dbi.GetSnapshotARN(originalSnapshotName, true)
+	// 	if err != nil {
+	// 		log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
+	// 	}
+	// 	_, err = dbi.CopyClusterSnaphot(*arn, copySnapshotName, config.MainRegion, kmsKey)
+	// 	if err != nil {
+	// 		log.Fatalf("Error copying snapshot %s", err)
+	// 	}
+	// }
+	// if origStack.RestorationObjectName == state.LoneInstance {
+	// 	iarn, err := dbi.GetSnapshotARN(originalSnapshotName, false)
+	// 	if err != nil {
+	// 		log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
+	// 	}
+	// 	_, err = dbi.CopySnapshot(*iarn, copySnapshotName, config.MainRegion, kmsKey)
+	// 	if err != nil {
+	// 		log.Fatalf("Error copying snapshot %s", err)
+	// 	}
+	// }
+	// stack := NewStack(*origStack, config.BackupRegion)
 
-	sm.UpdateState(stack.Name, *fn, "stack")
+	// fn := helpers.RandomStateFileName()
+	// err = stack.Write(*fn)
+	// if err != nil {
+	// 	fmt.Printf("error writing stack %s", err)
+	// }
+
+	// sm.UpdateState(stack.Name, *fn, "stack")
 }
 
 func createKMSKey(config Config, sm state.StateManager) string {
@@ -116,10 +123,12 @@ func createKMSKey(config Config, sm state.StateManager) string {
 
 //FindStack get's a stack for creating our new stack when we copy the snapshot
 func FindStack(sm state.StateManager, snapshot string) *state.Stack {
+	fmt.Println("in find stack")
 	sm.Mu.Lock()
 	defer sm.Mu.Unlock()
-
+	fmt.Printf("sm state locations is %v\n", sm.StateLocations)
 	for _, v := range sm.StateLocations {
+		fmt.Printf("\n state location %v\n", v)
 		if v.ObjectType != "stack" {
 			continue
 		}
@@ -127,6 +136,7 @@ func FindStack(sm state.StateManager, snapshot string) *state.Stack {
 		if err != nil {
 			log.Printf("error reading stack %s", err)
 		}
+		fmt.Printf("\n%v\n", stack)
 		if stack.Name == snapshot {
 			return stack
 		}
