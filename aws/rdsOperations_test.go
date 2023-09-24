@@ -569,3 +569,39 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 		})
 	}
 }
+
+func TestDbInstances_RestoreInstanceForCluster(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		input rds.CreateDBInstanceInput
+	}
+
+	field := fields{RdsClient: mockRDSClient{}}
+	arg := args{input: rds.CreateDBInstanceInput{}}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *rds.CreateDBInstanceOutput
+		wantErr bool
+	}{
+		{name: "good", fields: field, args: arg, want: &rds.CreateDBInstanceOutput{}, wantErr: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			got, err := instances.RestoreInstanceForCluster(tt.args.input)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DbInstances.RestoreInstanceForCluster() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DbInstances.RestoreInstanceForCluster() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
