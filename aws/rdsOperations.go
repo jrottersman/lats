@@ -90,8 +90,7 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 }
 
 func (instances *DbInstances) CreateClusterFromStack(s *state.Stack) error {
-	// sort keys
-	// sorted := s.SortStack()
+
 	// get the one which is the cluster and create it
 	first := s.Objects[1]
 	if len(first) != 1 {

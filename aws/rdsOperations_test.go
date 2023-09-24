@@ -605,3 +605,30 @@ func TestDbInstances_RestoreInstanceForCluster(t *testing.T) {
 		})
 	}
 }
+
+func TestDbInstances_CreateClusterFromStack(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		s *state.Stack
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			if err := instances.CreateClusterFromStack(tt.args.s); (err != nil) != tt.wantErr {
+				t.Errorf("DbInstances.CreateClusterFromStack() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
