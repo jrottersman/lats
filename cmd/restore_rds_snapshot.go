@@ -23,7 +23,6 @@ var (
 		Run: func(cmd *cobra.Command, args []string) {
 			_, sm := GetState()
 			RestoreSnapshot(sm, snapshotName)
-			fmt.Println("Implement me ")
 		},
 	}
 )
