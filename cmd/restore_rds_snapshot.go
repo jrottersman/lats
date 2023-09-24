@@ -21,6 +21,8 @@ var (
 		Short:   "Restores an RDS snapshot",
 		Long:    "Restores an RDS snapshot",
 		Run: func(cmd *cobra.Command, args []string) {
+			_, sm := GetState()
+			RestoreSnapshot(sm, snapshotName)
 			fmt.Println("Implement me ")
 		},
 	}
@@ -33,12 +35,11 @@ func init() {
 }
 
 //RestoreSnapshot is the function that restores a snapshot
-func RestoreSnapshot(instances *aws.DbInstances, stateKV state.StateManager, snapshotName string) error {
+func RestoreSnapshot(stateKV state.StateManager, snapshotName string) error {
 	dbi := aws.Init(region)
 	SnapshotStack := FindStack(stateKV, snapshotName)
 	if SnapshotStack.RestorationObjectName == state.Cluster {
 		return dbi.CreateClusterFromStack(SnapshotStack)
-		// TODO finish create Cluster from stack
 	} else if SnapshotStack.RestorationObjectName == state.LoneInstance {
 		return dbi.CreateInstanceFromStack(SnapshotStack)
 	}
