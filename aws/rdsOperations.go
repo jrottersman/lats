@@ -245,6 +245,15 @@ func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanc
 	return output, nil
 }
 
+func (instances *DbInstances) RestoreInstanceForCluster(input rds.CreateDBInstanceInput) (*rds.CreateDBInstanceOutput, error) {
+	output, err := instances.RdsClient.CreateDBInstance(context.TODO(), &input)
+	if err != nil {
+		log.Printf("error creating instance %s", err)
+		return nil, err
+	}
+	return output, nil
+}
+
 func (instances *DbInstances) GetInstanceSnapshotARN(name string, marker *string) (*string, error) {
 	fmt.Printf("in instance snapshots\n\n")
 	output, err := instances.RdsClient.DescribeDBSnapshots(context.TODO(), &rds.DescribeDBSnapshotsInput{
