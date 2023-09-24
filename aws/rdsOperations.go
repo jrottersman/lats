@@ -111,9 +111,14 @@ func (instances *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 	waitChan := make(chan struct{}, MAX_CONCURRENT_JOBS)
 	for _, i := range second {
 		waitChan <- struct{}{}
-		go func() {
-			fmt.Printf("%v", i)
-		}()
+		go func(inst state.Object) {
+			o := inst.ReadObject()
+			ins := o.(*rds.CreateDBInstanceInput)
+			_, err := instances.RestoreInstanceForCluster(*ins)
+			if err != nil {
+				fmt.Printf("error creating instance %s", err)
+			}
+		}(i)
 	}
 	return nil
 }
