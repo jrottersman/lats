@@ -39,6 +39,10 @@ func (m mockRDSClient) DescribeDBSnapshots(ctx context.Context, params *rds.Desc
 	return &rds.DescribeDBSnapshotsOutput{}, nil
 }
 
+func (m mockRDSClient) CopyDBParameterGroup(ctx context.Context, params *rds.CopyDBParameterGroupInput, optFns ...func(*rds.Options)) (*rds.CopyDBParameterGroupOutput, error) {
+	return &rds.CopyDBParameterGroupOutput{}, nil
+}
+
 func (m mockRDSClient) CreateDBInstance(ctx context.Context, params *rds.CreateDBInstanceInput, optFns ...func(*rds.Options)) (*rds.CreateDBInstanceOutput, error) {
 	return &rds.CreateDBInstanceOutput{}, nil
 }
