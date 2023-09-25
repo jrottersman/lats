@@ -33,8 +33,9 @@ func DecodeKmsOutput(b bytes.Buffer) types.KeyMetadata {
 	return kmsMetadata
 }
 
-func GetKmsOutput(s *StateManager, keyId string) (*types.KeyMetadata, error) {
-	i := s.GetStateObject(keyId)
+// GetKmsOutput takes a keyid and get's the key we can probably delete this one
+func GetKmsOutput(s *StateManager, KeyID string) (*types.KeyMetadata, error) {
+	i := s.GetStateObject(KeyID)
 	key, ok := i.(types.KeyMetadata)
 	if !ok {
 		str := fmt.Sprintf("error decoding KMS key from interface %v", i)

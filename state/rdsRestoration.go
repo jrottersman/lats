@@ -7,6 +7,7 @@ import (
 	"github.com/jrottersman/lats/helpers"
 )
 
+// RDSRestorationStore stores all of our things we could possibly need to restore a db or cluster
 type RDSRestorationStore struct {
 	Snapshot        *types.DBSnapshot
 	Instance        *types.DBInstance
