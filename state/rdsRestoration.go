@@ -15,6 +15,7 @@ type RDSRestorationStore struct {
 	ClusterSnapshot *types.DBClusterSnapshot
 }
 
+// GetInstanceIdentifier get's the instance identifier from the restoration store
 func (r RDSRestorationStore) GetInstanceIdentifier() *string {
 	if r.Instance == nil {
 		return nil
@@ -25,6 +26,7 @@ func (r RDSRestorationStore) GetInstanceIdentifier() *string {
 	return r.Instance.DBInstanceIdentifier
 }
 
+//GetInstanceClass getter for instance class
 func (r RDSRestorationStore) GetInstanceClass() *string {
 	if r.Instance == nil {
 		return nil
@@ -35,6 +37,7 @@ func (r RDSRestorationStore) GetInstanceClass() *string {
 	return r.Instance.DBInstanceClass
 }
 
+//GetAllocatedStorage getter for allocated storage
 func (r RDSRestorationStore) GetAllocatedStorage() *int32 {
 	if r.Snapshot == nil {
 		return nil
