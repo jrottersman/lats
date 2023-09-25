@@ -6,6 +6,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
+	mock "github.com/jrottersman/lats/mocks"
 	"github.com/jrottersman/lats/rdsState"
 	"github.com/jrottersman/lats/state"
 )
@@ -22,7 +23,7 @@ func TestGenerateRDSClusterStack(t *testing.T) {
 	clusterId := "foo"
 	snapshotId := "bar"
 	filen := "/tmp/bar"
-	c := mockRDSClient{}
+	c := mock.MockRDSClient{}
 	i := aws.DbInstances{RdsClient: c}
 
 	resto := state.RDSRestorationStore{
