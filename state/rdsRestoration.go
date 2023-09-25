@@ -48,6 +48,7 @@ func (r RDSRestorationStore) GetAllocatedStorage() *int32 {
 	return &r.Snapshot.AllocatedStorage
 }
 
+//GetAutoMinorVersionUpgrade yet another getter
 func (r RDSRestorationStore) GetAutoMinorVersionUpgrade() *bool {
 	if r.Instance == nil {
 		return nil
@@ -55,6 +56,7 @@ func (r RDSRestorationStore) GetAutoMinorVersionUpgrade() *bool {
 	return &r.Instance.AutoMinorVersionUpgrade
 }
 
+//GetBackupTarget yet another getter
 func (r RDSRestorationStore) GetBackupTarget() *string {
 	if r.Instance == nil {
 		return nil
@@ -62,6 +64,7 @@ func (r RDSRestorationStore) GetBackupTarget() *string {
 	return r.Instance.BackupTarget
 }
 
+//GetDeleteProtection yet another getter
 func (r RDSRestorationStore) GetDeleteProtection() *bool {
 	if r.Instance == nil {
 		return nil
@@ -69,6 +72,7 @@ func (r RDSRestorationStore) GetDeleteProtection() *bool {
 	return &r.Instance.DeletionProtection
 }
 
+//GetSnapshotIdentifier yet another getter
 func (r RDSRestorationStore) GetSnapshotIdentifier() *string {
 	if r.Snapshot == nil {
 		return nil
@@ -79,6 +83,7 @@ func (r RDSRestorationStore) GetSnapshotIdentifier() *string {
 	return r.Snapshot.DBSnapshotIdentifier
 }
 
+//GetEnabledCloudwatchLogsExports yet another getter
 func (r RDSRestorationStore) GetEnabledCloudwatchLogsExports() []string {
 	if r.Instance == nil {
 		return []string{}
@@ -89,6 +94,7 @@ func (r RDSRestorationStore) GetEnabledCloudwatchLogsExports() []string {
 	return r.Instance.EnabledCloudwatchLogsExports
 }
 
+//GetClusterSnapshotIdentifier yet another getter
 func (r RDSRestorationStore) GetClusterSnapshotIdentifier() *string {
 	if r.ClusterSnapshot == nil {
 		return nil
@@ -99,6 +105,7 @@ func (r RDSRestorationStore) GetClusterSnapshotIdentifier() *string {
 	return r.ClusterSnapshot.DBClusterSnapshotIdentifier
 }
 
+//GetDBClusterIdentifier yet another getter
 func (r RDSRestorationStore) GetDBClusterIdentifier() *string {
 	if r.ClusterSnapshot == nil {
 		return nil
@@ -109,6 +116,7 @@ func (r RDSRestorationStore) GetDBClusterIdentifier() *string {
 	return r.ClusterSnapshot.DBClusterIdentifier
 }
 
+//GetClusterEngine yet another getter
 func (r RDSRestorationStore) GetClusterEngine() *string {
 	if r.ClusterSnapshot == nil {
 		return nil
@@ -119,6 +127,7 @@ func (r RDSRestorationStore) GetClusterEngine() *string {
 	return r.ClusterSnapshot.Engine
 }
 
+//GetDBClusterInstanceClass yet another getter
 func (r RDSRestorationStore) GetDBClusterInstanceClass() *string {
 	if r.Cluster == nil {
 		return nil
@@ -129,6 +138,7 @@ func (r RDSRestorationStore) GetDBClusterInstanceClass() *string {
 	return r.Cluster.DBClusterInstanceClass
 }
 
+//GetKmsKey yet another getter
 func (r RDSRestorationStore) GetKmsKey() *string {
 	if r.ClusterSnapshot == nil {
 		return nil
@@ -139,6 +149,7 @@ func (r RDSRestorationStore) GetKmsKey() *string {
 	return r.ClusterSnapshot.KmsKeyId
 }
 
+//GetClusterAZs yet another getter
 func (r RDSRestorationStore) GetClusterAZs() *[]string {
 	if r.ClusterSnapshot == nil {
 		return nil
@@ -149,6 +160,7 @@ func (r RDSRestorationStore) GetClusterAZs() *[]string {
 	return &r.ClusterSnapshot.AvailabilityZones
 }
 
+//GetDBClusterMembers yet another getter
 func (r RDSRestorationStore) GetDBClusterMembers() *[]types.DBClusterMember {
 	if r.Cluster == nil {
 		return nil
@@ -159,6 +171,7 @@ func (r RDSRestorationStore) GetDBClusterMembers() *[]types.DBClusterMember {
 	return &r.Cluster.DBClusterMembers
 }
 
+//RDSRestorationStoreBuilder builds an RDSRestorationStore
 func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSRestorationStore, error) {
 	snap, err := GetRDSSnapshotOutput(sm, snapshotName)
 	if err != nil {
