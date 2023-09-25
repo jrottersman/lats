@@ -1,7 +1,6 @@
 package aws
 
 import (
-	"context"
 	"os"
 	"reflect"
 	"sync"
@@ -10,113 +9,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
+	mock "github.com/jrottersman/lats/mocks"
 	"github.com/jrottersman/lats/state"
 )
 
-type mockRDSClient struct{}
-
-func (m mockRDSClient) DescribeDBClusters(ctx context.Context, params *rds.DescribeDBClustersInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClustersOutput, error) {
-	f := "foo"
-	r := &rds.DescribeDBClustersOutput{
-		DBClusters: []types.DBCluster{{DBClusterIdentifier: &f, Status: aws.String("creating"), DBClusterMembers: []types.DBClusterMember{{DBInstanceIdentifier: &f}}}},
-	}
-	return r, nil
-}
-
-func (m mockRDSClient) DescribeDBClusterSnapshots(ctx context.Context, params *rds.DescribeDBClusterSnapshotsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClusterSnapshotsOutput, error) {
-	snapshots := []types.DBClusterSnapshot{}
-	snap := types.DBClusterSnapshot{
-		DBClusterSnapshotIdentifier: aws.String("foo"),
-		DBClusterSnapshotArn:        aws.String("foo"),
-	}
-	snapshots = append(snapshots, snap)
-
-	return &rds.DescribeDBClusterSnapshotsOutput{
-		DBClusterSnapshots: snapshots,
-	}, nil
-}
-
-func (m mockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput, optFns ...func(*rds.Options)) (*rds.DescribeDBInstancesOutput, error) {
-	f := "foo"
-	r := &rds.DescribeDBInstancesOutput{
-		DBInstances: []types.DBInstance{{DBInstanceIdentifier: &f}},
-	}
-	return r, nil
-}
-
-func (m mockRDSClient) DescribeDBSnapshots(ctx context.Context, params *rds.DescribeDBSnapshotsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBSnapshotsOutput, error) {
-	snapshots := []types.DBSnapshot{}
-	snap := types.DBSnapshot{
-		DBSnapshotIdentifier: aws.String("foo"),
-		DBSnapshotArn:        aws.String("foo"),
-	}
-	snapshots = append(snapshots, snap)
-	return &rds.DescribeDBSnapshotsOutput{
-		DBSnapshots: snapshots,
-	}, nil
-}
-
-func (m mockRDSClient) CopyDBParameterGroup(ctx context.Context, params *rds.CopyDBParameterGroupInput, optFns ...func(*rds.Options)) (*rds.CopyDBParameterGroupOutput, error) {
-	return &rds.CopyDBParameterGroupOutput{}, nil
-}
-
-func (m mockRDSClient) CreateDBInstance(ctx context.Context, params *rds.CreateDBInstanceInput, optFns ...func(*rds.Options)) (*rds.CreateDBInstanceOutput, error) {
-	return &rds.CreateDBInstanceOutput{}, nil
-}
-
-func (m mockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error) {
-	r := &rds.CreateDBSnapshotOutput{
-		DBSnapshot: &types.DBSnapshot{
-			AllocatedStorage: 1000,
-		},
-	}
-	return r, nil
-}
-
-func (m mockRDSClient) DescribeDBParameterGroups(ctx context.Context, params *rds.DescribeDBParameterGroupsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBParameterGroupsOutput, error) {
-	f := "foo"
-	r := rds.DescribeDBParameterGroupsOutput{
-		DBParameterGroups: []types.DBParameterGroup{{DBParameterGroupName: &f}},
-	}
-	return &r, nil
-}
-func (m mockRDSClient) CopyDBClusterSnapshot(ctx context.Context, params *rds.CopyDBClusterSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBClusterSnapshotOutput, error) {
-	return &rds.CopyDBClusterSnapshotOutput{
-		DBClusterSnapshot: &types.DBClusterSnapshot{},
-	}, nil
-}
-
-func (m mockRDSClient) CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBSnapshotOutput, error) {
-	r := &rds.CopyDBSnapshotOutput{
-		DBSnapshot: &types.DBSnapshot{
-			AllocatedStorage: 1000,
-		},
-	}
-	return r, nil
-}
-
-func (m mockRDSClient) RestoreDBClusterFromSnapshot(ctx context.Context, params *rds.RestoreDBClusterFromSnapshotInput, optFns ...func(*rds.Options)) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
-	r := &rds.RestoreDBClusterFromSnapshotOutput{DBCluster: &types.DBCluster{Status: aws.String("creating")}}
-	return r, nil
-}
-
-func (m mockRDSClient) RestoreDBInstanceFromDBSnapshot(ctx context.Context, params *rds.RestoreDBInstanceFromDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
-	r := &rds.RestoreDBInstanceFromDBSnapshotOutput{}
-	return r, nil
-}
-
-func (m mockRDSClient) CreateDBClusterSnapshot(ctx context.Context, params *rds.CreateDBClusterSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBClusterSnapshotOutput, error) {
-	r := rds.CreateDBClusterSnapshotOutput{
-		DBClusterSnapshot: &types.DBClusterSnapshot{
-			AllocatedStorage: 1000,
-		},
-	}
-	return &r, nil
-}
-
 func TestGetCluster(t *testing.T) {
 	expected := "foo"
-	c := mockRDSClient{}
+	c := mock.MockRDSClient{}
 	dbi := DbInstances{
 		RdsClient: c,
 	}
@@ -130,7 +29,7 @@ func TestGetCluster(t *testing.T) {
 }
 func TestGetInstance(t *testing.T) {
 	expected := "foo"
-	c := mockRDSClient{}
+	c := mock.MockRDSClient{}
 	dbi := DbInstances{
 		RdsClient: c,
 	}
@@ -145,7 +44,7 @@ func TestGetInstance(t *testing.T) {
 
 func TestGetInstanceFromCluster(t *testing.T) {
 	expected := "foo"
-	c := mockRDSClient{}
+	c := mock.MockRDSClient{}
 	dbi := DbInstances{
 		RdsClient: c,
 	}
@@ -163,7 +62,7 @@ func TestGetInstanceFromCluster(t *testing.T) {
 }
 
 func TestCreateSnapshot(t *testing.T) {
-	c := mockRDSClient{}
+	c := mock.MockRDSClient{}
 	dbi := DbInstances{
 		RdsClient: c,
 	}
@@ -177,7 +76,7 @@ func TestCreateSnapshot(t *testing.T) {
 }
 
 func TestCreateClusterSnapshot(t *testing.T) {
-	c := mockRDSClient{}
+	c := mock.MockRDSClient{}
 	dbi := DbInstances{
 		RdsClient: c,
 	}
@@ -191,7 +90,7 @@ func TestCreateClusterSnapshot(t *testing.T) {
 }
 
 func TestDescribeParameterGroup(t *testing.T) {
-	c := mockRDSClient{}
+	c := mock.MockRDSClient{}
 	dbi := DbInstances{
 		RdsClient: c,
 	}
@@ -205,7 +104,7 @@ func TestDescribeParameterGroup(t *testing.T) {
 }
 
 func TestCopySnapshot(t *testing.T) {
-	c := mockRDSClient{}
+	c := mock.MockRDSClient{}
 	dbi := DbInstances{
 		RdsClient: c,
 	}
@@ -272,7 +171,7 @@ func TestRestoreSnapshotInstance(t *testing.T) {
 		t.Errorf("error writing file %s", err)
 	}
 
-	c := mockRDSClient{}
+	c := mock.MockRDSClient{}
 	dbi := DbInstances{
 		RdsClient: c,
 	}
@@ -304,7 +203,7 @@ func TestRestoreSnapshotCluster(t *testing.T) {
 		ClusterSnapshot: &snap,
 	}
 
-	c := mockRDSClient{}
+	c := mock.MockRDSClient{}
 	dbi := DbInstances{
 		RdsClient: c,
 	}
@@ -325,7 +224,7 @@ func TestDbInstances_getClusterStatus(t *testing.T) {
 	type args struct {
 		name string
 	}
-	m := mockRDSClient{}
+	m := mock.MockRDSClient{}
 	tests := []struct {
 		name    string
 		fields  fields
@@ -361,7 +260,7 @@ func TestDbInstances_GetInstanceSnapshotARN(t *testing.T) {
 		marker *string
 	}
 
-	m := mockRDSClient{}
+	m := mock.MockRDSClient{}
 	field := fields{RdsClient: m}
 	arg := args{"foo", nil}
 	tests := []struct {
@@ -399,7 +298,7 @@ func TestDbInstances_GetClusterSnapshotARN(t *testing.T) {
 		marker *string
 	}
 
-	m := mockRDSClient{}
+	m := mock.MockRDSClient{}
 	field := fields{RdsClient: m}
 	arg := args{"foo", nil}
 
@@ -438,7 +337,7 @@ func TestDbInstances_GetSnapshotARN(t *testing.T) {
 		cluster bool
 	}
 
-	m := mockRDSClient{}
+	m := mock.MockRDSClient{}
 	field := fields{RdsClient: m}
 	arg := args{"foo", false}
 
@@ -478,7 +377,7 @@ func TestDbInstances_CopyClusterSnaphot(t *testing.T) {
 		sourceRegion         string
 		kmsKey               string
 	}
-	m := mockRDSClient{}
+	m := mock.MockRDSClient{}
 	field := fields{RdsClient: m}
 	want := types.DBClusterSnapshot{}
 	arg := args{originalSnapshotName: "foo", newSnapshotName: "foo", sourceRegion: "baz", kmsKey: "bat"}
@@ -515,7 +414,7 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 	type args struct {
 		s *state.Stack
 	}
-	field := fields{RdsClient: mockRDSClient{}}
+	field := fields{RdsClient: mock.MockRDSClient{}}
 	// Create long args
 	objs := []state.Object{}
 	obj1 := state.Object{}
@@ -582,7 +481,7 @@ func TestDbInstances_RestoreInstanceForCluster(t *testing.T) {
 		input rds.CreateDBInstanceInput
 	}
 
-	field := fields{RdsClient: mockRDSClient{}}
+	field := fields{RdsClient: mock.MockRDSClient{}}
 	arg := args{input: rds.CreateDBInstanceInput{}}
 	tests := []struct {
 		name    string
@@ -618,7 +517,7 @@ func TestDbInstances_CreateClusterFromStack(t *testing.T) {
 		s *state.Stack
 	}
 
-	field := fields{RdsClient: mockRDSClient{}}
+	field := fields{RdsClient: mock.MockRDSClient{}}
 	// Create long args
 	objs := []state.Object{}
 	obj1 := state.Object{}
