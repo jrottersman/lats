@@ -73,7 +73,8 @@ func (m MockRDSClient) DescribeDBParameterGroups(ctx context.Context, params *rd
 }
 
 func (m MockRDSClient) DescribeDBParameters(ctx context.Context, params *rds.DescribeDBParametersInput, optFns ...func(*rds.Options)) (*rds.DescribeDBParametersOutput, error) {
-	return &rds.DescribeDBParametersOutput{}, nil
+	x := []types.Parameter{}
+	return &rds.DescribeDBParametersOutput{Parameters: x}, nil
 }
 
 func (m MockRDSClient) CopyDBClusterSnapshot(ctx context.Context, params *rds.CopyDBClusterSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBClusterSnapshotOutput, error) {

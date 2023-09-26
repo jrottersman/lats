@@ -230,6 +230,7 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 
 }
 
+//GetParametersForGroup returns the parameters for a parameter group
 func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (*[]types.Parameter, error) {
 	output, err := instances.RdsClient.DescribeDBParameters(context.TODO(), &rds.DescribeDBParametersInput{
 		DBParameterGroupName: aws.String(ParameterGroupName),

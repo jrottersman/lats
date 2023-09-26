@@ -550,3 +550,36 @@ func TestDbInstances_CreateClusterFromStack(t *testing.T) {
 		})
 	}
 }
+
+func TestDbInstances_GetParametersForGroup(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		ParameterGroupName string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *[]types.Parameter
+		wantErr bool
+	}{
+		{name: "pass", fields: fields{RdsClient: mock.MockRDSClient{}}, args: args{ParameterGroupName: "foo"}, want: &[]types.Parameter{}, wantErr: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			got, err := instances.GetParametersForGroup(tt.args.ParameterGroupName)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DbInstances.GetParametersForGroup() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DbInstances.GetParametersForGroup() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
