@@ -209,7 +209,7 @@ func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, ne
 
 // TODO Copy Option Group
 
-// GetParameterGroup we will use this for moving custom parameter groups around jumped the gun here but oh well
+// GetParameterGroup we will use this for moving custom parameter groups
 func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 	*types.DBParameterGroup, error) {
 	output, err := instances.RdsClient.DescribeDBParameterGroups(
@@ -228,6 +228,33 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 	}
 	return &output.DBParameterGroups[0], err
 
+}
+
+func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (*[]types.Parameter, error) {
+	output, err := instances.RdsClient.DescribeDBParameters(context.TODO(), &rds.DescribeDBParametersInput{
+		DBParameterGroupName: aws.String(ParameterGroupName),
+	})
+	if err != nil {
+		log.Printf("Error getting parameters %s", err)
+		return nil, err
+	}
+	parameters := output.Parameters
+	for {
+		if output.Marker != nil {
+			output, err := instances.RdsClient.DescribeDBParameters(context.TODO(), &rds.DescribeDBParametersInput{
+				DBParameterGroupName: aws.String(ParameterGroupName),
+				Marker:               output.Marker,
+			})
+			if err != nil {
+				log.Printf("Error getting parameters %s", err)
+				return nil, err
+			}
+			parameters = append(parameters, output.Parameters...)
+		} else {
+			break
+		}
+	}
+	return &parameters, nil
 }
 
 func (instances *DbInstances) RestoreSnapshotCluster(input rds.RestoreDBClusterFromSnapshotInput) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
