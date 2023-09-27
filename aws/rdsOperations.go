@@ -218,7 +218,7 @@ func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string
 	})
 	if err != nil {
 		var notFoundError *types.DBClusterParameterGroupNotFoundFault
-		if error.As(err, &notFoundError) {
+		if errors.As(err, &notFoundError) {
 			log.Printf("Parameter group %v does not exist.\n", ParameterGroupName)
 			err = nil
 		} else {
