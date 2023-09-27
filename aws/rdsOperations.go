@@ -211,6 +211,24 @@ func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, ne
 
 // TODO Copy Option Group
 
+func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string) (
+	*types.DBClusterParameterGroup, error) {
+		output, err := instances.RdsClient.DescribeDBClusterParameterGroups(context.TODO(), &rds.DescribeDBClusterParameterGroupsInput{
+			DBClusterParameterGroupName: aws.String(ParameterGroupName)
+		})
+		if err != nil {
+			var notFoundError *types.DBClusterParameterGroupNotFoundFault
+			if error.As(err, &notFoundError) {
+				log.Printf("Parameter group %v does not exist.\n", parameterGroupName)
+				err = nil
+			} else {
+				log.Printf("Error getting parameter group %v: %v\n", parameterGroupName, err)
+			}
+			return nil, err
+		}
+		return &output.DBClusterParameterGroups, nil
+	}
+
 // GetParameterGroup we will use this for moving custom parameter groups
 func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 	*types.DBParameterGroup, error) {
