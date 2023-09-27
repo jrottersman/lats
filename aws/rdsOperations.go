@@ -213,21 +213,21 @@ func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, ne
 
 func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string) (
 	*types.DBClusterParameterGroup, error) {
-		output, err := instances.RdsClient.DescribeDBClusterParameterGroups(context.TODO(), &rds.DescribeDBClusterParameterGroupsInput{
-			DBClusterParameterGroupName: aws.String(ParameterGroupName)
-		})
-		if err != nil {
-			var notFoundError *types.DBClusterParameterGroupNotFoundFault
-			if error.As(err, &notFoundError) {
-				log.Printf("Parameter group %v does not exist.\n", parameterGroupName)
-				err = nil
-			} else {
-				log.Printf("Error getting parameter group %v: %v\n", parameterGroupName, err)
-			}
-			return nil, err
+	output, err := instances.RdsClient.DescribeDBClusterParameterGroups(context.TODO(), &rds.DescribeDBClusterParameterGroupsInput{
+		DBClusterParameterGroupName: aws.String(ParameterGroupName),
+	})
+	if err != nil {
+		var notFoundError *types.DBClusterParameterGroupNotFoundFault
+		if error.As(err, &notFoundError) {
+			log.Printf("Parameter group %v does not exist.\n", ParameterGroupName)
+			err = nil
+		} else {
+			log.Printf("Error getting parameter group %v: %v\n", ParameterGroupName, err)
 		}
-		return &output.DBClusterParameterGroups, nil
+		return nil, err
 	}
+	return &output.DBClusterParameterGroups[0], nil
+}
 
 // GetParameterGroup we will use this for moving custom parameter groups
 func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
