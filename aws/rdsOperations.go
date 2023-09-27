@@ -336,8 +336,14 @@ func (instances *DbInstances) GetSnapshotARN(name string, cluster bool) (*string
 	fmt.Printf("getting snapshot ARN\n\n")
 	if cluster {
 		snap, err := instances.GetClusterSnapshotARN(name, nil)
-		return snap, fmt.Errorf("cluster snapshot error: %s", err)
+		if err != nil {
+			return nil, fmt.Errorf("cluster snapshot error: %s", err)
+		}
+		return snap, nil
 	}
 	snap, err := instances.GetInstanceSnapshotARN(name, nil)
-	return snap, fmt.Errorf("Instance Snapshot error %s", err)
+	if err != nil {
+		return nil, fmt.Errorf("Instance Snapshot error %s", err)
+	}
+	return snap, nil
 }
