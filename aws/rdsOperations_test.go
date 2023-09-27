@@ -583,3 +583,17 @@ func TestDbInstances_GetParametersForGroup(t *testing.T) {
 		})
 	}
 }
+
+func TestDbInstances_GetClusterParameterGroup(t *testing.T) {
+	c := mock.MockRDSClient{}
+	dbi := DbInstances{
+		RdsClient: c,
+	}
+	resp, err := dbi.GetClusterParameterGroup("foo")
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
+	if *resp.DBClusterParameterGroupName != "foo" {
+		t.Errorf("expected foo got %s", *resp.DBClusterParameterGroupName)
+	}
+}

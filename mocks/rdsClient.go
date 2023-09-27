@@ -65,7 +65,10 @@ func (m MockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateD
 }
 
 func (m MockRDSClient) DescribeDBClusterParameterGroups(ctx context.Context, params *rds.DescribeDBClusterParameterGroupsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClusterParameterGroupsOutput, error) {
-	return &rds.DescribeDBClusterParameterGroupsOutput{}, nil
+	f := "foo"
+	return &rds.DescribeDBClusterParameterGroupsOutput{
+		DBClusterParameterGroups: []types.DBClusterParameterGroup{{DBClusterParameterGroupName: &f}},
+	}, nil
 }
 
 func (m MockRDSClient) DescribeDBClusterParameters(ctx context.Context, params *rds.DescribeDBClusterParametersInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClusterParametersOutput, error) {
