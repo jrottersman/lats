@@ -12,8 +12,8 @@ import (
 	"github.com/jrottersman/lats/state"
 )
 
-// MAX number of operations to hit AWS with at the same time
-const MAX_CONCURRENT_JOBS = 3
+// MaxConcurrentJobs max number of operations to hit AWS with at the same time
+const MaxConcurrentJobs = 3
 
 // Client is used for mocking the AWS RDS instance for testing
 type Client interface {
@@ -59,6 +59,7 @@ func (instances *DbInstances) GetInstance(instanceName string) (
 	return &output.DBInstances[0], nil
 }
 
+//GetCluster describes an RDS cluster
 func (instances *DbInstances) GetCluster(clusterName string) (*types.DBCluster, error) {
 	output, err := instances.RdsClient.DescribeDBClusters(context.TODO(),
 		&rds.DescribeDBClustersInput{
@@ -77,6 +78,7 @@ func (instances *DbInstances) GetCluster(clusterName string) (*types.DBCluster, 
 	return &output.DBClusters[0], err
 }
 
+//GetInstancesFromCluster get's the instaces associated with a database cluster
 func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]types.DBInstance, error) {
 	if c.DBClusterMembers == nil {
 		return nil, nil
@@ -92,6 +94,7 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 	return dbs, nil
 }
 
+//CreateClusterFromStack creates an RDS cluster from a stack
 func (instances *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 
 	// get the one which is the cluster and create it
@@ -110,7 +113,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 
 	// get two which is the instances create them in parrallel
 	second := s.Objects[2]
-	waitChan := make(chan struct{}, MAX_CONCURRENT_JOBS)
+	waitChan := make(chan struct{}, MaxConcurrentJobs)
 	for _, i := range second {
 		waitChan <- struct{}{}
 		go func(inst state.Object) {
@@ -125,6 +128,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 	return nil
 }
 
+//CreateInstanceFromStack creates an RDS instance from a stack object
 func (instances *DbInstances) CreateInstanceFromStack(s *state.Stack) error {
 	instance := s.Objects[1]
 	if len(instance) != 1 {
@@ -166,6 +170,7 @@ func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName s
 	return output.DBSnapshot, nil
 }
 
+//CreateClusterSnapshot so it turns out AWS is annoying and makes us create snapshots seperatly for clusters and instaces how fun!
 func (instances *DbInstances) CreateClusterSnapshot(clusterName string, snapshotName string) (*types.DBClusterSnapshot, error) {
 	output, err := instances.RdsClient.CreateDBClusterSnapshot(context.TODO(), &rds.CreateDBClusterSnapshotInput{
 		DBClusterIdentifier:         aws.String(clusterName),
@@ -194,6 +199,7 @@ func (instances *DbInstances) CopySnapshot(originalSnapshotName string, newSnaps
 	return output.DBSnapshot, nil
 }
 
+//CopyClusterSnaphot see CopySnapshot now for a Cluster
 func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, newSnapshotName string, sourceRegion string, kmsKey string) (
 	*types.DBClusterSnapshot, error) {
 	output, err := instances.RdsClient.CopyDBClusterSnapshot(context.TODO(), &rds.CopyDBClusterSnapshotInput{
@@ -211,6 +217,7 @@ func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, ne
 
 // TODO Copy Option Group
 
+//GetClusterParameterGroup get the cluster parameter group so we can make a new one in a new region or you know store it for restoration (actually we won't need to do that cause the data is stored on the snapshot :P)
 func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string) (
 	*types.DBClusterParameterGroup, error) {
 	output, err := instances.RdsClient.DescribeDBClusterParameterGroups(context.TODO(), &rds.DescribeDBClusterParameterGroupsInput{
@@ -306,6 +313,7 @@ func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (
 	return &parameters, nil
 }
 
+//RestoreSnapshotCluster takes a snapshot turns it into a DB Cluster fun fact the cluster won't be ready from just this there will be no instances
 func (instances *DbInstances) RestoreSnapshotCluster(input rds.RestoreDBClusterFromSnapshotInput) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
 	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(context.TODO(), &input)
 	if err != nil {
@@ -326,6 +334,7 @@ func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanc
 	return output, nil
 }
 
+//RestoreInstanceForCluster our cluster has no instances by default it need's instances to be usable this makes them exist
 func (instances *DbInstances) RestoreInstanceForCluster(input rds.CreateDBInstanceInput) (*rds.CreateDBInstanceOutput, error) {
 	output, err := instances.RdsClient.CreateDBInstance(context.TODO(), &input)
 	if err != nil {
