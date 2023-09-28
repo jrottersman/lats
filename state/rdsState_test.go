@@ -243,7 +243,6 @@ func TestEncodeParameters(t *testing.T) {
 	if len(lp) != len(result) {
 		t.Errorf("got %d expected %d", len(result), len(lp))
 	}
-
 }
 
 func TestWriteOutput(t *testing.T) {
