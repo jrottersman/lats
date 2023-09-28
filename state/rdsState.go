@@ -311,6 +311,16 @@ func EncodeParameters(p *[]types.Parameter) bytes.Buffer {
 	return encoder
 }
 
+func DecodeParameters(b bytes.Buffer) *[]types.Parameter {
+	var lp []types.Parameter
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&lp)
+	if err != nil {
+		log.Fatalf("Error decoding parameters %s", err)
+	}
+	return &lp
+}
+
 //GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
 func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
 	if fn == nil {
