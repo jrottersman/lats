@@ -597,3 +597,36 @@ func TestDbInstances_GetClusterParameterGroup(t *testing.T) {
 		t.Errorf("expected foo got %s", *resp.DBClusterParameterGroupName)
 	}
 }
+
+func TestDbInstances_GetParametersForClusterParameterGroup(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		ParameterGroupName string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *[]types.Parameter
+		wantErr bool
+	}{
+		{name: "pass", fields: fields{RdsClient: mock.MockRDSClient{}}, args: args{ParameterGroupName: "foo"}, want: &[]types.Parameter{}, wantErr: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			got, err := instances.GetParametersForClusterParameterGroup(tt.args.ParameterGroupName)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DbInstances.GetParametersForClusterParameterGroup() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DbInstances.GetParametersForClusterParameterGroup() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

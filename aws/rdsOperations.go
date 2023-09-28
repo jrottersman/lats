@@ -229,6 +229,34 @@ func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string
 	return &output.DBClusterParameterGroups[0], nil
 }
 
+//GetParametersForClusterParameterGroup returns parameters for a cluster group
+func (instances *DbInstances) GetParametersForClusterParameterGroup(ParameterGroupName string) (*[]types.Parameter, error) {
+	output, err := instances.RdsClient.DescribeDBClusterParameters(context.TODO(), &rds.DescribeDBClusterParametersInput{
+		DBClusterParameterGroupName: aws.String(ParameterGroupName),
+	})
+	if err != nil {
+		log.Printf("Error getting parameters %s", err)
+		return nil, err
+	}
+	parameters := output.Parameters
+	for {
+		if output.Marker != nil {
+			output, err := instances.RdsClient.DescribeDBClusterParameters(context.TODO(), &rds.DescribeDBClusterParametersInput{
+				DBClusterParameterGroupName: aws.String(ParameterGroupName),
+				Marker:                      output.Marker,
+			})
+			if err != nil {
+				log.Printf("Error getting parameters %s", err)
+				return nil, err
+			}
+			parameters = append(parameters, output.Parameters...)
+		} else {
+			break
+		}
+	}
+	return &parameters, nil
+}
+
 // GetParameterGroup we will use this for moving custom parameter groups
 func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 	*types.DBParameterGroup, error) {
