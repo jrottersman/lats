@@ -36,6 +36,7 @@ func DecodeRDSClusterOutput(b bytes.Buffer) types.DBCluster {
 	return dbCluster
 }
 
+// EncodeRDSClusterOutput takes a cluster snapshot and creates bytes
 func EncodeRDSClusterOutput(db *types.DBCluster) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
@@ -70,6 +71,7 @@ func EncodeRDSSnapshotOutput(snapshot *types.DBSnapshot) bytes.Buffer {
 	return encoder
 }
 
+//GetRDSSnapshotOutput reads a snapshot at this point I think we can delete this
 func GetRDSSnapshotOutput(s StateManager, snap string) (*types.DBSnapshot, error) {
 	i := s.GetStateObject(snap)
 	snapshot, ok := i.(types.DBSnapshot)
