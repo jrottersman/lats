@@ -276,6 +276,16 @@ func DecodeCreateDBInstanceInput(b bytes.Buffer) *rds.CreateDBInstanceInput {
 	return &dbCluster
 }
 
+func EncodeParameterGroup(p *types.DBParameterGroup) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+	err := enc.Encode(&p)
+	if err != nil {
+		log.Fatalf("Error encoding our parameter group: %s", err)
+	}
+	return encoder
+}
+
 //GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
 func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
 	if fn == nil {

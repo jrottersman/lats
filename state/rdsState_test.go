@@ -200,6 +200,23 @@ func TestDecodeRDSClusterSnapshotOutput(t *testing.T) {
 
 }
 
+func TestEncodeParameterGroup(t *testing.T) {
+
+	pg := types.DBParameterGroup{
+		DBParameterGroupName: aws.String("foo"),
+	}
+	r := EncodeParameterGroup(&pg)
+	var result types.DBParameterGroup
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if *result.DBParameterGroupName != *pg.DBParameterGroupName {
+		t.Errorf("got %s expected %s", *result.DBParameterGroupName, *pg.DBParameterGroupName)
+	}
+}
+
 func TestWriteOutput(t *testing.T) {
 	type foo struct {
 		A string
