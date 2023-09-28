@@ -300,6 +300,17 @@ func DecodeParameterGroup(b bytes.Buffer) *types.DBParameterGroup {
 	return &pg
 }
 
+//EncodeParameters encodes the parameters for a paramter group and turns it into a bytes.Buffer
+func EncodeParameters(p *[]types.Parameter) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+	err := enc.Encode(&p)
+	if err != nil {
+		log.Fatalf("Error encoding our parameters %s", err)
+	}
+	return encoder
+}
+
 //GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
 func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
 	if fn == nil {
