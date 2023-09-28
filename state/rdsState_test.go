@@ -217,6 +217,18 @@ func TestEncodeParameterGroup(t *testing.T) {
 	}
 }
 
+func TestDecodeParameterGroup(t *testing.T) {
+	pg := types.DBParameterGroup{
+		DBParameterGroupName: aws.String("foo"),
+	}
+	r := EncodeParameterGroup(&pg)
+	resp := DecodeParameterGroup(r)
+	if *resp.DBParameterGroupName != *pg.DBParameterGroupName {
+		t.Errorf("got %s expected %s", *resp.DBParameterGroupName, *pg.DBParameterGroupName)
+	}
+
+}
+
 func TestWriteOutput(t *testing.T) {
 	type foo struct {
 		A string

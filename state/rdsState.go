@@ -278,6 +278,7 @@ func DecodeCreateDBInstanceInput(b bytes.Buffer) *rds.CreateDBInstanceInput {
 	return &dbCluster
 }
 
+//EncodeParameterGroup takes a parameter group and turns it into a bytes.Buffer
 func EncodeParameterGroup(p *types.DBParameterGroup) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
@@ -286,6 +287,17 @@ func EncodeParameterGroup(p *types.DBParameterGroup) bytes.Buffer {
 		log.Fatalf("Error encoding our parameter group: %s", err)
 	}
 	return encoder
+}
+
+//DecodeParameterGroup creates the instance from our bytes buffer when we want to replay
+func DecodeParameterGroup(b bytes.Buffer) *types.DBParameterGroup {
+	var pg types.DBParameterGroup
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&pg)
+	if err != nil {
+		log.Fatalf("Error decoding state for RDS Cluster: %s", err)
+	}
+	return &pg
 }
 
 //GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
