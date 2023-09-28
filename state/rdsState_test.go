@@ -229,6 +229,23 @@ func TestDecodeParameterGroup(t *testing.T) {
 
 }
 
+func TestEncodeParameters(t *testing.T) {
+	p := types.Parameter{}
+	lp := []types.Parameter{}
+	lp = append(lp, p)
+	r := EncodeParameters(&lp)
+	var result []types.Parameter
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if len(lp) != len(result) {
+		t.Errorf("got %d expected %d", len(result), len(lp))
+	}
+
+}
+
 func TestWriteOutput(t *testing.T) {
 	type foo struct {
 		A string
