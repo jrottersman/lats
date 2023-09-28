@@ -295,19 +295,19 @@ func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (
 	}
 	parameters := output.Parameters
 	for {
-		if output.Marker != nil {
-			output, err := instances.RdsClient.DescribeDBParameters(context.TODO(), &rds.DescribeDBParametersInput{
-				DBParameterGroupName: aws.String(ParameterGroupName),
-				Marker:               output.Marker,
-			})
-			if err != nil {
-				log.Printf("Error getting parameters %s", err)
-				return nil, err
-			}
-			parameters = append(parameters, output.Parameters...)
-		} else {
+		if output.Marker == nil {
 			break
 		}
+		output, err := instances.RdsClient.DescribeDBParameters(context.TODO(), &rds.DescribeDBParametersInput{
+			DBParameterGroupName: aws.String(ParameterGroupName),
+			Marker:               output.Marker,
+		})
+		if err != nil {
+			log.Printf("Error getting parameters %s", err)
+			return nil, err
+		}
+		parameters = append(parameters, output.Parameters...)
+
 	}
 	return &parameters, nil
 }
