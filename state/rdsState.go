@@ -300,6 +300,17 @@ func DecodeParameterGroup(b bytes.Buffer) *types.DBParameterGroup {
 	return &pg
 }
 
+//EncodeClusterParameterGroup takes a parameter group and turns it into a bytes.Buffer
+func EncodeClusterParameterGroup(p *types.DBClusterParameterGroup) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+	err := enc.Encode(&p)
+	if err != nil {
+		log.Fatalf("Error encoding our parameter group: %s", err)
+	}
+	return encoder
+}
+
 //EncodeParameters encodes the parameters for a paramter group and turns it into a bytes.Buffer
 func EncodeParameters(p *[]types.Parameter) bytes.Buffer {
 	var encoder bytes.Buffer
