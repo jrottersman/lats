@@ -295,7 +295,7 @@ func DecodeParameterGroup(b bytes.Buffer) *types.DBParameterGroup {
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&pg)
 	if err != nil {
-		log.Fatalf("Error decoding state for RDS Cluster: %s", err)
+		log.Fatalf("Error decoding state for parameter group: %s", err)
 	}
 	return &pg
 }
@@ -309,6 +309,17 @@ func EncodeClusterParameterGroup(p *types.DBClusterParameterGroup) bytes.Buffer 
 		log.Fatalf("Error encoding our parameter group: %s", err)
 	}
 	return encoder
+}
+
+//DecodeClusterParameterGroup creates the instance from our bytes buffer when we want to replay
+func DecodeClusterParameterGroup(b bytes.Buffer) *types.DBClusterParameterGroup {
+	var pg types.DBClusterParameterGroup
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&pg)
+	if err != nil {
+		log.Fatalf("Error decoding state for cluster parameter group: %s", err)
+	}
+	return &pg
 }
 
 //EncodeParameters encodes the parameters for a paramter group and turns it into a bytes.Buffer
