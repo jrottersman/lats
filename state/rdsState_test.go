@@ -245,6 +245,17 @@ func TestEncodeClusterParameterGroup(t *testing.T) {
 	}
 }
 
+func TestDecodeClusterParameterGroup(t *testing.T) {
+	pg := types.DBClusterParameterGroup{
+		DBClusterParameterGroupName: aws.String("foo"),
+	}
+	r := EncodeClusterParameterGroup(&pg)
+	resp := DecodeClusterParameterGroup(r)
+	if *resp.DBClusterParameterGroupName != *pg.DBClusterParameterGroupName {
+		t.Errorf("got %s expected %s", *resp.DBClusterParameterGroupName, *pg.DBClusterParameterGroupName)
+	}
+}
+
 func TestEncodeParameters(t *testing.T) {
 	p := types.Parameter{}
 	lp := []types.Parameter{}
