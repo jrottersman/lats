@@ -245,6 +245,17 @@ func TestEncodeParameters(t *testing.T) {
 	}
 }
 
+func TestDecodeParameters(t *testing.T) {
+	p := types.Parameter{}
+	lp := []types.Parameter{}
+	lp = append(lp, p)
+	r := EncodeParameters(&lp)
+	result := DecodeParameters(r)
+	if len(lp) != len(*result) {
+		t.Errorf("got %d expected %d", len(*result), len(lp))
+	}
+}
+
 func TestWriteOutput(t *testing.T) {
 	type foo struct {
 		A string
