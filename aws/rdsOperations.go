@@ -313,6 +313,21 @@ func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (
 	return &parameters, nil
 }
 
+//CreateParameterGroup creates a pararmeter group for a DB instance
+func (i *DbInstances) CreateParameterGroup(p *types.DBParameterGroup) (*rds.CreateDBParameterGroupOutput, error) {
+	input := rds.CreateDBParameterGroupInput{
+		DBParameterGroupFamily: p.DBParameterGroupFamily,
+		DBParameterGroupName:   p.DBParameterGroupName,
+		Description:            p.Description,
+	}
+	output, err := i.RdsClient.CreateDBParameterGroup(context.TODO(), &input)
+	if err != nil {
+		log.Printf("error creating parameter group %s", err)
+		return output, err
+	}
+	return output, err
+}
+
 //RestoreSnapshotCluster takes a snapshot turns it into a DB Cluster fun fact the cluster won't be ready from just this there will be no instances
 func (instances *DbInstances) RestoreSnapshotCluster(input rds.RestoreDBClusterFromSnapshotInput) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
 	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(context.TODO(), &input)
