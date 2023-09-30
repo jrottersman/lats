@@ -12,6 +12,7 @@ import (
 const LoneInstance = "SingleRDSInstance"
 const Cluster = "RDSCluster"
 const Instance = "ClusterInstance"
+const DBParameterGroup = "DBParameterGroup"
 
 type Object struct {
 	FileName string
@@ -33,6 +34,8 @@ func (o Object) ReadObject() interface{} {
 		return DecodeRestoreDBClusterFromSnapshotInput(*buf)
 	case Instance:
 		return DecodeCreateDBInstanceInput(*buf)
+	case DBParameterGroup:
+		return DecodeParameterGroup(*buf)
 	}
 	return nil
 }
