@@ -315,13 +315,13 @@ func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (
 }
 
 //CreateParameterGroup creates a pararmeter group for a DB instance
-func (i *DbInstances) CreateParameterGroup(p *types.DBParameterGroup) (*rds.CreateDBParameterGroupOutput, error) {
+func (instances *DbInstances) CreateParameterGroup(p *types.DBParameterGroup) (*rds.CreateDBParameterGroupOutput, error) {
 	input := rds.CreateDBParameterGroupInput{
 		DBParameterGroupFamily: p.DBParameterGroupFamily,
 		DBParameterGroupName:   p.DBParameterGroupName,
 		Description:            p.Description,
 	}
-	output, err := i.RdsClient.CreateDBParameterGroup(context.TODO(), &input)
+	output, err := instances.RdsClient.CreateDBParameterGroup(context.TODO(), &input)
 	if err != nil {
 		log.Printf("error creating parameter group %s", err)
 		return output, err
@@ -330,7 +330,7 @@ func (i *DbInstances) CreateParameterGroup(p *types.DBParameterGroup) (*rds.Crea
 }
 
 //ModifyParameterGroup adds all the parameters to a db parameter group
-func (i *DbInstances) ModifyParameterGroup(pg string, parameters []types.Parameter) error {
+func (instances *DbInstances) ModifyParameterGroup(pg string, parameters []types.Parameter) error {
 	//batch this thing
 	batchSize := 20
 	batches := make([][]types.Parameter, 0, (len(parameters)+batchSize-1)/batchSize)
@@ -341,7 +341,7 @@ func (i *DbInstances) ModifyParameterGroup(pg string, parameters []types.Paramet
 	batches = append(batches, parameters)
 
 	for _, batch := range batches {
-		_, err := i.RdsClient.ModifyDBParameterGroup(context.TODO(), &rds.ModifyDBParameterGroupInput{
+		_, err := instances.RdsClient.ModifyDBParameterGroup(context.TODO(), &rds.ModifyDBParameterGroupInput{
 			DBParameterGroupName: aws.String(pg),
 			Parameters:           batch,
 		})
