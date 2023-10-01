@@ -330,6 +330,21 @@ func (instances *DbInstances) CreateParameterGroup(p *types.DBParameterGroup) (*
 	return output, err
 }
 
+//CreateClusterParameterGroup creates a pararmeter group for a DB instance
+func (instances *DbInstances) CreateClusterParameterGroup(p *types.DBClusterParameterGroup) (*rds.CreateDBClusterParameterGroupOutput, error) {
+	input := rds.CreateDBClusterParameterGroupInput{
+		DBParameterGroupFamily:      p.DBParameterGroupFamily,
+		DBClusterParameterGroupName: p.DBClusterParameterGroupName,
+		Description:                 p.Description,
+	}
+	output, err := instances.RdsClient.CreateDBClusterParameterGroup(context.TODO(), &input)
+	if err != nil {
+		log.Printf("error creating parameter group %s", err)
+		return output, err
+	}
+	return output, nil
+}
+
 //ModifyParameterGroup adds all the parameters to a db parameter group
 func (instances *DbInstances) ModifyParameterGroup(pg string, parameters []types.Parameter) error {
 	//batch this thing
