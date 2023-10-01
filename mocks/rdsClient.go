@@ -110,6 +110,10 @@ func (m MockRDSClient) ModifyDBParameterGroup(ctx context.Context, params *rds.M
 	return &rds.ModifyDBParameterGroupOutput{}, nil
 }
 
+func (m MockRDSClient) ModifyDBClusterParameterGroup(ctx context.Context, params *rds.ModifyDBClusterParameterGroupInput, optFns ...func(*rds.Options)) (*rds.ModifyDBClusterParameterGroupOutput, error) {
+	return &rds.ModifyDBClusterParameterGroupOutput{}, nil
+}
+
 func (m MockRDSClient) CopyDBClusterSnapshot(ctx context.Context, params *rds.CopyDBClusterSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBClusterSnapshotOutput, error) {
 	return &rds.CopyDBClusterSnapshotOutput{
 		DBClusterSnapshot: &types.DBClusterSnapshot{},
