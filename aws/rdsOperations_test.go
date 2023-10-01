@@ -699,3 +699,45 @@ func TestDbInstances_ModifyParameterGroup(t *testing.T) {
 		})
 	}
 }
+
+func TestDbInstances_CreateClusterParameterGroup(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		p *types.DBClusterParameterGroup
+	}
+
+	params := types.DBClusterParameterGroup{
+		DBClusterParameterGroupArn:  aws.String("foo"),
+		DBParameterGroupFamily:      aws.String("foo"),
+		DBClusterParameterGroupName: aws.String("foo"),
+	}
+	expect := rds.CreateDBClusterParameterGroupOutput{
+		DBClusterParameterGroup: &params,
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *rds.CreateDBClusterParameterGroupOutput
+		wantErr bool
+	}{
+		{name: "foo", fields: fields{RdsClient: mock.MockRDSClient{}}, args: args{p: &params}, want: &expect, wantErr: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			got, err := instances.CreateClusterParameterGroup(tt.args.p)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DbInstances.CreateClusterParameterGroup() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DbInstances.CreateClusterParameterGroup() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
