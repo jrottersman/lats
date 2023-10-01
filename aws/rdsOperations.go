@@ -329,6 +329,29 @@ func (i *DbInstances) CreateParameterGroup(p *types.DBParameterGroup) (*rds.Crea
 	return output, err
 }
 
+//ModifyParameterGroup adds all the parameters to a db parameter group
+func (i *DbInstances) ModifyParameterGroup(pg string, parameters []types.Parameter) error {
+	//batch this thing
+	batchSize := 20
+	batches := make([][]types.Parameter, 0, (len(parameters)+batchSize-1)/batchSize)
+
+	for batchSize < len(parameters) {
+		parameters, batches = parameters[batchSize:], append(batches, parameters[0:batchSize:batchSize])
+	}
+	batches = append(batches, parameters)
+
+	for _, batch := range batches {
+		_, err := i.RdsClient.ModifyDBParameterGroup(context.TODO(), &rds.ModifyDBParameterGroupInput{
+			DBParameterGroupName: aws.String(pg),
+			Parameters:           batch,
+		})
+		if err != nil {
+			fmt.Printf("error updating parameters %s", err)
+		}
+	}
+	return nil
+}
+
 //RestoreSnapshotCluster takes a snapshot turns it into a DB Cluster fun fact the cluster won't be ready from just this there will be no instances
 func (instances *DbInstances) RestoreSnapshotCluster(input rds.RestoreDBClusterFromSnapshotInput) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
 	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(context.TODO(), &input)
