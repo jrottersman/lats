@@ -48,6 +48,14 @@ func (r RDSRestorationStore) GetAllocatedStorage() *int32 {
 	return &r.Snapshot.AllocatedStorage
 }
 
+//GetParameterGroups gets the parameter groups for an instance
+func (r RDSRestorationStore) GetParameterGroups() []types.DBParameterGroupStatus {
+	if r.Instance == nil {
+		return nil
+	}
+	return r.Instance.DBParameterGroups
+}
+
 //GetAutoMinorVersionUpgrade yet another getter
 func (r RDSRestorationStore) GetAutoMinorVersionUpgrade() *bool {
 	if r.Instance == nil {
