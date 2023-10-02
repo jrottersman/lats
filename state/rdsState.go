@@ -357,13 +357,13 @@ func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*
 		return nil, err
 	}
 
-	obj := NewObject(*fn, 1, LoneInstance) // 1 is the order currently we just have the instance so this is 1 we will have to update it once we are handling parameter groups
+	instanceObj := NewObject(*fn, 1, LoneInstance) // 1 is the order currently we just have the instance so this is 1 we will have to update it once we are handling parameter groups
 
-	var objects []Object
-	objects = append(objects, obj)
+	var instanceObjects []Object
+	instanceObjects = append(instanceObjects, instanceObj)
 
 	m := make(map[int][]Object)
-	m[1] = objects
+	m[1] = instanceObjects
 
 	return &Stack{
 		Name:                  name,
