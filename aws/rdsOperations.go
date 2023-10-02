@@ -369,7 +369,7 @@ func (instances *DbInstances) ModifyParameterGroup(pg string, parameters []types
 	return nil
 }
 
-//ModifyClusterParameterGroup adds all the parameters to a db parameter group
+//ModifyClusterParameterGroup adds all the parameters to a db cluster parameter group
 func (instances *DbInstances) ModifyClusterParameterGroup(pg string, parameters []types.Parameter) error {
 	//batch this thing
 	batchSize := 20
