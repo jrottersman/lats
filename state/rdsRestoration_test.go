@@ -625,3 +625,34 @@ func TestRDSRestorationStore_GetDBClusterMembers(t *testing.T) {
 		})
 	}
 }
+
+func TestRDSRestorationStore_GetParameterGroups(t *testing.T) {
+	type fields struct {
+		Snapshot        *types.DBSnapshot
+		Instance        *types.DBInstance
+		Cluster         *types.DBCluster
+		ClusterSnapshot *types.DBClusterSnapshot
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   []types.DBParameterGroupStatus
+	}{
+		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
+		{name: "RegularNil", fields: fields{nil, nil, &types.DBCluster{}, nil}, want: nil},
+		{name: "GetData", fields: fields{nil, &types.DBInstance{DBParameterGroups: []types.DBParameterGroupStatus{}}, &types.DBCluster{DBClusterMembers: []types.DBClusterMember{{IsClusterWriter: true}}}, nil}, want: []types.DBParameterGroupStatus{}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := RDSRestorationStore{
+				Snapshot:        tt.fields.Snapshot,
+				Instance:        tt.fields.Instance,
+				Cluster:         tt.fields.Cluster,
+				ClusterSnapshot: tt.fields.ClusterSnapshot,
+			}
+			if got := r.GetParameterGroups(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RDSRestorationStore.GetParameterGroups() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
