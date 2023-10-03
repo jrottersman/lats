@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/gob"
 	"os"
-	"reflect"
 	"sync"
 	"testing"
 
@@ -481,58 +480,6 @@ func TestGenerateRestoreDBInstanceFromDBClusterSnapshotInput(t *testing.T) {
 	resp := GenerateRestoreDBInstanceFromDBClusterSnapshotInput(rStore)
 	if *resp.DBClusterSnapshotIdentifier != "boo" {
 		t.Errorf("expected boo got %v", *resp.DBClusterSnapshotIdentifier)
-	}
-}
-
-func TestGenerateRDSInstanceStack(t *testing.T) {
-	type args struct {
-		r    RDSRestorationStore
-		name string
-		fn   *string
-	}
-	r := RDSRestorationStore{
-		Snapshot: &types.DBSnapshot{DBSnapshotIdentifier: aws.String("boo")},
-		Instance: &types.DBInstance{},
-	}
-	arg := args{
-		r:    r,
-		name: "bar",
-		fn:   aws.String("/tmp/foo.gob"),
-	}
-	defer os.Remove("/tmp/foo.gob")
-
-	obj := Object{
-		FileName: "/tmp/foo.gob",
-		Order:    1,
-		ObjType:  LoneInstance,
-	}
-	oMap := make(map[int][]Object)
-	oMap[1] = []Object{obj}
-	expected := Stack{
-		Name:                  "bar",
-		RestorationObjectName: LoneInstance,
-		Objects:               oMap,
-	}
-
-	tests := []struct {
-		name    string
-		args    args
-		want    *Stack
-		wantErr bool
-	}{
-		{"first", arg, &expected, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := GenerateRDSInstanceStack(tt.args.r, tt.args.name, tt.args.fn)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GenerateRDSInstanceStack() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GenerateRDSInstanceStack() = %v, want %v", got, tt.want)
-			}
-		})
 	}
 }
 

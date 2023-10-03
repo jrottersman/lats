@@ -10,7 +10,6 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
-	"github.com/jrottersman/lats/helpers"
 )
 
 // EncodeRDSDatabaseOutput converts a dbInstace to an array of bytes in preperation for wrtiing it to disk
@@ -341,33 +340,4 @@ func DecodeParameters(b bytes.Buffer) *[]types.Parameter {
 		log.Fatalf("Error decoding parameters %s", err)
 	}
 	return &lp
-}
-
-//GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
-func GenerateRDSInstanceStack(r RDSRestorationStore, name string, fn *string) (*Stack, error) {
-	if fn == nil {
-		fn = helpers.RandomStateFileName()
-	}
-
-	DBInput := GenerateRestoreDBInstanceFromDBSnapshotInput(r)
-
-	b := EncodeRestoreDBInstanceFromDBSnapshotInput(DBInput)
-	_, err := WriteOutput(*fn, b)
-	if err != nil {
-		return nil, err
-	}
-
-	instanceObj := NewObject(*fn, 1, LoneInstance) // 1 is the order currently we just have the instance so this is 1 we will have to update it once we are handling parameter groups
-
-	var instanceObjects []Object
-	instanceObjects = append(instanceObjects, instanceObj)
-
-	m := make(map[int][]Object)
-	m[1] = instanceObjects
-
-	return &Stack{
-		Name:                  name,
-		RestorationObjectName: LoneInstance,
-		Objects:               m,
-	}, nil
 }
