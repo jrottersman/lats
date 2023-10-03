@@ -86,6 +86,11 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 		Instance: db,
 		Snapshot: snapshot,
 	}
+	pgs, err := aws.GetParameterGroups(store, dbi)
+	if err != nil {
+		fmt.Printf("error getting parameter groups %s", err)
+	}
+	fmt.Printf("need to figure out to handle %v", pgs)
 	stack, err := state.GenerateRDSInstanceStack(store, snapshotName, helpers.RandomStateFileName())
 	if err != nil {
 		log.Fatalf("error generating stack %s", err)
