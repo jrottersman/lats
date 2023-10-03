@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
+	laws "github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/state"
 )
 
@@ -15,6 +16,7 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 		r    state.RDSRestorationStore
 		name string
 		fn   *string
+		pg   []laws.ParameterGroup
 	}
 	r := state.RDSRestorationStore{
 		Snapshot: &types.DBSnapshot{DBSnapshotIdentifier: aws.String("boo")},
@@ -24,6 +26,7 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 		r:    r,
 		name: "bar",
 		fn:   aws.String("/tmp/foo.gob"),
+		pg:   []laws.ParameterGroup{},
 	}
 	defer os.Remove("/tmp/foo.gob")
 
@@ -50,7 +53,7 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GenerateRDSInstanceStack(tt.args.r, tt.args.name, tt.args.fn)
+			got, err := GenerateRDSInstanceStack(tt.args.r, tt.args.name, tt.args.fn, tt.args.pg)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GenerateRDSInstanceStack() error = %v, wantErr %v", err, tt.wantErr)
 				return
