@@ -1,12 +1,13 @@
 package rdsState
 
 import (
+	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
 	"github.com/jrottersman/lats/state"
 )
 
 //GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
-func GenerateRDSInstanceStack(r state.RDSRestorationStore, name string, fn *string) (*state.Stack, error) {
+func GenerateRDSInstanceStack(r state.RDSRestorationStore, name string, fn *string, pgs []aws.ParameterGroup) (*state.Stack, error) {
 	if fn == nil {
 		fn = helpers.RandomStateFileName()
 	}
