@@ -34,8 +34,6 @@ func (o Object) ReadObject() interface{} {
 		return DecodeRestoreDBClusterFromSnapshotInput(*buf)
 	case Instance:
 		return DecodeCreateDBInstanceInput(*buf)
-	case DBParameterGroup:
-		return DecodeParameterGroup(*buf)
 	}
 	return nil
 }
