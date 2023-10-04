@@ -81,3 +81,14 @@ func Test_encodeParameterGroups(t *testing.T) {
 		t.Errorf("got %d expected %d", len(result), len(pgs))
 	}
 }
+
+func Test_DecodeParameterGroups(t *testing.T) {
+	pg := laws.ParameterGroup{}
+	pgs := []laws.ParameterGroup{}
+	pgs = append(pgs, pg)
+	r := encodeParameterGroups(pgs)
+	result := DecodeParameterGroups(r)
+	if len(pgs) != len(result) {
+		t.Errorf("got %d expected %d", len(result), len(pgs))
+	}
+}
