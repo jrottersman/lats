@@ -1,6 +1,7 @@
 package rdsState
 
 import (
+	"encoding/gob"
 	"os"
 	"reflect"
 	"testing"
@@ -62,5 +63,21 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 				t.Errorf("GenerateRDSInstanceStack() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func Test_encodeParameterGroups(t *testing.T) {
+	pg := laws.ParameterGroup{}
+	pgs := []laws.ParameterGroup{}
+	pgs = append(pgs, pg)
+	r := encodeParameterGroups(pgs)
+	var result []laws.ParameterGroup
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if len(pgs) != len(result) {
+		t.Errorf("got %d expected %d", len(result), len(pgs))
 	}
 }
