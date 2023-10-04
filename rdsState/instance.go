@@ -1,6 +1,10 @@
 package rdsState
 
 import (
+	"bytes"
+	"encoding/gob"
+	"log"
+
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
 	"github.com/jrottersman/lats/state"
@@ -33,4 +37,14 @@ func GenerateRDSInstanceStack(r state.RDSRestorationStore, name string, fn *stri
 		RestorationObjectName: state.LoneInstance,
 		Objects:               m,
 	}, nil
+}
+
+func encodeParameterGroups(pgs []aws.ParameterGroup) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+	err := enc.Encode(&pgs)
+	if err != nil {
+		log.Fatalf("Error encoding our parameters %s", err)
+	}
+	return encoder
 }
