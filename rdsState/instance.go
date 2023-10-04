@@ -48,3 +48,14 @@ func encodeParameterGroups(pgs []aws.ParameterGroup) bytes.Buffer {
 	}
 	return encoder
 }
+
+// Decode the parameter Group
+func DecodeParameterGroups(b bytes.Buffer) []aws.ParameterGroup {
+	var pg []aws.ParameterGroup
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&pg)
+	if err != nil {
+		log.Fatalf("Error decoding parameters %s", err)
+	}
+	return pg
+}
