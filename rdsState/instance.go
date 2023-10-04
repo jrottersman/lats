@@ -3,6 +3,7 @@ package rdsState
 import (
 	"bytes"
 	"encoding/gob"
+	"fmt"
 	"log"
 
 	"github.com/jrottersman/lats/aws"
@@ -11,15 +12,25 @@ import (
 )
 
 //GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
-func GenerateRDSInstanceStack(r state.RDSRestorationStore, name string, fn *string, pgs []aws.ParameterGroup) (*state.Stack, error) {
+//TODO refacotr this to use a struct this is messy
+func GenerateRDSInstanceStack(r state.RDSRestorationStore, name string, fn *string, paramfn *string, pgs []aws.ParameterGroup) (*state.Stack, error) {
 	if fn == nil {
 		fn = helpers.RandomStateFileName()
 	}
 
-	DBInput := state.GenerateRestoreDBInstanceFromDBSnapshotInput(r)
+	if paramfn == nil {
+		paramfn = helpers.RandomStateFileName()
+	}
 
-	b := state.EncodeRestoreDBInstanceFromDBSnapshotInput(DBInput)
-	_, err := state.WriteOutput(*fn, b)
+	b := encodeParameterGroups(pgs)
+	_, err := state.WriteOutput(*paramfn, b)
+	if err != nil {
+		return nil, fmt.Errorf("error writing parameter groups %s", err)
+	}
+
+	DBInput := state.GenerateRestoreDBInstanceFromDBSnapshotInput(r)
+	b = state.EncodeRestoreDBInstanceFromDBSnapshotInput(DBInput)
+	_, err = state.WriteOutput(*fn, b)
 	if err != nil {
 		return nil, err
 	}
