@@ -27,6 +27,9 @@ func GenerateRDSInstanceStack(r state.RDSRestorationStore, name string, fn *stri
 	if err != nil {
 		return nil, fmt.Errorf("error writing parameter groups %s", err)
 	}
+	paramObj := state.NewObject(*paramfn, 1, state.DBParameterGroup)
+	var paramObjects []state.Object
+	paramObjects = append(paramObjects, paramObj)
 
 	DBInput := state.GenerateRestoreDBInstanceFromDBSnapshotInput(r)
 	b = state.EncodeRestoreDBInstanceFromDBSnapshotInput(DBInput)
@@ -35,13 +38,14 @@ func GenerateRDSInstanceStack(r state.RDSRestorationStore, name string, fn *stri
 		return nil, err
 	}
 
-	instanceObj := state.NewObject(*fn, 1, state.LoneInstance) // 1 is the order currently we just have the instance so this is 1 we will have to update it once we are handling parameter groups
+	instanceObj := state.NewObject(*fn, 2, state.LoneInstance)
 
 	var instanceObjects []state.Object
 	instanceObjects = append(instanceObjects, instanceObj)
 
 	m := make(map[int][]state.Object)
-	m[1] = instanceObjects
+	m[1] = paramObjects
+	m[2] = instanceObjects
 
 	return &state.Stack{
 		Name:                  name,
