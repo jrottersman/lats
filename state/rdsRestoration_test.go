@@ -656,3 +656,42 @@ func TestRDSRestorationStore_GetParameterGroups(t *testing.T) {
 		})
 	}
 }
+
+func TestRDSRestorationStore_GetClusterParameterGroups(t *testing.T) {
+	type fields struct {
+		Snapshot        *types.DBSnapshot
+		Instance        *types.DBInstance
+		Cluster         *types.DBCluster
+		ClusterSnapshot *types.DBClusterSnapshot
+	}
+	field := fields{nil, &types.DBInstance{}, &types.DBCluster{DBClusterParameterGroup: aws.String("foo")}, nil}
+	tests := []struct {
+		name   string
+		fields fields
+		want   *string
+	}{
+		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
+		{name: "RegularNil", fields: fields{nil, nil, &types.DBCluster{}, nil}, want: nil},
+		{name: "GetData", fields: field, want: aws.String("foo")},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := RDSRestorationStore{
+				Snapshot:        tt.fields.Snapshot,
+				Instance:        tt.fields.Instance,
+				Cluster:         tt.fields.Cluster,
+				ClusterSnapshot: tt.fields.ClusterSnapshot,
+			}
+			got := r.GetClusterParameterGroups()
+			if got != nil && tt.want != nil {
+				if *got != *tt.want {
+					t.Errorf("RDSRestorationStore.GetClusterParameterGroups() = %v, want %v", *got, *tt.want)
+				}
+			} else {
+				if got != tt.want {
+					t.Errorf("RDSRestorationStore.GetClusterParameterGroups() = %v, want %v", got, tt.want)
+				}
+			}
+		})
+	}
+}
