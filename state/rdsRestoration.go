@@ -56,6 +56,14 @@ func (r RDSRestorationStore) GetParameterGroups() []types.DBParameterGroupStatus
 	return r.Instance.DBParameterGroups
 }
 
+//GetClusterParameterGroups gets the parameter groups for a cluster
+func (r RDSRestorationStore) GetClusterParameterGroups() *string {
+	if r.Cluster == nil {
+		return nil
+	}
+	return r.Cluster.DBClusterParameterGroup
+}
+
 //GetAutoMinorVersionUpgrade yet another getter
 func (r RDSRestorationStore) GetAutoMinorVersionUpgrade() *bool {
 	if r.Instance == nil {
