@@ -36,11 +36,17 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 
 	obj := state.Object{
 		FileName: "/tmp/foo.gob",
-		Order:    1,
+		Order:    2,
 		ObjType:  state.LoneInstance,
 	}
+	pobj := state.Object{
+		FileName: "/tmp/bar.gob",
+		Order:    1,
+		ObjType:  state.DBParameterGroup,
+	}
 	oMap := make(map[int][]state.Object)
-	oMap[1] = []state.Object{obj}
+	oMap[2] = []state.Object{obj}
+	oMap[1] = []state.Object{pobj}
 	expected := state.Stack{
 		Name:                  "bar",
 		RestorationObjectName: state.LoneInstance,
