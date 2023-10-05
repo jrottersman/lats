@@ -21,15 +21,35 @@ func GetParameterGroups(r state.RDSRestorationStore, i DbInstances) ([]Parameter
 		if err != nil {
 			return nil, fmt.Errorf("error getting parameter group %s", err)
 		}
+
+		params, err := i.GetParametersForGroup(*pg.DBParameterGroupName)
 		if err != nil {
 			return nil, fmt.Errorf("error getting parameters %s for group %s", err, *pg.DBParameterGroupName)
 		}
-		params, err := i.GetParametersForGroup(*pg.DBParameterGroupName)
 		fpg := ParameterGroup{
 			ParameterGroup: *group,
 			Params:         *params,
 		}
 		groups = append(groups, fpg)
 	}
+	return groups, nil
+}
+
+func GetClusterParameterGroup(r state.RDSRestorationStore, i DbInstances) ([]ParameterGroup, error) {
+	pg := r.GetClusterParameterGroups()
+	groups := []ParameterGroup{}
+	group, err := i.GetClusterParameterGroup(*pg)
+	if err != nil {
+		return nil, fmt.Errorf("error getting cluster parameter group %s", err)
+	}
+	params, err := i.GetParametersForGroup(*pg)
+	if err != nil {
+		return nil, fmt.Errorf("error getting parameters %s for group %s", err, *pg)
+	}
+	fpg := ParameterGroup{
+		ClusterParameterGroup: *group,
+		Params:                *params,
+	}
+	groups = append(groups, fpg)
 	return groups, nil
 }
