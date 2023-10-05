@@ -11,8 +11,8 @@ import (
 	"github.com/jrottersman/lats/state"
 )
 
+//TODO refactor this to use a struct this is messy
 //GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
-//TODO refacotr this to use a struct this is messy
 func GenerateRDSInstanceStack(r state.RDSRestorationStore, name string, fn *string, paramfn *string, pgs []aws.ParameterGroup) (*state.Stack, error) {
 	if fn == nil {
 		fn = helpers.RandomStateFileName()
@@ -64,7 +64,7 @@ func encodeParameterGroups(pgs []aws.ParameterGroup) bytes.Buffer {
 	return encoder
 }
 
-// Decode the parameter Group
+//DecodeParameterGroup Decodes the parameter Group
 func DecodeParameterGroups(b bytes.Buffer) []aws.ParameterGroup {
 	var pg []aws.ParameterGroup
 	dec := gob.NewDecoder(&b)

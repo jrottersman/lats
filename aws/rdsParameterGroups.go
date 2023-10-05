@@ -8,8 +8,9 @@ import (
 )
 
 type ParameterGroup struct {
-	ParameterGroup types.DBParameterGroup
-	Params         []types.Parameter
+	ParameterGroup        types.DBParameterGroup
+	ClusterParameterGroup types.DBClusterParameterGroup
+	Params                []types.Parameter
 }
 
 func GetParameterGroups(r state.RDSRestorationStore, i DbInstances) ([]ParameterGroup, error) {
