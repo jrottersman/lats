@@ -21,32 +21,33 @@ type InstanceStackInputs struct {
 
 //TODO refactor this to use a struct this is messy
 //GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
-func GenerateRDSInstanceStack(r state.RDSRestorationStore, name string, fn *string, paramfn *string, pgs []aws.ParameterGroup) (*state.Stack, error) {
-	if fn == nil {
-		fn = helpers.RandomStateFileName()
+//r state.RDSRestorationStore, name string, fn *string, paramfn *string, pgs []aws.ParameterGroup
+func GenerateRDSInstanceStack(i InstanceStackInputs) (*state.Stack, error) {
+	if i.InstanceFileName == "" {
+		i.InstanceFileName = *helpers.RandomStateFileName()
 	}
 
-	if paramfn == nil {
-		paramfn = helpers.RandomStateFileName()
+	if i.ParameterFileName == "" {
+		i.ParameterFileName = *helpers.RandomStateFileName()
 	}
 
-	b := encodeParameterGroups(pgs)
-	_, err := state.WriteOutput(*paramfn, b)
+	b := encodeParameterGroups(i.ParameterGroups)
+	_, err := state.WriteOutput(i.ParameterFileName, b)
 	if err != nil {
 		return nil, fmt.Errorf("error writing parameter groups %s", err)
 	}
-	paramObj := state.NewObject(*paramfn, 1, state.DBParameterGroup)
+	paramObj := state.NewObject(i.ParameterFileName, 1, state.DBParameterGroup)
 	var paramObjects []state.Object
 	paramObjects = append(paramObjects, paramObj)
 
-	DBInput := state.GenerateRestoreDBInstanceFromDBSnapshotInput(r)
+	DBInput := state.GenerateRestoreDBInstanceFromDBSnapshotInput(i.R)
 	b = state.EncodeRestoreDBInstanceFromDBSnapshotInput(DBInput)
-	_, err = state.WriteOutput(*fn, b)
+	_, err = state.WriteOutput(i.InstanceFileName, b)
 	if err != nil {
 		return nil, err
 	}
 
-	instanceObj := state.NewObject(*fn, 2, state.LoneInstance)
+	instanceObj := state.NewObject(i.InstanceFileName, 2, state.LoneInstance)
 
 	var instanceObjects []state.Object
 	instanceObjects = append(instanceObjects, instanceObj)
@@ -56,7 +57,7 @@ func GenerateRDSInstanceStack(r state.RDSRestorationStore, name string, fn *stri
 	m[2] = instanceObjects
 
 	return &state.Stack{
-		Name:                  name,
+		Name:                  i.StackName,
 		RestorationObjectName: state.LoneInstance,
 		Objects:               m,
 	}, nil
