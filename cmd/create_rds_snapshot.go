@@ -59,7 +59,13 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 		Cluster:         cluster,
 		ClusterSnapshot: snapshot,
 	}
-	stack, err := rdsState.GenerateRDSClusterStack(store, snapshotName, nil, dbi, ".state")
+	input := rdsState.ClusterStackInput{
+		R:         store,
+		StackName: snapshotName,
+		Client:    dbi,
+		Folder:    ".state",
+	}
+	stack, err := rdsState.GenerateRDSClusterStack(input)
 	if err != nil {
 		log.Fatalf("error generating stack %s", err)
 	}

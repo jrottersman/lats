@@ -13,11 +13,7 @@ import (
 
 func TestGenerateRDSClusterStack(t *testing.T) {
 	type args struct {
-		r      state.RDSRestorationStore
-		name   string
-		fn     *string
-		client aws.DbInstances
-		folder string
+		i rdsState.ClusterStackInput
 	}
 
 	clusterId := "foo"
@@ -30,12 +26,15 @@ func TestGenerateRDSClusterStack(t *testing.T) {
 		Cluster:         &types.DBCluster{DBClusterIdentifier: &clusterId},
 		ClusterSnapshot: &types.DBClusterSnapshot{DBClusterSnapshotIdentifier: &snapshotId},
 	}
+	input := rdsState.ClusterStackInput{
+		R:         resto,
+		StackName: "foo",
+		Filename:  filen,
+		Client:    i,
+		Folder:    "/tmp",
+	}
 	arg := args{
-		r:      resto,
-		name:   "foo",
-		fn:     &filen,
-		client: i,
-		folder: "/tmp",
+		i: input,
 	}
 
 	objs := make(map[int][]state.Object)
@@ -64,7 +63,7 @@ func TestGenerateRDSClusterStack(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := rdsState.GenerateRDSClusterStack(tt.args.r, tt.args.name, tt.args.fn, tt.args.client, tt.args.folder)
+			got, err := rdsState.GenerateRDSClusterStack(tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GenerateRDSClusterStack() error = %v, wantErr %v", err, tt.wantErr)
 				return

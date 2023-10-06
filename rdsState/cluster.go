@@ -15,32 +15,32 @@ type ClusterStackInput struct {
 }
 
 //GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.
-func GenerateRDSClusterStack(r state.RDSRestorationStore, name string, fn *string, client aws.DbInstances, folder string) (*state.Stack, error) {
-	if fn == nil {
-		fn = helpers.RandomStateFileName()
+func GenerateRDSClusterStack(c ClusterStackInput) (*state.Stack, error) {
+	if c.Filename == "" {
+		c.Filename = *helpers.RandomStateFileName()
 	}
 	objMap := make(map[int][]state.Object)
-	ClusterInput := state.GenerateRestoreDBClusterFromSnapshotInput(r)
+	ClusterInput := state.GenerateRestoreDBClusterFromSnapshotInput(c.R)
 
 	// This is the cluster
 	bc := state.EncodeRestoreDBClusterFromSnapshotInput(ClusterInput)
-	_, err := state.WriteOutput(*fn, bc)
+	_, err := state.WriteOutput(c.Filename, bc)
 	if err != nil {
 		return nil, err
 	}
-	clusterObj := state.NewObject(*fn, 1, state.Cluster)
+	clusterObj := state.NewObject(c.Filename, 1, state.Cluster)
 	var clusterObjects []state.Object
 	clusterObjects = append(clusterObjects, clusterObj)
 	objMap[1] = clusterObjects
 
-	instanceObjects, err := ClusterInstancesToObjects(r.Cluster, client, folder, 2)
+	instanceObjects, err := ClusterInstancesToObjects(c.R.Cluster, c.Client, c.Folder, 2)
 	if err != nil {
 		return nil, err
 	}
 	objMap[2] = instanceObjects
 
 	return &state.Stack{
-		Name:                  name,
+		Name:                  c.StackName,
 		RestorationObjectName: state.Cluster,
 		Objects:               objMap,
 	}, nil
