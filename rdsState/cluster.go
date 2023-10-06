@@ -6,6 +6,14 @@ import (
 	"github.com/jrottersman/lats/state"
 )
 
+type ClusterStackInput struct {
+	R         state.RDSRestorationStore
+	StackName string
+	Filename  string
+	Client    aws.DbInstances
+	Folder    string
+}
+
 //GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.
 func GenerateRDSClusterStack(r state.RDSRestorationStore, name string, fn *string, client aws.DbInstances, folder string) (*state.Stack, error) {
 	if fn == nil {
