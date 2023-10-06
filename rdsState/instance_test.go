@@ -14,22 +14,26 @@ import (
 
 func TestGenerateRDSInstanceStack(t *testing.T) {
 	type args struct {
-		r       state.RDSRestorationStore
-		name    string
-		fn      *string
-		paramfn *string
-		pg      []laws.ParameterGroup
+		i InstanceStackInputs
 	}
 	r := state.RDSRestorationStore{
 		Snapshot: &types.DBSnapshot{DBSnapshotIdentifier: aws.String("boo")},
 		Instance: &types.DBInstance{},
 	}
+	inputs := InstanceStackInputs{
+		R:                 r,
+		StackName:         "bar",
+		InstanceFileName:  "/tmp/foo.gob",
+		ParameterFileName: "/tmp/bar.gob",
+		ParameterGroups:   []laws.ParameterGroup{},
+	}
+	//		r:       r,
+	// name:    "bar",
+	// fn:      aws.String("/tmp/foo.gob"),
+	// paramfn: aws.String("/tmp/bar.gob"),
+	// pg:      []laws.ParameterGroup{},
 	arg := args{
-		r:       r,
-		name:    "bar",
-		fn:      aws.String("/tmp/foo.gob"),
-		paramfn: aws.String("/tmp/bar.gob"),
-		pg:      []laws.ParameterGroup{},
+		i: inputs,
 	}
 	defer os.Remove("/tmp/foo.gob")
 	defer os.Remove("/tmp/bar.gob")
@@ -63,7 +67,7 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GenerateRDSInstanceStack(tt.args.r, tt.args.name, tt.args.fn, tt.args.paramfn, tt.args.pg)
+			got, err := GenerateRDSInstanceStack(tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GenerateRDSInstanceStack() error = %v, wantErr %v", err, tt.wantErr)
 				return
