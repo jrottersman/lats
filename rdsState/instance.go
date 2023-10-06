@@ -19,9 +19,7 @@ type InstanceStackInputs struct {
 	ParameterGroups   []aws.ParameterGroup
 }
 
-//TODO refactor this to use a struct this is messy
 //GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
-//r state.RDSRestorationStore, name string, fn *string, paramfn *string, pgs []aws.ParameterGroup
 func GenerateRDSInstanceStack(i InstanceStackInputs) (*state.Stack, error) {
 	if i.InstanceFileName == "" {
 		i.InstanceFileName = *helpers.RandomStateFileName()

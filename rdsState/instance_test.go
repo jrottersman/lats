@@ -27,11 +27,6 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 		ParameterFileName: "/tmp/bar.gob",
 		ParameterGroups:   []laws.ParameterGroup{},
 	}
-	//		r:       r,
-	// name:    "bar",
-	// fn:      aws.String("/tmp/foo.gob"),
-	// paramfn: aws.String("/tmp/bar.gob"),
-	// pg:      []laws.ParameterGroup{},
 	arg := args{
 		i: inputs,
 	}
