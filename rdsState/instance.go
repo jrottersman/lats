@@ -11,6 +11,7 @@ import (
 	"github.com/jrottersman/lats/state"
 )
 
+//InstanceStackInputs struct to generate stack for an instance
 type InstanceStackInputs struct {
 	R                 state.RDSRestorationStore
 	StackName         string
@@ -19,7 +20,7 @@ type InstanceStackInputs struct {
 	ParameterGroups   []aws.ParameterGroup
 }
 
-//GenerateRDSInstaceStack creates a stack for restoration for an RDS instance
+//GenerateRDSInstanceStack creates a stack for restoration for an RDS instance
 func GenerateRDSInstanceStack(i InstanceStackInputs) (*state.Stack, error) {
 	if i.InstanceFileName == "" {
 		i.InstanceFileName = *helpers.RandomStateFileName()
@@ -71,7 +72,7 @@ func encodeParameterGroups(pgs []aws.ParameterGroup) bytes.Buffer {
 	return encoder
 }
 
-//DecodeParameterGroup Decodes the parameter Group
+//DecodeParameterGroups Decodes the parameter Group
 func DecodeParameterGroups(b bytes.Buffer) []aws.ParameterGroup {
 	var pg []aws.ParameterGroup
 	dec := gob.NewDecoder(&b)
