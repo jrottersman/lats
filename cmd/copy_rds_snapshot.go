@@ -165,6 +165,10 @@ func NewStack(oldStack state.Stack, ending string) *state.Stack {
 			case state.Instance:
 				s := getInstanceObject(obj, ending, k)
 				objs[k] = append(objs[k], s)
+			case state.DBClusterParameterGroup:
+				objs[k] = append(objs[k], i)
+			case state.DBParameterGroup:
+				objs[k] = append(objs[k], i)
 			}
 		}
 	}
