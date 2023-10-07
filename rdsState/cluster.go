@@ -1,4 +1,4 @@
-package rdsState
+package rdsstate
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 	"github.com/jrottersman/lats/state"
 )
 
+//ClusterStackInput is the input for a ClusterStack
 type ClusterStackInput struct {
 	R                 state.RDSRestorationStore
 	StackName         string

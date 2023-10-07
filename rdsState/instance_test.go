@@ -1,4 +1,4 @@
-package rdsState
+package rdsstate
 
 import (
 	"encoding/gob"

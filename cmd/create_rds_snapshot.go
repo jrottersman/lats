@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
-	"github.com/jrottersman/lats/rdsState"
+	"github.com/jrottersman/lats/rdsstate"
 	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
 )
@@ -59,13 +59,13 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 		Cluster:         cluster,
 		ClusterSnapshot: snapshot,
 	}
-	input := rdsState.ClusterStackInput{
+	input := rdsstate.ClusterStackInput{
 		R:         store,
 		StackName: snapshotName,
 		Client:    dbi,
 		Folder:    ".state",
 	}
-	stack, err := rdsState.GenerateRDSClusterStack(input)
+	stack, err := rdsstate.GenerateRDSClusterStack(input)
 	if err != nil {
 		log.Fatalf("error generating stack %s", err)
 	}
@@ -96,12 +96,12 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 	if err != nil {
 		fmt.Printf("error getting parameter groups %s", err)
 	}
-	stackInput := rdsState.InstanceStackInputs{
+	stackInput := rdsstate.InstanceStackInputs{
 		R:               store,
 		StackName:       snapshotName,
 		ParameterGroups: pgs,
 	}
-	stack, err := rdsState.GenerateRDSInstanceStack(stackInput)
+	stack, err := rdsstate.GenerateRDSInstanceStack(stackInput)
 	if err != nil {
 		log.Fatalf("error generating stack %s", err)
 	}

@@ -1,4 +1,4 @@
-package rdsState_test
+package rdsstate_test
 
 import (
 	"reflect"
@@ -7,13 +7,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
 	mock "github.com/jrottersman/lats/mocks"
-	"github.com/jrottersman/lats/rdsState"
+	"github.com/jrottersman/lats/rdsstate"
 	"github.com/jrottersman/lats/state"
 )
 
 func TestGenerateRDSClusterStack(t *testing.T) {
 	type args struct {
-		i rdsState.ClusterStackInput
+		i rdsstate.ClusterStackInput
 	}
 
 	clusterId := "foo"
@@ -27,7 +27,7 @@ func TestGenerateRDSClusterStack(t *testing.T) {
 		Cluster:         &types.DBCluster{DBClusterIdentifier: &clusterId},
 		ClusterSnapshot: &types.DBClusterSnapshot{DBClusterSnapshotIdentifier: &snapshotId},
 	}
-	input := rdsState.ClusterStackInput{
+	input := rdsstate.ClusterStackInput{
 		R:                 resto,
 		StackName:         "foo",
 		Filename:          filen,
@@ -74,7 +74,7 @@ func TestGenerateRDSClusterStack(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := rdsState.GenerateRDSClusterStack(tt.args.i)
+			got, err := rdsstate.GenerateRDSClusterStack(tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GenerateRDSClusterStack() error = %v, wantErr %v", err, tt.wantErr)
 				return
