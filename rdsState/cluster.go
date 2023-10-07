@@ -45,12 +45,12 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*state.Stack, error) {
 	if err != nil {
 		return nil, err
 	}
-	clusterObj := state.NewObject(c.Filename, 1, state.Cluster)
+	clusterObj := state.NewObject(c.Filename, 2, state.Cluster)
 	var clusterObjects []state.Object
 	clusterObjects = append(clusterObjects, clusterObj)
 	objMap[2] = clusterObjects
 
-	instanceObjects, err := ClusterInstancesToObjects(c.R.Cluster, c.Client, c.Folder, 2)
+	instanceObjects, err := ClusterInstancesToObjects(c.R.Cluster, c.Client, c.Folder, 3)
 	if err != nil {
 		return nil, err
 	}

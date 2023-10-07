@@ -19,6 +19,7 @@ func TestGenerateRDSClusterStack(t *testing.T) {
 	clusterId := "foo"
 	snapshotId := "bar"
 	filen := "/tmp/bar"
+	pFileName := "/tmp/foo"
 	c := mock.MockRDSClient{}
 	i := aws.DbInstances{RdsClient: c}
 
@@ -27,26 +28,36 @@ func TestGenerateRDSClusterStack(t *testing.T) {
 		ClusterSnapshot: &types.DBClusterSnapshot{DBClusterSnapshotIdentifier: &snapshotId},
 	}
 	input := rdsState.ClusterStackInput{
-		R:         resto,
-		StackName: "foo",
-		Filename:  filen,
-		Client:    i,
-		Folder:    "/tmp",
+		R:                 resto,
+		StackName:         "foo",
+		Filename:          filen,
+		ParameterFileName: pFileName,
+		ParameterGroups:   []aws.ParameterGroup{},
+		Client:            i,
+		Folder:            "/tmp",
 	}
 	arg := args{
 		i: input,
 	}
 
 	objs := make(map[int][]state.Object)
+	pObjs := []state.Object{}
+	pObj := state.Object{
+		FileName: pFileName,
+		Order:    1,
+		ObjType:  state.DBClusterParameterGroup,
+	}
+	pObjs = append(pObjs, pObj)
 	tObjs := []state.Object{}
 	obj := state.Object{
 		FileName: "/tmp/bar",
-		Order:    1,
+		Order:    2,
 		ObjType:  state.Cluster,
 	}
 	tObjs = append(tObjs, obj)
-	objs[1] = tObjs
-	objs[2] = nil
+	objs[1] = pObjs
+	objs[2] = tObjs
+	objs[3] = nil
 	wanted := state.Stack{
 		Name:                  "foo",
 		RestorationObjectName: state.Cluster,
