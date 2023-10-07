@@ -13,6 +13,7 @@ const LoneInstance = "SingleRDSInstance"
 const Cluster = "RDSCluster"
 const Instance = "ClusterInstance"
 const DBParameterGroup = "DBParameterGroup"
+const DBClusterParameterGroup = "DBClusterParameterGroup"
 
 type Object struct {
 	FileName string
