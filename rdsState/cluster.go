@@ -23,6 +23,9 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*state.Stack, error) {
 	if c.Filename == "" {
 		c.Filename = *helpers.RandomStateFileName()
 	}
+	if c.ParameterFileName == "" {
+		c.ParameterFileName = *helpers.RandomStateFileName()
+	}
 	objMap := make(map[int][]state.Object)
 	bp := encodeParameterGroups(c.ParameterGroups)
 	_, err := state.WriteOutput(c.ParameterFileName, bp)
