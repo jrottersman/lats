@@ -5,6 +5,7 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
 )
 
@@ -21,7 +22,7 @@ func TestFindStack(t *testing.T) {
 	if resp != nil {
 		t.Errorf("Expected nil got %v", resp)
 	}
-	stk := state.Stack{
+	stk := stack.Stack{
 		Name:                  "foo",
 		RestorationObjectName: "stack",
 	}

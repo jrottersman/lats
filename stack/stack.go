@@ -1,4 +1,4 @@
-package state
+package stack
 
 import (
 	"bytes"
@@ -7,6 +7,9 @@ import (
 	"log"
 	"os"
 	"sort"
+
+	"github.com/jrottersman/lats/helpers"
+	"github.com/jrottersman/lats/state"
 )
 
 const LoneInstance = "SingleRDSInstance"
@@ -30,11 +33,11 @@ func (o Object) ReadObject() interface{} {
 	buf := bytes.NewBuffer(dat)
 	switch o.ObjType {
 	case LoneInstance:
-		return DecodeRestoreDBInstanceFromDBSnapshotInput(*buf)
+		return state.DecodeRestoreDBInstanceFromDBSnapshotInput(*buf)
 	case Cluster:
-		return DecodeRestoreDBClusterFromSnapshotInput(*buf)
+		return state.DecodeRestoreDBClusterFromSnapshotInput(*buf)
 	case Instance:
-		return DecodeCreateDBInstanceInput(*buf)
+		return state.DecodeCreateDBInstanceInput(*buf)
 	}
 	return nil
 }
@@ -71,9 +74,9 @@ func (s Stack) Write(filename string) error {
 		log.Fatalf("Error creating bytes %s", err)
 		return err
 	}
-	_, err = WriteOutput(filename, *b)
+	_, err = helpers.WriteOutput(filename, *b)
 	if err != nil {
-		log.Fatalf("error wrting output %s", err)
+		log.Fatalf("error writing output %s", err)
 		return err
 	}
 	return nil

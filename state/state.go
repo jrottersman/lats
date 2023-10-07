@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"os"
 	"sync"
-
-	"github.com/jrottersman/lats/helpers"
 )
 
 // THis whole approach might need some serious refactoring I should be using a map I think s
@@ -17,59 +15,6 @@ const RdsInstanceType = "RDSInstance"
 const KMSKeyType = "KMSKey"
 const RdsClusterType = "RDSCluster"
 const ClusterSnapshotType = "RDSClusterSnapshot"
-
-type StackLookup struct {
-	Name string `json:"name"`
-	File string `json:"file"`
-}
-
-//CreateStackLookUp writes a stack to disk and creates a LookUp for that stack
-func CreateStackLookUp(stack Stack, filename ...string) StackLookup {
-	if filename == nil {
-		filename[0] = *helpers.RandomStateFileName()
-	}
-	err := stack.Write(filename[0])
-	if err != nil {
-		fmt.Printf("error creating stack %s", err)
-	}
-	return StackLookup{
-		Name: stack.Name,
-		File: filename[0],
-	}
-}
-
-//StackFiles stores the locations of our stacks
-type StackFiles struct {
-	Stacks []StackLookup
-}
-
-//Append to our StackFiles
-func (sf *StackFiles) AppendStackLookup(sl StackLookup) {
-	sf.Stacks = append(sf.Stacks, sl)
-}
-
-//GetStack get's a single stack from our stack list
-func (sf *StackFiles) GetStack(name string) (*Stack, error) {
-	for _, v := range sf.Stacks {
-		if v.Name == name {
-			stack, err := ReadStack(v.File)
-			if err != nil {
-				return nil, err
-			}
-			return stack, err
-		}
-	}
-	return nil, fmt.Errorf("Stack with name %s doesn't exist", name)
-}
-
-func (sf *StackFiles) RemoveStack(name string) {
-	for i, v := range sf.Stacks {
-		if v.Name == name {
-			DeleteStack(v.File)
-			sf.Stacks = append(sf.Stacks[:i], sf.Stacks[i+1:]...)
-		}
-	}
-}
 
 // StateKV manages our state file and object location
 type StateKV struct {

@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	mock "github.com/jrottersman/lats/mocks"
+	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
 )
 
@@ -412,18 +413,18 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 		RdsClient Client
 	}
 	type args struct {
-		s *state.Stack
+		s *stack.Stack
 	}
 	field := fields{RdsClient: mock.MockRDSClient{}}
 	// Create long args
-	objs := []state.Object{}
-	obj1 := state.Object{}
-	obj2 := state.Object{}
+	objs := []stack.Object{}
+	obj1 := stack.Object{}
+	obj2 := stack.Object{}
 	objs = append(objs, obj1)
 	objs = append(objs, obj2)
-	objects := make(map[int][]state.Object)
+	objects := make(map[int][]stack.Object)
 	objects[1] = objs
-	longStack := state.Stack{
+	longStack := stack.Stack{
 		Objects: objects,
 	}
 	failArg := args{s: &longStack}
@@ -431,7 +432,7 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 	//Create a valid object and instance
 	filename := "/tmp/foo"
 	order := 1
-	objType := state.LoneInstance
+	objType := stack.LoneInstance
 
 	defer os.Remove(filename)
 	db := rds.RestoreDBInstanceFromDBSnapshotInput{
@@ -442,12 +443,12 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 	if err != nil {
 		t.Errorf("failed to write output, %s", err)
 	}
-	gObj := state.NewObject(filename, order, objType)
-	objs2 := []state.Object{}
+	gObj := stack.NewObject(filename, order, objType)
+	objs2 := []stack.Object{}
 	objs2 = append(objs2, gObj)
-	object := make(map[int][]state.Object)
+	object := make(map[int][]stack.Object)
 	object[1] = objs2
-	goodstack := state.Stack{
+	goodstack := stack.Stack{
 		Objects: object,
 	}
 	passArgs := args{s: &goodstack}
@@ -514,19 +515,19 @@ func TestDbInstances_CreateClusterFromStack(t *testing.T) {
 		RdsClient Client
 	}
 	type args struct {
-		s *state.Stack
+		s *stack.Stack
 	}
 
 	field := fields{RdsClient: mock.MockRDSClient{}}
 	// Create long args
-	objs := []state.Object{}
-	obj1 := state.Object{}
-	obj2 := state.Object{}
+	objs := []stack.Object{}
+	obj1 := stack.Object{}
+	obj2 := stack.Object{}
 	objs = append(objs, obj1)
 	objs = append(objs, obj2)
-	objects := make(map[int][]state.Object)
+	objects := make(map[int][]stack.Object)
 	objects[1] = objs
-	longStack := state.Stack{
+	longStack := stack.Stack{
 		Objects: objects,
 	}
 	failArg := args{s: &longStack}

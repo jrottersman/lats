@@ -8,7 +8,7 @@ import (
 	"github.com/jrottersman/lats/aws"
 	mock "github.com/jrottersman/lats/mocks"
 	"github.com/jrottersman/lats/rdsstate"
-	"github.com/jrottersman/lats/state"
+	"github.com/jrottersman/lats/stack"
 )
 
 func TestGenerateRDSClusterStack(t *testing.T) {
@@ -40,34 +40,34 @@ func TestGenerateRDSClusterStack(t *testing.T) {
 		i: input,
 	}
 
-	objs := make(map[int][]state.Object)
-	pObjs := []state.Object{}
-	pObj := state.Object{
+	objs := make(map[int][]stack.Object)
+	pObjs := []stack.Object{}
+	pObj := stack.Object{
 		FileName: pFileName,
 		Order:    1,
-		ObjType:  state.DBClusterParameterGroup,
+		ObjType:  stack.DBClusterParameterGroup,
 	}
 	pObjs = append(pObjs, pObj)
-	tObjs := []state.Object{}
-	obj := state.Object{
+	tObjs := []stack.Object{}
+	obj := stack.Object{
 		FileName: "/tmp/bar",
 		Order:    2,
-		ObjType:  state.Cluster,
+		ObjType:  stack.Cluster,
 	}
 	tObjs = append(tObjs, obj)
 	objs[1] = pObjs
 	objs[2] = tObjs
 	objs[3] = nil
-	wanted := state.Stack{
+	wanted := stack.Stack{
 		Name:                  "foo",
-		RestorationObjectName: state.Cluster,
+		RestorationObjectName: stack.Cluster,
 		Objects:               objs,
 	}
 
 	tests := []struct {
 		name    string
 		args    args
-		want    *state.Stack
+		want    *stack.Stack
 		wantErr bool
 	}{
 		{"test", arg, &wanted, false},

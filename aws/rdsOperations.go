@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
-	"github.com/jrottersman/lats/state"
+	"github.com/jrottersman/lats/stack"
 )
 
 // MaxConcurrentJobs max number of operations to hit AWS with at the same time
@@ -99,7 +99,7 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 }
 
 //CreateClusterFromStack creates an RDS cluster from a stack
-func (instances *DbInstances) CreateClusterFromStack(s *state.Stack) error {
+func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 
 	// get the one which is the cluster and create it
 	first := s.Objects[1]
@@ -120,7 +120,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 	waitChan := make(chan struct{}, MaxConcurrentJobs)
 	for _, i := range second {
 		waitChan <- struct{}{}
-		go func(inst state.Object) {
+		go func(inst stack.Object) {
 			o := inst.ReadObject()
 			ins := o.(*rds.CreateDBInstanceInput)
 			_, err := instances.RestoreInstanceForCluster(*ins)
@@ -133,7 +133,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *state.Stack) error {
 }
 
 //CreateInstanceFromStack creates an RDS instance from a stack object
-func (instances *DbInstances) CreateInstanceFromStack(s *state.Stack) error {
+func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 	instance := s.Objects[1]
 	if len(instance) != 1 {
 		return fmt.Errorf("There should only be a single instance")

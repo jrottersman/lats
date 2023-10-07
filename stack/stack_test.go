@@ -1,4 +1,4 @@
-package state
+package stack_test
 
 import (
 	"encoding/gob"
@@ -8,19 +8,21 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
+	"github.com/jrottersman/lats/stack"
+	"github.com/jrottersman/lats/state"
 )
 
 func Test_ReadObject(t *testing.T) {
 	filename := "/tmp/foo"
 	order := 5
-	objType := LoneInstance
+	objType := stack.LoneInstance
 
 	defer os.Remove(filename)
 	db := rds.RestoreDBInstanceFromDBSnapshotInput{
 		DBInstanceIdentifier: aws.String("foo"),
 	}
-	r := EncodeRestoreDBInstanceFromDBSnapshotInput(&db)
-	_, err := WriteOutput(filename, r)
+	r := state.EncodeRestoreDBInstanceFromDBSnapshotInput(&db)
+	_, err := state.WriteOutput(filename, r)
 	if err != nil {
 		t.Errorf("failed to write output, %s", err)
 	}

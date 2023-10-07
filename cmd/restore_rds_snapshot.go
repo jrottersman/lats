@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jrottersman/lats/aws"
+	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
 )
@@ -37,9 +38,9 @@ func init() {
 func RestoreSnapshot(stateKV state.StateManager, snapshotName string) error {
 	dbi := aws.Init(region)
 	SnapshotStack := FindStack(stateKV, snapshotName)
-	if SnapshotStack.RestorationObjectName == state.Cluster {
+	if SnapshotStack.RestorationObjectName == stack.Cluster {
 		return dbi.CreateClusterFromStack(SnapshotStack)
-	} else if SnapshotStack.RestorationObjectName == state.LoneInstance {
+	} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
 		return dbi.CreateInstanceFromStack(SnapshotStack)
 	}
 	return fmt.Errorf("Error invalid type of stack to restore a snapshot")

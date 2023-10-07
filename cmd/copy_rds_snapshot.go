@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
+	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -80,7 +81,7 @@ func copySnapshot() {
 	origStack := FindStack(sm, originalSnapshotName)
 	fmt.Printf("orig stack is %v\n", origStack)
 
-	if origStack.RestorationObjectName == state.Cluster {
+	if origStack.RestorationObjectName == stack.Cluster {
 		arn, err := dbi2.GetSnapshotARN(originalSnapshotName, true)
 		if err != nil {
 			log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
@@ -90,7 +91,7 @@ func copySnapshot() {
 			log.Fatalf("Error copying snapshot %s", err)
 		}
 	}
-	if origStack.RestorationObjectName == state.LoneInstance {
+	if origStack.RestorationObjectName == stack.LoneInstance {
 		iarn, err := dbi2.GetSnapshotARN(originalSnapshotName, false)
 		if err != nil {
 			log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
@@ -123,7 +124,7 @@ func createKMSKey(config Config, sm state.StateManager) string {
 }
 
 //FindStack get's a stack for creating our new stack when we copy the snapshot
-func FindStack(sm state.StateManager, snapshot string) *state.Stack {
+func FindStack(sm state.StateManager, snapshot string) *stack.Stack {
 	fmt.Println("in find stack")
 	sm.Mu.Lock()
 	defer sm.Mu.Unlock()
@@ -136,7 +137,7 @@ func FindStack(sm state.StateManager, snapshot string) *state.Stack {
 		if v.ObjectType != "stack" {
 			continue
 		}
-		stack, err := state.ReadStack(v.FileLocation)
+		stack, err := stack.ReadStack(v.FileLocation)
 		if err != nil {
 			log.Printf("error reading stack %s", err)
 		}
@@ -149,36 +150,36 @@ func FindStack(sm state.StateManager, snapshot string) *state.Stack {
 }
 
 // NewStack generates the new stack that we are going touse
-func NewStack(oldStack state.Stack, ending string) *state.Stack {
-	objs := make(map[int][]state.Object)
+func NewStack(oldStack stack.Stack, ending string) *stack.Stack {
+	objs := make(map[int][]stack.Object)
 	for k, v := range oldStack.Objects {
-		objs[k] = []state.Object{}
+		objs[k] = []stack.Object{}
 		for _, i := range v {
 			obj := i.ReadObject()
 			switch i.ObjType {
-			case state.LoneInstance:
+			case stack.LoneInstance:
 				s := getLoneInstanceObject(obj, ending, k)
 				objs[k] = append(objs[k], s)
-			case state.Cluster:
+			case stack.Cluster:
 				s := getClusterObject(obj, ending, k)
 				objs[k] = append(objs[k], s)
-			case state.Instance:
+			case stack.Instance:
 				s := getInstanceObject(obj, ending, k)
 				objs[k] = append(objs[k], s)
-			case state.DBClusterParameterGroup:
+			case stack.DBClusterParameterGroup:
 				objs[k] = append(objs[k], i)
-			case state.DBParameterGroup:
+			case stack.DBParameterGroup:
 				objs[k] = append(objs[k], i)
 			}
 		}
 	}
-	return &state.Stack{
+	return &stack.Stack{
 		Name:                  fmt.Sprintf("%s-%s", oldStack.Name, ending),
 		RestorationObjectName: oldStack.RestorationObjectName,
 	}
 }
 
-func getLoneInstanceObject(obj interface{}, ending string, order int) state.Object {
+func getLoneInstanceObject(obj interface{}, ending string, order int) stack.Object {
 	obj2 := obj.(*rds.RestoreDBInstanceFromDBSnapshotInput)
 	insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
 	obj2.DBInstanceIdentifier = &insID
@@ -194,15 +195,15 @@ func getLoneInstanceObject(obj interface{}, ending string, order int) state.Obje
 	if err != nil {
 		log.Fatalf("Error writing ouptut %s", err)
 	}
-	s := state.Object{
+	s := stack.Object{
 		FileName: *fn,
 		Order:    order,
-		ObjType:  state.LoneInstance,
+		ObjType:  stack.LoneInstance,
 	}
 	return s
 }
 
-func getClusterObject(obj interface{}, ending string, order int) state.Object {
+func getClusterObject(obj interface{}, ending string, order int) stack.Object {
 	obj2 := obj.(rds.RestoreDBClusterFromSnapshotInput)
 	clsID := fmt.Sprintf("%s-%s", *obj2.DBClusterIdentifier, ending)
 	obj2.DBClusterIdentifier = &clsID
@@ -218,14 +219,14 @@ func getClusterObject(obj interface{}, ending string, order int) state.Object {
 	if err != nil {
 		log.Fatalf("Error writing ouptut %s", err)
 	}
-	return state.Object{
+	return stack.Object{
 		FileName: *fn,
 		Order:    order,
-		ObjType:  state.Cluster,
+		ObjType:  stack.Cluster,
 	}
 }
 
-func getInstanceObject(obj interface{}, ending string, order int) state.Object {
+func getInstanceObject(obj interface{}, ending string, order int) stack.Object {
 	obj2 := obj.(rds.CreateDBInstanceInput)
 	insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
 	clusterID := fmt.Sprintf("%s-%s", *obj2.DBClusterIdentifier, ending)
@@ -240,9 +241,9 @@ func getInstanceObject(obj interface{}, ending string, order int) state.Object {
 	if err != nil {
 		log.Fatalf("Error writing ouptut %s", err)
 	}
-	return state.Object{
+	return stack.Object{
 		FileName: *fn,
 		Order:    order,
-		ObjType:  state.Instance,
+		ObjType:  stack.Instance,
 	}
 }

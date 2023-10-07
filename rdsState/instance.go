@@ -8,6 +8,7 @@ import (
 
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
+	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
 )
 
@@ -55,9 +56,9 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*state.Stack, error) {
 	m[1] = paramObjects
 	m[2] = instanceObjects
 
-	return &state.Stack{
+	return &stack.Stack{
 		Name:                  i.StackName,
-		RestorationObjectName: state.LoneInstance,
+		RestorationObjectName: stack.LoneInstance,
 		Objects:               m,
 	}, nil
 }
@@ -70,15 +71,4 @@ func encodeParameterGroups(pgs []aws.ParameterGroup) bytes.Buffer {
 		log.Fatalf("Error encoding our parameters %s", err)
 	}
 	return encoder
-}
-
-//DecodeParameterGroups Decodes the parameter Group
-func DecodeParameterGroups(b bytes.Buffer) []aws.ParameterGroup {
-	var pg []aws.ParameterGroup
-	dec := gob.NewDecoder(&b)
-	err := dec.Decode(&pg)
-	if err != nil {
-		log.Fatalf("Error decoding parameters %s", err)
-	}
-	return pg
 }
