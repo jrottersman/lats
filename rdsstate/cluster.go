@@ -5,8 +5,8 @@ import (
 
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
-	"github.com/jrottersman/lats/state"
 	"github.com/jrottersman/lats/stack"
+	"github.com/jrottersman/lats/state"
 )
 
 //ClusterStackInput is the input for a ClusterStack

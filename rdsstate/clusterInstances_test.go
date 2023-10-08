@@ -9,8 +9,8 @@ import (
 	"github.com/jrottersman/lats/aws"
 	mock "github.com/jrottersman/lats/mocks"
 	"github.com/jrottersman/lats/rdsstate"
-	"github.com/jrottersman/lats/state"
 	"github.com/jrottersman/lats/stack"
+	"github.com/jrottersman/lats/state"
 )
 
 func TestClusterInstancesToObjects(t *testing.T) {
