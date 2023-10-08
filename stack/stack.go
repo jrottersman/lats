@@ -38,6 +38,10 @@ func (o Object) ReadObject() interface{} {
 		return state.DecodeRestoreDBClusterFromSnapshotInput(*buf)
 	case Instance:
 		return state.DecodeCreateDBInstanceInput(*buf)
+	case DBParameterGroup:
+		log.Fatalf("implement me")
+	case DBClusterParameterGroup:
+		log.Fatalf("implement me")
 	}
 	return nil
 }
