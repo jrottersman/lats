@@ -30,7 +30,7 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 		c.ParameterFileName = *helpers.RandomStateFileName()
 	}
 	objMap := make(map[int][]stack.Object)
-	bp := encodeParameterGroups(c.ParameterGroups)
+	bp := pgstate.EncodeParameterGroups(c.ParameterGroups)
 	_, err := state.WriteOutput(c.ParameterFileName, bp)
 	if err != nil {
 		return nil, fmt.Errorf("error writing parameters %s", err)

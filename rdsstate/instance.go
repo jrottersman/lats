@@ -1,10 +1,7 @@
 package rdsstate
 
 import (
-	"bytes"
-	"encoding/gob"
 	"fmt"
-	"log"
 
 	"github.com/jrottersman/lats/helpers"
 	"github.com/jrottersman/lats/pgstate"
@@ -31,7 +28,7 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 		i.ParameterFileName = *helpers.RandomStateFileName()
 	}
 
-	b := encodeParameterGroups(i.ParameterGroups)
+	b := pgstate.EncodeParameterGroups(i.ParameterGroups)
 	_, err := state.WriteOutput(i.ParameterFileName, b)
 	if err != nil {
 		return nil, fmt.Errorf("error writing parameter groups %s", err)
@@ -61,25 +58,4 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 		RestorationObjectName: stack.LoneInstance,
 		Objects:               m,
 	}, nil
-}
-
-func encodeParameterGroups(pgs []pgstate.ParameterGroup) bytes.Buffer {
-	var encoder bytes.Buffer
-	enc := gob.NewEncoder(&encoder)
-	err := enc.Encode(&pgs)
-	if err != nil {
-		log.Fatalf("Error encoding our parameters %s", err)
-	}
-	return encoder
-}
-
-//DecodeParameterGroups Decodes the parameter Group
-func DecodeParameterGroups(b bytes.Buffer) []pgstate.ParameterGroup {
-	var pg []pgstate.ParameterGroup
-	dec := gob.NewDecoder(&b)
-	err := dec.Decode(&pg)
-	if err != nil {
-		log.Fatalf("Error decoding parameters %s", err)
-	}
-	return pg
 }

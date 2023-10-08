@@ -1,16 +1,15 @@
 package rdsstate
 
 import (
-	"encoding/gob"
 	"os"
 	"reflect"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
+	"github.com/jrottersman/lats/pgstate"
 	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
-	"github.com/jrottersman/lats/pgstate"
 )
 
 func TestGenerateRDSInstanceStack(t *testing.T) {
@@ -72,32 +71,5 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 				t.Errorf("GenerateRDSInstanceStack() = %v, want %v", got, tt.want)
 			}
 		})
-	}
-}
-
-func Test_encodeParameterGroups(t *testing.T) {
-	pg := pgstate.ParameterGroup{}
-	pgs := []pgstate.ParameterGroup{}
-	pgs = append(pgs, pg)
-	r := encodeParameterGroups(pgs)
-	var result []pgstate.ParameterGroup
-	dec := gob.NewDecoder(&r)
-	err := dec.Decode(&result)
-	if err != nil {
-		t.Errorf("decode error: %s", err)
-	}
-	if len(pgs) != len(result) {
-		t.Errorf("got %d expected %d", len(result), len(pgs))
-	}
-}
-
-func Test_DecodeParameterGroups(t *testing.T) {
-	pg := pgstate.ParameterGroup{}
-	pgs := []pgstate.ParameterGroup{}
-	pgs = append(pgs, pg)
-	r := encodeParameterGroups(pgs)
-	result := DecodeParameterGroups(r)
-	if len(pgs) != len(result) {
-		t.Errorf("got %d expected %d", len(result), len(pgs))
 	}
 }
