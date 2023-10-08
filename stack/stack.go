@@ -9,6 +9,7 @@ import (
 	"sort"
 
 	"github.com/jrottersman/lats/helpers"
+	"github.com/jrottersman/lats/pgstate"
 	"github.com/jrottersman/lats/state"
 )
 
@@ -39,9 +40,9 @@ func (o Object) ReadObject() interface{} {
 	case Instance:
 		return state.DecodeCreateDBInstanceInput(*buf)
 	case DBParameterGroup:
-		log.Fatalf("implement me")
+		pgstate.DecodeParameterGroups(*buf)
 	case DBClusterParameterGroup:
-		log.Fatalf("implement me")
+		pgstate.DecodeParameterGroups(*buf)
 	}
 	return nil
 }
