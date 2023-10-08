@@ -134,6 +134,10 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 
 //CreateInstanceFromStack creates an RDS instance from a stack object
 func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
+	pgs := s.Objects[1]
+	if len(pgs) == 0 {
+		fmt.Printf("No parameter groups using the defaults")
+	}
 	instance := s.Objects[2]
 	if len(instance) != 1 {
 		return fmt.Errorf("There should only be a single instance")
