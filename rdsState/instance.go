@@ -22,7 +22,7 @@ type InstanceStackInputs struct {
 }
 
 //GenerateRDSInstanceStack creates a stack for restoration for an RDS instance
-func GenerateRDSInstanceStack(i InstanceStackInputs) (*state.Stack, error) {
+func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 	if i.InstanceFileName == "" {
 		i.InstanceFileName = *helpers.RandomStateFileName()
 	}
@@ -36,8 +36,8 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*state.Stack, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error writing parameter groups %s", err)
 	}
-	paramObj := state.NewObject(i.ParameterFileName, 1, state.DBParameterGroup)
-	var paramObjects []state.Object
+	paramObj := stack.NewObject(i.ParameterFileName, 1, stack.DBParameterGroup)
+	var paramObjects []stack.Object
 	paramObjects = append(paramObjects, paramObj)
 
 	DBInput := state.GenerateRestoreDBInstanceFromDBSnapshotInput(i.R)
@@ -47,12 +47,12 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*state.Stack, error) {
 		return nil, err
 	}
 
-	instanceObj := state.NewObject(i.InstanceFileName, 2, state.LoneInstance)
+	instanceObj := stack.NewObject(i.InstanceFileName, 2, stack.LoneInstance)
 
-	var instanceObjects []state.Object
+	var instanceObjects []stack.Object
 	instanceObjects = append(instanceObjects, instanceObj)
 
-	m := make(map[int][]state.Object)
+	m := make(map[int][]stack.Object)
 	m[1] = paramObjects
 	m[2] = instanceObjects
 
@@ -71,4 +71,15 @@ func encodeParameterGroups(pgs []aws.ParameterGroup) bytes.Buffer {
 		log.Fatalf("Error encoding our parameters %s", err)
 	}
 	return encoder
+}
+
+//DecodeParameterGroups Decodes the parameter Group
+func DecodeParameterGroups(b bytes.Buffer) []aws.ParameterGroup {
+	var pg []aws.ParameterGroup
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&pg)
+	if err != nil {
+		log.Fatalf("Error decoding parameters %s", err)
+	}
+	return pg
 }

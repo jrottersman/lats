@@ -9,6 +9,7 @@ import (
 	mock "github.com/jrottersman/lats/mocks"
 	"github.com/jrottersman/lats/rdsstate"
 	"github.com/jrottersman/lats/stack"
+	"github.com/jrottersman/lats/state"
 )
 
 func TestGenerateRDSClusterStack(t *testing.T) {

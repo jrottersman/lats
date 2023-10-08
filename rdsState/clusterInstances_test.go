@@ -10,6 +10,7 @@ import (
 	mock "github.com/jrottersman/lats/mocks"
 	"github.com/jrottersman/lats/rdsstate"
 	"github.com/jrottersman/lats/state"
+	"github.com/jrottersman/lats/stack"
 )
 
 func TestClusterInstancesToObjects(t *testing.T) {
@@ -39,8 +40,8 @@ func TestClusterInstancesToObjects(t *testing.T) {
 	mem = append(mem, one)
 
 	//Want object
-	objs := []state.Object{}
-	fo := state.Object{
+	objs := []stack.Object{}
+	fo := stack.Object{
 		FileName: "/tmp/foo.gob",
 		Order:    2,
 		ObjType:  state.RdsInstanceType,
@@ -55,7 +56,7 @@ func TestClusterInstancesToObjects(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    []state.Object
+		want    []stack.Object
 		wantErr bool
 	}{
 		{name: "nil", args: nilArg, want: nil, wantErr: false},

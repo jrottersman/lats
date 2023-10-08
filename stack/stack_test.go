@@ -27,7 +27,7 @@ func Test_ReadObject(t *testing.T) {
 		t.Errorf("failed to write output, %s", err)
 	}
 
-	resp := NewObject(filename, order, objType)
+	resp := stack.NewObject(filename, order, objType)
 	i := resp.ReadObject()
 	_, ok := i.(*rds.RestoreDBInstanceFromDBSnapshotInput)
 	if !ok {
@@ -40,7 +40,7 @@ func Test_NewObject(t *testing.T) {
 	order := 5
 	objType := "rdsInstance"
 
-	resp := NewObject(filename, order, objType)
+	resp := stack.NewObject(filename, order, objType)
 	if resp.Order != order {
 		t.Errorf("NewObject order expected %d got %d", resp.Order, order)
 	}
@@ -50,20 +50,20 @@ func Test_NewStack(t *testing.T) {
 	name := "foo"
 	roname := "bar"
 
-	o1 := Object{
+	o1 := stack.Object{
 		"tmp/foo",
 		1,
 		"RDSCluster",
 	}
 
-	o2 := Object{
+	o2 := stack.Object{
 		"tmp/bar",
 		1,
 		"RDSCluster",
 	}
-	objects := []Object{o1, o2}
+	objects := []stack.Object{o1, o2}
 
-	resp := NewStack(name, roname, objects)
+	resp := stack.NewStack(name, roname, objects)
 	if len(resp.Objects[1]) != 2 {
 		t.Errorf("expected 2 got %d", len(resp.Objects[1]))
 	}
@@ -73,33 +73,33 @@ func Test_Encoder(t *testing.T) {
 	name := "foo"
 	roname := "bar"
 
-	o1 := Object{
+	o1 := stack.Object{
 		"tmp/foo",
 		1,
 		"RDSCluster",
 	}
 
-	o2 := Object{
+	o2 := stack.Object{
 		"tmp/bar",
 		1,
 		"RDSCluster",
 	}
-	objects := []Object{o1, o2}
+	objects := []stack.Object{o1, o2}
 
-	stack := NewStack(name, roname, objects)
+	mStack := stack.NewStack(name, roname, objects)
 
-	r, err := stack.Encoder()
+	r, err := mStack.Encoder()
 	if err != nil {
 		t.Errorf("encode error: %s", err)
 	}
-	var result Stack
+	var result stack.Stack
 	dec := gob.NewDecoder(r)
 	err = dec.Decode(&result)
 	if err != nil {
 		t.Errorf("decode error: %s", err)
 	}
-	if result.Name != stack.Name {
-		t.Errorf("got %s expected %s", result.Name, stack.Name)
+	if result.Name != mStack.Name {
+		t.Errorf("got %s expected %s", result.Name, mStack.Name)
 	}
 }
 
@@ -107,23 +107,23 @@ func Test_Write(t *testing.T) {
 	name := "foo"
 	roname := "bar"
 
-	o1 := Object{
+	o1 := stack.Object{
 		"tmp/foo",
 		1,
 		"RDSCluster",
 	}
 
-	o2 := Object{
+	o2 := stack.Object{
 		"tmp/bar",
 		1,
 		"RDSCluster",
 	}
-	objects := []Object{o1, o2}
+	objects := []stack.Object{o1, o2}
 
-	stack := NewStack(name, roname, objects)
+	mStack := stack.NewStack(name, roname, objects)
 	filename := "/tmp/foobar"
 	defer os.Remove(filename)
-	err := stack.Write(filename)
+	err := mStack.Write(filename)
 	if err != nil {
 		t.Errorf("got %s expected nil", err)
 	}
@@ -133,32 +133,32 @@ func Test_ReadStack(t *testing.T) {
 	name := "foo"
 	roname := "bar"
 
-	o1 := Object{
+	o1 := stack.Object{
 		"tmp/foo",
 		1,
 		"RDSCluster",
 	}
 
-	o2 := Object{
+	o2 := stack.Object{
 		"tmp/bar",
 		1,
 		"RDSCluster",
 	}
-	objects := []Object{o1, o2}
+	objects := []stack.Object{o1, o2}
 
-	stack := NewStack(name, roname, objects)
+	mStack := stack.NewStack(name, roname, objects)
 	filename := "/tmp/foobar"
 	defer os.Remove(filename)
-	err := stack.Write(filename)
+	err := mStack.Write(filename)
 	if err != nil {
 		t.Errorf("writing got %s expected nil", err)
 	}
-	sp, err := ReadStack(filename)
+	sp, err := stack.ReadStack(filename)
 	if err != nil {
 		t.Errorf("error reading stack %s", err)
 	}
-	if sp.Name != stack.Name {
-		t.Errorf("got %s expected %s", sp.Name, stack.Name)
+	if sp.Name != mStack.Name {
+		t.Errorf("got %s expected %s", sp.Name, mStack.Name)
 	}
 }
 
@@ -166,26 +166,26 @@ func Test_DeleteStack(t *testing.T) {
 	name := "foo"
 	roname := "bar"
 
-	o1 := Object{
+	o1 := stack.Object{
 		"tmp/foo",
 		1,
 		"RDSCluster",
 	}
 
-	o2 := Object{
+	o2 := stack.Object{
 		"tmp/bar",
 		1,
 		"RDSCluster",
 	}
-	objects := []Object{o1, o2}
+	objects := []stack.Object{o1, o2}
 
-	stack := NewStack(name, roname, objects)
+	mStack := stack.NewStack(name, roname, objects)
 	filename := "/tmp/foobar"
-	err := stack.Write(filename)
+	err := mStack.Write(filename)
 	if err != nil {
 		t.Errorf("writing got %s expected nil", err)
 	}
-	fe := DeleteStack(filename)
+	fe := stack.DeleteStack(filename)
 	if fe != nil {
 		t.Errorf("delete stack error %s", fe)
 	}
@@ -195,12 +195,12 @@ func TestStack_SortStack(t *testing.T) {
 	type fields struct {
 		Name                  string
 		RestorationObjectName string
-		Objects               map[int][]Object
+		Objects               map[int][]stack.Object
 	}
-	objs := make(map[int][]Object)
-	objs[1] = []Object{}
-	objs[2] = []Object{}
-	objs[3] = []Object{}
+	objs := make(map[int][]stack.Object)
+	objs[1] = []stack.Object{}
+	objs[2] = []stack.Object{}
+	objs[3] = []stack.Object{}
 	expected := []int{1, 2, 3}
 	tests := []struct {
 		name   string
@@ -211,7 +211,7 @@ func TestStack_SortStack(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := Stack{
+			s := stack.Stack{
 				Name:                  tt.fields.Name,
 				RestorationObjectName: tt.fields.RestorationObjectName,
 				Objects:               tt.fields.Objects,

@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	laws "github.com/jrottersman/lats/aws"
+	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
 )
 
@@ -33,29 +34,29 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 	defer os.Remove("/tmp/foo.gob")
 	defer os.Remove("/tmp/bar.gob")
 
-	obj := state.Object{
+	obj := stack.Object{
 		FileName: "/tmp/foo.gob",
 		Order:    2,
-		ObjType:  state.LoneInstance,
+		ObjType:  stack.LoneInstance,
 	}
-	pobj := state.Object{
+	pobj := stack.Object{
 		FileName: "/tmp/bar.gob",
 		Order:    1,
-		ObjType:  state.DBParameterGroup,
+		ObjType:  stack.DBParameterGroup,
 	}
-	oMap := make(map[int][]state.Object)
-	oMap[2] = []state.Object{obj}
-	oMap[1] = []state.Object{pobj}
-	expected := state.Stack{
+	oMap := make(map[int][]stack.Object)
+	oMap[2] = []stack.Object{obj}
+	oMap[1] = []stack.Object{pobj}
+	expected := stack.Stack{
 		Name:                  "bar",
-		RestorationObjectName: state.LoneInstance,
+		RestorationObjectName: stack.LoneInstance,
 		Objects:               oMap,
 	}
 
 	tests := []struct {
 		name    string
 		args    args
-		want    *state.Stack
+		want    *stack.Stack
 		wantErr bool
 	}{
 		{"first", arg, &expected, false},

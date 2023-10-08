@@ -5,16 +5,18 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
+	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
+	"github.com/jrottersman/lats/helpers"
 )
 
 // ClusterInstancesToObjects makes a list of instances as objects for our stack
-func ClusterInstancesToObjects(t *types.DBCluster, c aws.DbInstances, folder string, order int) ([]state.Object, error) {
+func ClusterInstancesToObjects(t *types.DBCluster, c aws.DbInstances, folder string, order int) ([]stack.Object, error) {
 	// Cluster is empty
 	if len(t.DBClusterMembers) == 0 {
 		return nil, nil
 	}
-	objects := []state.Object{}
+	objects := []stack.Object{}
 	for _, v := range t.DBClusterMembers {
 		// GEtInstance here that will get us an error an instanc type we then need to generate an object from this instance
 		inst, err := c.GetInstance(*v.DBInstanceIdentifier)
@@ -24,8 +26,8 @@ func ClusterInstancesToObjects(t *types.DBCluster, c aws.DbInstances, folder str
 		input := state.CreateDbInstanceInput(inst, t.DBClusterIdentifier)
 		b := state.EncodeCreateDBInstanceInput(input)
 		fName := fmt.Sprintf("%s/%s.gob", folder, *v.DBInstanceIdentifier)
-		state.WriteOutput(fName, b)
-		obj := state.Object{
+		helpers.WriteOutput(fName, b)
+		obj := stack.Object{
 			FileName: fName,
 			Order:    order,
 			ObjType:  state.RdsInstanceType,
