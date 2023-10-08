@@ -134,7 +134,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 
 //CreateInstanceFromStack creates an RDS instance from a stack object
 func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
-	instance := s.Objects[1]
+	instance := s.Objects[2]
 	if len(instance) != 1 {
 		return fmt.Errorf("There should only be a single instance")
 	}

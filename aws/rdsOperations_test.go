@@ -431,7 +431,7 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 
 	//Create a valid object and instance
 	filename := "/tmp/foo"
-	order := 1
+	order := 2
 	objType := stack.LoneInstance
 
 	defer os.Remove(filename)
@@ -447,7 +447,7 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 	objs2 := []stack.Object{}
 	objs2 = append(objs2, gObj)
 	object := make(map[int][]stack.Object)
-	object[1] = objs2
+	object[2] = objs2
 	goodstack := stack.Stack{
 		Objects: object,
 	}
