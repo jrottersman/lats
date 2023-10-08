@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
 	mock "github.com/jrottersman/lats/mocks"
+	"github.com/jrottersman/lats/pgstate"
 	"github.com/jrottersman/lats/rdsstate"
 	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
@@ -33,7 +34,7 @@ func TestGenerateRDSClusterStack(t *testing.T) {
 		StackName:         "foo",
 		Filename:          filen,
 		ParameterFileName: pFileName,
-		ParameterGroups:   []aws.ParameterGroup{},
+		ParameterGroups:   []pgstate.ParameterGroup{},
 		Client:            i,
 		Folder:            "/tmp",
 	}

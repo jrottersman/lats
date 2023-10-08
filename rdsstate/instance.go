@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
+	"github.com/jrottersman/lats/pgstate"
 	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
 )
@@ -18,7 +18,7 @@ type InstanceStackInputs struct {
 	StackName         string
 	InstanceFileName  string
 	ParameterFileName string
-	ParameterGroups   []aws.ParameterGroup
+	ParameterGroups   []pgstate.ParameterGroup
 }
 
 //GenerateRDSInstanceStack creates a stack for restoration for an RDS instance
@@ -63,7 +63,7 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 	}, nil
 }
 
-func encodeParameterGroups(pgs []aws.ParameterGroup) bytes.Buffer {
+func encodeParameterGroups(pgs []pgstate.ParameterGroup) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
 	err := enc.Encode(&pgs)
@@ -74,8 +74,8 @@ func encodeParameterGroups(pgs []aws.ParameterGroup) bytes.Buffer {
 }
 
 //DecodeParameterGroups Decodes the parameter Group
-func DecodeParameterGroups(b bytes.Buffer) []aws.ParameterGroup {
-	var pg []aws.ParameterGroup
+func DecodeParameterGroups(b bytes.Buffer) []pgstate.ParameterGroup {
+	var pg []pgstate.ParameterGroup
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&pg)
 	if err != nil {

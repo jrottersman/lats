@@ -8,9 +8,9 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
-	laws "github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
+	"github.com/jrottersman/lats/pgstate"
 )
 
 func TestGenerateRDSInstanceStack(t *testing.T) {
@@ -26,7 +26,7 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 		StackName:         "bar",
 		InstanceFileName:  "/tmp/foo.gob",
 		ParameterFileName: "/tmp/bar.gob",
-		ParameterGroups:   []laws.ParameterGroup{},
+		ParameterGroups:   []pgstate.ParameterGroup{},
 	}
 	arg := args{
 		i: inputs,
@@ -76,11 +76,11 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 }
 
 func Test_encodeParameterGroups(t *testing.T) {
-	pg := laws.ParameterGroup{}
-	pgs := []laws.ParameterGroup{}
+	pg := pgstate.ParameterGroup{}
+	pgs := []pgstate.ParameterGroup{}
 	pgs = append(pgs, pg)
 	r := encodeParameterGroups(pgs)
-	var result []laws.ParameterGroup
+	var result []pgstate.ParameterGroup
 	dec := gob.NewDecoder(&r)
 	err := dec.Decode(&result)
 	if err != nil {
@@ -92,8 +92,8 @@ func Test_encodeParameterGroups(t *testing.T) {
 }
 
 func Test_DecodeParameterGroups(t *testing.T) {
-	pg := laws.ParameterGroup{}
-	pgs := []laws.ParameterGroup{}
+	pg := pgstate.ParameterGroup{}
+	pgs := []pgstate.ParameterGroup{}
 	pgs = append(pgs, pg)
 	r := encodeParameterGroups(pgs)
 	result := DecodeParameterGroups(r)

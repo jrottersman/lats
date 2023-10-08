@@ -7,6 +7,7 @@ import (
 	"github.com/jrottersman/lats/helpers"
 	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
+	"github.com/jrottersman/lats/pgstate"
 )
 
 //ClusterStackInput is the input for a ClusterStack
@@ -17,7 +18,7 @@ type ClusterStackInput struct {
 	Client            aws.DbInstances
 	Folder            string
 	ParameterFileName string
-	ParameterGroups   []aws.ParameterGroup
+	ParameterGroups   []pgstate.ParameterGroup
 }
 
 //GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.

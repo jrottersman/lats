@@ -3,19 +3,13 @@ package aws
 import (
 	"fmt"
 
-	"github.com/aws/aws-sdk-go-v2/service/rds/types"
+	"github.com/jrottersman/lats/pgstate"
 	"github.com/jrottersman/lats/state"
 )
 
-type ParameterGroup struct {
-	ParameterGroup        types.DBParameterGroup
-	ClusterParameterGroup types.DBClusterParameterGroup
-	Params                []types.Parameter
-}
-
-func GetParameterGroups(r state.RDSRestorationStore, i DbInstances) ([]ParameterGroup, error) {
+func GetParameterGroups(r state.RDSRestorationStore, i DbInstances) ([]pgstate.ParameterGroup, error) {
 	pgs := r.GetParameterGroups()
-	groups := []ParameterGroup{}
+	groups := []pgstate.ParameterGroup{}
 	for _, pg := range pgs {
 		group, err := i.GetParameterGroup(*pg.DBParameterGroupName)
 		if err != nil {
@@ -26,7 +20,7 @@ func GetParameterGroups(r state.RDSRestorationStore, i DbInstances) ([]Parameter
 		if err != nil {
 			return nil, fmt.Errorf("error getting parameters %s for group %s", err, *pg.DBParameterGroupName)
 		}
-		fpg := ParameterGroup{
+		fpg := pgstate.ParameterGroup{
 			ParameterGroup: *group,
 			Params:         *params,
 		}
@@ -35,9 +29,9 @@ func GetParameterGroups(r state.RDSRestorationStore, i DbInstances) ([]Parameter
 	return groups, nil
 }
 
-func GetClusterParameterGroup(r state.RDSRestorationStore, i DbInstances) ([]ParameterGroup, error) {
+func GetClusterParameterGroup(r state.RDSRestorationStore, i DbInstances) ([]pgstate.ParameterGroup, error) {
 	pg := r.GetClusterParameterGroups()
-	groups := []ParameterGroup{}
+	groups := []pgstate.ParameterGroup{}
 	group, err := i.GetClusterParameterGroup(*pg)
 	if err != nil {
 		return nil, fmt.Errorf("error getting cluster parameter group %s", err)
@@ -46,7 +40,7 @@ func GetClusterParameterGroup(r state.RDSRestorationStore, i DbInstances) ([]Par
 	if err != nil {
 		return nil, fmt.Errorf("error getting parameters %s for group %s", err, *pg)
 	}
-	fpg := ParameterGroup{
+	fpg := pgstate.ParameterGroup{
 		ClusterParameterGroup: *group,
 		Params:                *params,
 	}
