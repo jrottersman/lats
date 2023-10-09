@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
+	"github.com/jrottersman/lats/pgstate"
 	"github.com/jrottersman/lats/stack"
 )
 
@@ -136,7 +137,16 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 	pgs := s.Objects[1]
 	if len(pgs) == 0 {
-		fmt.Printf("No parameter groups using the defaults")
+		fmt.Printf("No parameter groups using the default parameter group")
+	} else {
+		for _, p := range pgs {
+			pb := p.ReadObject()
+			pg := pb.(*pgstate.ParameterGroup)
+			_, err := instances.CreateParameterGroup(&pg.ParameterGroup)
+			if err != nil {
+				return err
+			}
+		}
 	}
 	instance := s.Objects[2]
 	if len(instance) != 1 {
