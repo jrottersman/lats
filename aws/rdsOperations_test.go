@@ -423,7 +423,7 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 	objs = append(objs, obj1)
 	objs = append(objs, obj2)
 	objects := make(map[int][]stack.Object)
-	objects[1] = objs
+	objects[2] = objs
 	longStack := stack.Stack{
 		Objects: objects,
 	}
