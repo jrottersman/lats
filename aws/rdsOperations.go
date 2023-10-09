@@ -147,7 +147,7 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 				return err
 			}
 			//TODO make this handle 20 at a time
-			_, err = instances.ModifyParameterGroup(*pg.ParameterGroup.DBParameterGroupName, pg.Params)
+			err = instances.ModifyParameterGroup(*pg.ParameterGroup.DBParameterGroupName, pg.Params)
 			if err != nil {
 				return err
 			}
