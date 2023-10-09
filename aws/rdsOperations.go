@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
@@ -152,6 +153,8 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 				return err
 			}
 		}
+		// Sleep for 5 minutes per AWS documentation to wait for a parameter group to be ready
+		time.Sleep(300 * time.Second)
 	}
 	instance := s.Objects[2]
 	if len(instance) != 1 {
