@@ -149,10 +149,18 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 			if err != nil {
 				return err
 			}
-			//TODO make this handle 20 at a time
-			err = instances.ModifyParameterGroup(*pg.ParameterGroup.DBParameterGroupName, pg.Params)
-			if err != nil {
-				return err
+			batchSize := 20
+			params := pg.Params
+			batches := make([][]types.Parameter, 0, (len(params)+batchSize-1)/batchSize)
+			for batchSize < len(params) {
+				params, batches = params[batchSize:], append(batches, params[0:batchSize:batchSize])
+			}
+			batches = append(batches, params)
+			for _, b := range batches {
+				err = instances.ModifyParameterGroup(*pg.ParameterGroup.DBParameterGroupName, b)
+				if err != nil {
+					return err
+				}
 			}
 		}
 		// Sleep for 5 minutes per AWS documentation to wait for a parameter group to be ready
