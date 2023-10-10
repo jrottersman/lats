@@ -102,6 +102,11 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 
 //CreateClusterFromStack creates an RDS cluster from a stack
 func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
+	first := s.Objects[1]
+
+	for _, p := range first {
+		fmt.Printf("%v", p)
+	}
 
 	// get the one which is the cluster and create it
 	second := s.Objects[2]
