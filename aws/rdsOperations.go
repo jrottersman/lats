@@ -137,12 +137,14 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 //CreateInstanceFromStack creates an RDS instance from a stack object
 func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 	pgs := s.Objects[1]
+	var pgName *string
 	if len(pgs) == 0 {
 		fmt.Printf("No parameter groups using the default parameter group")
 	} else {
 		for _, p := range pgs {
 			pb := p.ReadObject()
 			pg := pb.(*pgstate.ParameterGroup)
+			pgName = pg.ParameterGroup.DBParameterGroupName
 			_, err := instances.CreateParameterGroup(&pg.ParameterGroup)
 			if err != nil {
 				return err
@@ -163,6 +165,9 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 	for _, v := range instance {
 		b := v.ReadObject()
 		ins := b.(*rds.RestoreDBInstanceFromDBSnapshotInput)
+		if pgName != nil {
+			ins.DBParameterGroupName = pgName
+		}
 		_, err := instances.RestoreSnapshotInstance(*ins)
 		if err != nil {
 			return err
