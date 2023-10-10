@@ -104,11 +104,11 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 
 	// get the one which is the cluster and create it
-	first := s.Objects[1]
-	if len(first) != 1 {
+	second := s.Objects[2]
+	if len(second) != 1 {
 		return fmt.Errorf("Multiple clusters and there should only be one")
 	}
-	for _, v := range first {
+	for _, v := range second {
 		b := v.ReadObject()
 		dbi := b.(*rds.RestoreDBClusterFromSnapshotInput)
 		_, err := instances.RestoreSnapshotCluster(*dbi) // we might need to do something with the output in which case this changes
@@ -117,10 +117,10 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 		}
 	}
 
-	// get two which is the instances create them in parrallel
-	second := s.Objects[2]
+	// get three which is the instances create them in parrallel
+	third := s.Objects[3]
 	waitChan := make(chan struct{}, MaxConcurrentJobs)
-	for _, i := range second {
+	for _, i := range third {
 		waitChan <- struct{}{}
 		go func(inst stack.Object) {
 			o := inst.ReadObject()
