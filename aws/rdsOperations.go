@@ -129,6 +129,8 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 				}
 			}
 		}
+		//Wait five minutes for parameter sets per aws docs
+		time.Sleep(300 * time.Second)
 	}
 
 	// get the one which is the cluster and create it
