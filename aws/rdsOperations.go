@@ -288,7 +288,21 @@ func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, ne
 	return output.DBClusterSnapshot, nil
 }
 
-// TODO Copy Option Group
+//RestoreOptionGroup creates the option group for our database this is very optional
+func (instances *DbInstances) RestoreOptionGroup(EngineName string, MajorEngineVersion string, OptionGroupName string, Description string) (
+	*rds.CreateOptionGroupOutput, error) {
+	input := rds.CreateOptionGroupInput{
+		EngineName:             &EngineName,
+		MajorEngineVersion:     &MajorEngineVersion,
+		OptionGroupName:        &OptionGroupName,
+		OptionGroupDescription: &Description,
+	}
+	out, err := instances.RdsClient.CreateOptionGroup(context.TODO(), &input)
+	if err != nil {
+		return nil, fmt.Errorf("Restore option group had an error %s", err)
+	}
+	return out, nil
+}
 
 //GetClusterParameterGroup get the cluster parameter group so we can make a new one in a new region or you know store it for restoration (actually we won't need to do that cause the data is stored on the snapshot :P)
 func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string) (
