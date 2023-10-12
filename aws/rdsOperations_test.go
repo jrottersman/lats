@@ -770,3 +770,44 @@ func TestDbInstances_ModifyClusterParameterGroup(t *testing.T) {
 		})
 	}
 }
+
+func TestDbInstances_RestoreOptionGroup(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		EngineName         string
+		MajorEngineVersion string
+		OptionGroupName    string
+		Description        string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *rds.CreateOptionGroupOutput
+		wantErr bool
+	}{
+		{name: "emptyTest",
+			fields:  fields{RdsClient: mock.MockRDSClient{}},
+			args:    args{EngineName: "foo", MajorEngineVersion: "bar", OptionGroupName: "bat", Description: "taz"},
+			want:    &rds.CreateOptionGroupOutput{},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			got, err := instances.RestoreOptionGroup(tt.args.EngineName, tt.args.MajorEngineVersion, tt.args.OptionGroupName, tt.args.Description)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DbInstances.RestoreOptionGroup() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DbInstances.RestoreOptionGroup() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
