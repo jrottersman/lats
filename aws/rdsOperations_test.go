@@ -811,3 +811,35 @@ func TestDbInstances_RestoreOptionGroup(t *testing.T) {
 		})
 	}
 }
+
+func TestDbInstances_ModifyOptionGroup(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		OptionGroupName string
+		Include         []types.OptionConfiguration
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{name: "pass",
+			fields:  fields{RdsClient: mock.MockRDSClient{}},
+			args:    args{OptionGroupName: "foo", Include: []types.OptionConfiguration{}},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			if err := instances.ModifyOptionGroup(tt.args.OptionGroupName, tt.args.Include); (err != nil) != tt.wantErr {
+				t.Errorf("DbInstances.ModifyOptionGroup() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
