@@ -430,6 +430,18 @@ func (instances *DbInstances) CreateClusterParameterGroup(p *types.DBClusterPara
 	return output, nil
 }
 
+//ModifyOptionGroup modifies the option group
+func (instances *DbInstances) ModifyOptionGroup(OptionGroupName string, Include []types.OptionConfiguration, Delete []string) error {
+	input := rds.ModifyOptionGroupInput{
+		OptionGroupName:  &OptionGroupName,
+		ApplyImmediately: true,
+		OptionsToInclude: Include,
+		OptionsToRemove:  Delete,
+	}
+	_, err := instances.RdsClient.ModifyOptionGroup(context.TODO(), &input)
+	return err
+}
+
 //ModifyParameterGroup adds all the parameters to a db parameter group
 func (instances *DbInstances) ModifyParameterGroup(pg string, parameters []types.Parameter) error {
 	//batch this thing
