@@ -114,7 +114,7 @@ func (m MockRDSClient) ModifyDBParameterGroup(ctx context.Context, params *rds.M
 	return &rds.ModifyDBParameterGroupOutput{}, nil
 }
 
-func ModifyOptionGroup(ctx context.Context, params *rds.ModifyOptionGroupInput, optFns ...func(*rds.Options)) (*rds.ModifyOptionGroupOutput, error) {
+func (m MockRDSClient) ModifyOptionGroup(ctx context.Context, params *rds.ModifyOptionGroupInput, optFns ...func(*rds.Options)) (*rds.ModifyOptionGroupOutput, error) {
 	return &rds.ModifyOptionGroupOutput{}, nil
 }
 

@@ -431,12 +431,11 @@ func (instances *DbInstances) CreateClusterParameterGroup(p *types.DBClusterPara
 }
 
 //ModifyOptionGroup modifies the option group
-func (instances *DbInstances) ModifyOptionGroup(OptionGroupName string, Include []types.OptionConfiguration, Delete []string) error {
+func (instances *DbInstances) ModifyOptionGroup(OptionGroupName string, Include []types.OptionConfiguration) error {
 	input := rds.ModifyOptionGroupInput{
 		OptionGroupName:  &OptionGroupName,
 		ApplyImmediately: true,
 		OptionsToInclude: Include,
-		OptionsToRemove:  Delete,
 	}
 	_, err := instances.RdsClient.ModifyOptionGroup(context.TODO(), &input)
 	return err
