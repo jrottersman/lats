@@ -114,6 +114,10 @@ func (m MockRDSClient) ModifyDBParameterGroup(ctx context.Context, params *rds.M
 	return &rds.ModifyDBParameterGroupOutput{}, nil
 }
 
+func ModifyOptionGroup(ctx context.Context, params *rds.ModifyOptionGroupInput, optFns ...func(*rds.Options)) (*rds.ModifyOptionGroupOutput, error) {
+	return &rds.ModifyOptionGroupOutput{}, nil
+}
+
 func (m MockRDSClient) ModifyDBClusterParameterGroup(ctx context.Context, params *rds.ModifyDBClusterParameterGroupInput, optFns ...func(*rds.Options)) (*rds.ModifyDBClusterParameterGroupOutput, error) {
 	return &rds.ModifyDBClusterParameterGroupOutput{}, nil
 }
