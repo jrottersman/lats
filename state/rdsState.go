@@ -24,6 +24,18 @@ func EncodeRDSDatabaseOutput(db *types.DBInstance) bytes.Buffer {
 	return encoder
 }
 
+//EncodeOptionGroup convers an option group struct to bytes
+func EncodeOptionGroup(og *types.OptionGroup) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(og)
+	if err != nil {
+		log.Fatalf("Error encoding our option group: %s", err)
+	}
+	return encoder
+}
+
 // DecodeRDSClusterOutput takes a bytes buffer and returns it to a DbCluster type in preperation of restoring the database
 func DecodeRDSClusterOutput(b bytes.Buffer) types.DBCluster {
 	var dbCluster types.DBCluster
