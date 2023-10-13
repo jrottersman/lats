@@ -94,7 +94,11 @@ func (m MockRDSClient) DescribeDBClusterParameterGroups(ctx context.Context, par
 }
 
 func (m MockRDSClient) DescribeOptionGroups(ctx context.Context, params *rds.DescribeOptionGroupsInput, optFns ...func(*rds.Options)) (*rds.DescribeOptionGroupsOutput, error) {
-	return &rds.DescribeOptionGroupsOutput{}, nil
+	x := []types.OptionGroup{}
+	x = append(x, types.OptionGroup{})
+	return &rds.DescribeOptionGroupsOutput{
+		OptionGroupsList: x,
+	}, nil
 }
 
 func (m MockRDSClient) DescribeDBClusterParameters(ctx context.Context, params *rds.DescribeDBClusterParametersInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClusterParametersOutput, error) {
