@@ -7,15 +7,19 @@ import (
 	"github.com/jrottersman/lats/pgstate"
 	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
+
+	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
 //InstanceStackInputs struct to generate stack for an instance
 type InstanceStackInputs struct {
-	R                 state.RDSRestorationStore
-	StackName         string
-	InstanceFileName  string
-	ParameterFileName string
-	ParameterGroups   []pgstate.ParameterGroup
+	R                   state.RDSRestorationStore
+	StackName           string
+	InstanceFileName    string
+	ParameterFileName   string
+	OptionGroupFileName string
+	ParameterGroups     []pgstate.ParameterGroup
+	OptionGroup         types.OptionGroup
 }
 
 //GenerateRDSInstanceStack creates a stack for restoration for an RDS instance
