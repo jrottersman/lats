@@ -12,6 +12,22 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
+func TestEncodeOptionGroup(t *testing.T) {
+
+	og := types.OptionGroup{
+		EngineName: aws.String("foo"),
+	}
+	r := EncodeOptionGroup(&og)
+	var result types.OptionGroup
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if *result.EngineName != *og.EngineName {
+		t.Errorf("got %s expected %s", *result.EngineName, *og.EngineName)
+	}
+}
 func TestEncodeRestoreDBInstanceFromDBSnapshotInput(t *testing.T) {
 
 	db := rds.RestoreDBInstanceFromDBSnapshotInput{
