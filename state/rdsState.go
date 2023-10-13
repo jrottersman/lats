@@ -36,6 +36,17 @@ func EncodeOptionGroup(og *types.OptionGroup) bytes.Buffer {
 	return encoder
 }
 
+// DecodeOptionGroup takes a bytes buffer and returns it to a option group
+func DecodeOptionGroup(b bytes.Buffer) types.OptionGroup {
+	var optionGroup types.OptionGroup
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&optionGroup)
+	if err != nil {
+		log.Fatalf("Error decoding state for Option Group: %s", err)
+	}
+	return optionGroup
+}
+
 // DecodeRDSClusterOutput takes a bytes buffer and returns it to a DbCluster type in preperation of restoring the database
 func DecodeRDSClusterOutput(b bytes.Buffer) types.DBCluster {
 	var dbCluster types.DBCluster
