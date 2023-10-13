@@ -28,6 +28,18 @@ func TestEncodeOptionGroup(t *testing.T) {
 		t.Errorf("got %s expected %s", *result.EngineName, *og.EngineName)
 	}
 }
+
+func TestDecodeOptionGroup(t *testing.T) {
+	og := types.OptionGroup{
+		EngineName: aws.String("foo"),
+	}
+	r := EncodeOptionGroup(&og)
+	resp := DecodeOptionGroup(r)
+	if *resp.EngineName != *og.EngineName {
+		t.Errorf("got %s expected %s", *resp.EngineName, *og.EngineName)
+	}
+}
+
 func TestEncodeRestoreDBInstanceFromDBSnapshotInput(t *testing.T) {
 
 	db := rds.RestoreDBInstanceFromDBSnapshotInput{
