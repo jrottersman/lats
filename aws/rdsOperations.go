@@ -103,6 +103,18 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 	return dbs, nil
 }
 
+//GetOptionGroup get option group by name
+func (instances *DbInstances) GetOptionGroup(OptionGroupName string) (*types.OptionGroup, error) {
+	input := rds.DescribeOptionGroupsInput{
+		OptionGroupName: &OptionGroupName,
+	}
+	output, err := instances.RdsClient.DescribeOptionGroups(context.TODO(), &input)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting Option group %s", err)
+	}
+	return &output.OptionGroupsList[0], nil
+}
+
 //CreateClusterFromStack creates an RDS cluster from a stack
 func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 	first := s.Objects[1]
