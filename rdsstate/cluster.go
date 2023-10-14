@@ -8,17 +8,21 @@ import (
 	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
 	"github.com/jrottersman/lats/pgstate"
+
+	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
 //ClusterStackInput is the input for a ClusterStack
 type ClusterStackInput struct {
-	R                 state.RDSRestorationStore
-	StackName         string
-	Filename          string
-	Client            aws.DbInstances
-	Folder            string
-	ParameterFileName string
-	ParameterGroups   []pgstate.ParameterGroup
+	R                   state.RDSRestorationStore
+	StackName           string
+	Filename            string
+	Client              aws.DbInstances
+	Folder              string
+	ParameterFileName   string
+	ParameterGroups     []pgstate.ParameterGroup
+	OptionGroupFileName string
+	OptionGroup         types.OptionGroup
 }
 
 //GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.
