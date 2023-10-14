@@ -18,6 +18,7 @@ const Cluster = "RDSCluster"
 const Instance = "ClusterInstance"
 const DBParameterGroup = "DBParameterGroup"
 const DBClusterParameterGroup = "DBClusterParameterGroup"
+const OptionGroup = "OptionGroup"
 
 type Object struct {
 	FileName string

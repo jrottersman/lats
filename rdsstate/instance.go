@@ -35,7 +35,6 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 	if i.OptionGroupFileName == "" {
 		i.OptionGroupFileName = *helpers.RandomStateFileName()
 	}
-
 	b := pgstate.EncodeParameterGroups(i.ParameterGroups)
 	_, err := state.WriteOutput(i.ParameterFileName, b)
 	if err != nil {
@@ -44,6 +43,16 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 	paramObj := stack.NewObject(i.ParameterFileName, 1, stack.DBParameterGroup)
 	var paramObjects []stack.Object
 	paramObjects = append(paramObjects, paramObj)
+
+	if i.OptionGroup != nil {
+		b := state.EncodeOptionGroup(i.OptionGroup)
+		_, err := state.WriteOutput(i.OptionGroupFileName, b)
+		if err != nil {
+			return nil, fmt.Errorf("error writing option groups %s", err)
+		}
+		optionObj := stack.NewObject(i.OptionGroupFileName, 1, stack.OptionGroup)
+		paramObjects = append(paramObjects, optionObj)
+	}
 
 	DBInput := state.GenerateRestoreDBInstanceFromDBSnapshotInput(i.R)
 	b = state.EncodeRestoreDBInstanceFromDBSnapshotInput(DBInput)
