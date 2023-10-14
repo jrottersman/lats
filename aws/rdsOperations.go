@@ -191,23 +191,26 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 	} else {
 		for _, p := range pgs {
 			pb := p.ReadObject()
-			pg := pb.(*pgstate.ParameterGroup)
-			pgName = pg.ParameterGroup.DBParameterGroupName
-			_, err := instances.CreateParameterGroup(&pg.ParameterGroup)
-			if err != nil {
-				return err
-			}
-			batchSize := 20
-			params := pg.Params
-			batches := make([][]types.Parameter, 0, (len(params)+batchSize-1)/batchSize)
-			for batchSize < len(params) {
-				params, batches = params[batchSize:], append(batches, params[0:batchSize:batchSize])
-			}
-			batches = append(batches, params)
-			for _, b := range batches {
-				err = instances.ModifyParameterGroup(*pg.ParameterGroup.DBParameterGroupName, b)
+			switch pb.(type) {
+			case *pgstate.ParameterGroup:
+				pg := pb.(*pgstate.ParameterGroup)
+				pgName = pg.ParameterGroup.DBParameterGroupName
+				_, err := instances.CreateParameterGroup(&pg.ParameterGroup)
 				if err != nil {
 					return err
+				}
+				batchSize := 20
+				params := pg.Params
+				batches := make([][]types.Parameter, 0, (len(params)+batchSize-1)/batchSize)
+				for batchSize < len(params) {
+					params, batches = params[batchSize:], append(batches, params[0:batchSize:batchSize])
+				}
+				batches = append(batches, params)
+				for _, b := range batches {
+					err = instances.ModifyParameterGroup(*pg.ParameterGroup.DBParameterGroupName, b)
+					if err != nil {
+						return err
+					}
 				}
 			}
 		}
