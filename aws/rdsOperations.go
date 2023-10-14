@@ -212,6 +212,12 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 						return err
 					}
 				}
+			case *types.OptionGroup:
+				og := pb.(*types.OptionGroup)
+				_, err := instances.RestoreOptionGroup(*og.EngineName, *og.MajorEngineVersion, *og.OptionGroupName, *og.OptionGroupDescription)
+				if err != nil {
+					fmt.Printf("failed to restore option group %s", err)
+				}
 			}
 		}
 		// Sleep for 5 minutes per AWS documentation to wait for a parameter group to be ready
