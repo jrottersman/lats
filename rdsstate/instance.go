@@ -19,7 +19,7 @@ type InstanceStackInputs struct {
 	ParameterFileName   string
 	OptionGroupFileName string
 	ParameterGroups     []pgstate.ParameterGroup
-	OptionGroup         types.OptionGroup
+	OptionGroup         *types.OptionGroup
 }
 
 //GenerateRDSInstanceStack creates a stack for restoration for an RDS instance
@@ -30,6 +30,10 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 
 	if i.ParameterFileName == "" {
 		i.ParameterFileName = *helpers.RandomStateFileName()
+	}
+
+	if i.OptionGroupFileName == "" {
+		i.OptionGroupFileName = *helpers.RandomStateFileName()
 	}
 
 	b := pgstate.EncodeParameterGroups(i.ParameterGroups)
