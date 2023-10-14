@@ -22,7 +22,7 @@ type ClusterStackInput struct {
 	ParameterFileName   string
 	ParameterGroups     []pgstate.ParameterGroup
 	OptionGroupFileName string
-	OptionGroup         s.OptionGroup
+	OptionGroup         *types.OptionGroup
 }
 
 //GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.
@@ -45,6 +45,17 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 	parameterObj := stack.NewObject(c.ParameterFileName, 1, stack.DBClusterParameterGroup)
 	var paramObjects []stack.Object
 	paramObjects = append(paramObjects, parameterObj)
+
+	if c.OptionGroup != nil {
+		b := state.EncodeOptionGroup(c.OptionGroup)
+		_, err := state.WriteOutput(c.OptionGroupFileName, b)
+		if err != nil {
+			return nil, fmt.Errorf("Error writing option Group %s", err)
+		}
+		optionObj := stack.NewObject(c.OptionGroupFileName, 1, stack.OptionGroup)
+		paramObjects = append(paramObjects, optionObj)
+	}
+
 	objMap[1] = paramObjects
 
 	ClusterInput := state.GenerateRestoreDBClusterFromSnapshotInput(c.R)
