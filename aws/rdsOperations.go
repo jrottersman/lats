@@ -242,6 +242,32 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 	return nil
 }
 
+func optionsToConfiguration(opts []types.Option) []types.OptionConfiguration {
+	conf := []types.OptionConfiguration{}
+	for _, v := range opts {
+		dbsgs := []string{}
+		for _, dbsg := range v.DBSecurityGroupMemberships {
+			dbsgs = append(dbsgs, *dbsg.DBSecurityGroupName)
+		}
+
+		vpcsgs := []string{}
+		for _, vpcsg := range v.VpcSecurityGroupMemberships {
+			vpcsgs = append(vpcsgs, *vpcsg.VpcSecurityGroupId)
+		}
+
+		c := types.OptionConfiguration{
+			OptionName:                  v.OptionName,
+			DBSecurityGroupMemberships:  dbsgs,
+			OptionSettings:              v.OptionSettings,
+			OptionVersion:               v.OptionVersion,
+			Port:                        v.Port,
+			VpcSecurityGroupMemberships: vpcsgs,
+		}
+		conf = append(conf, c)
+	}
+	return conf
+}
+
 func (instances *DbInstances) getClusterStatus(name string) (*string, error) {
 	cluster, err := instances.GetCluster(name)
 	if err != nil {
