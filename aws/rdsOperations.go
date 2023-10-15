@@ -145,6 +145,9 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 						return err
 					}
 				}
+			case *types.OptionGroup:
+				og := pb.(*types.OptionGroup)
+				fmt.Printf("option group is %v", og)
 			}
 		}
 		//Wait five minutes for parameter sets per aws docs
