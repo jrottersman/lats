@@ -218,7 +218,11 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 				if err != nil {
 					fmt.Printf("failed to restore option group %s", err)
 				}
-				instances.ModifyOptionGroup(*og.OptionGroupName, []types.OptionConfiguration{}) //TODO options to option configuration
+				optConfigs := optionsToConfiguration(og.Options)
+				err = instances.ModifyOptionGroup(*og.OptionGroupName, optConfigs)
+				if err != nil {
+					fmt.Printf("error modifying option group %s", err)
+				}
 			}
 		}
 		// Sleep for 5 minutes per AWS documentation to wait for a parameter group to be ready
