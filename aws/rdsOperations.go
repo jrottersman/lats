@@ -124,23 +124,26 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 	} else {
 		for _, p := range first {
 			pb := p.ReadObject()
-			pg := pb.(*pgstate.ParameterGroup)
-			pgName = pg.ClusterParameterGroup.DBClusterParameterGroupName
-			_, err := instances.CreateClusterParameterGroup(&pg.ClusterParameterGroup)
-			if err != nil {
-				return err
-			}
-			batchSize := 20
-			params := pg.Params
-			batches := make([][]types.Parameter, 0, (len(params)+batchSize-1)/batchSize)
-			for batchSize < len(params) {
-				params, batches = params[batchSize:], append(batches, params[0:batchSize:batchSize])
-			}
-			batches = append(batches, params)
-			for _, b := range batches {
-				err = instances.ModifyClusterParameterGroup(*pg.ClusterParameterGroup.DBClusterParameterGroupName, b)
+			switch pb.(type) {
+			case *pgstate.ParameterGroup:
+				pg := pb.(*pgstate.ParameterGroup)
+				pgName = pg.ClusterParameterGroup.DBClusterParameterGroupName
+				_, err := instances.CreateClusterParameterGroup(&pg.ClusterParameterGroup)
 				if err != nil {
 					return err
+				}
+				batchSize := 20
+				params := pg.Params
+				batches := make([][]types.Parameter, 0, (len(params)+batchSize-1)/batchSize)
+				for batchSize < len(params) {
+					params, batches = params[batchSize:], append(batches, params[0:batchSize:batchSize])
+				}
+				batches = append(batches, params)
+				for _, b := range batches {
+					err = instances.ModifyClusterParameterGroup(*pg.ClusterParameterGroup.DBClusterParameterGroupName, b)
+					if err != nil {
+						return err
+					}
 				}
 			}
 		}
