@@ -148,6 +148,10 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 			case *types.OptionGroup:
 				og := pb.(*types.OptionGroup)
 				fmt.Printf("option group is %v", og)
+				_, err := instances.RestoreOptionGroup(*og.EngineName, *og.MajorEngineVersion, *og.OptionGroupName, *og.OptionGroupDescription)
+				if err != nil {
+					return fmt.Errorf("error creating option group %s", err)
+				}
 			}
 		}
 		//Wait five minutes for parameter sets per aws docs
