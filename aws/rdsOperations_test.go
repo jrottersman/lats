@@ -882,3 +882,23 @@ func TestDbInstances_GetOptionGroup(t *testing.T) {
 		})
 	}
 }
+
+func Test_optionsToConfiguration(t *testing.T) {
+	type args struct {
+		opts []types.Option
+	}
+	tests := []struct {
+		name string
+		args args
+		want []types.OptionConfiguration
+	}{
+		{"empty", args{[]types.Option{}}, []types.OptionConfiguration{}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := optionsToConfiguration(tt.args.opts); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("optionsToConfiguration() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
