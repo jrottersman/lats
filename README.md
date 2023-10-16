@@ -1,5 +1,11 @@
 # Lats
 
+## Features
+* Snapshot creation for RDS databases
+* Copy Snapshots, parameter groups and option groups to another region
+* restore snapshot and create new parameter group and option groups for the restored snapshot
+
+## Development plan
 Lats is a tool to simplify disaster recovery and multiregion movement in AWS. It's currently in heavy development and is working on getting RDS operations fully going. 
 In the near future it will allow
 1. Copying DB snapshots between regions
