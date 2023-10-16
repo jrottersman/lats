@@ -18,3 +18,7 @@ In the near future it will allow
 to build lats run `go run .`
 The first time you run lats you will need to run `./lats init` this will prompt you for your aws regions and create a state file entry for running lats. 
 The state file entry are json files however do not edit them manually or lats will fail to resotre snapshots
+
+## Contributing
+1. Fork the repository and clone it
+1. Have Go and the golang AWS SDK installed 
