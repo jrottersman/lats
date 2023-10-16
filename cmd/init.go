@@ -3,6 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"os"
 
 	"github.com/jrottersman/lats/helpers"
@@ -37,7 +38,7 @@ var (
 				if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 					genConfigFile()
 				} else {
-					fmt.Printf("Error parsing config file %s", err)
+					slog.Info("Error parsing config file ", "error", err)
 				}
 			}
 
@@ -112,7 +113,7 @@ func writeConfig(c Config, filename string) error {
 func readConfig(filename string) (Config, error) {
 	confFile, err := os.ReadFile(filename)
 	if err != nil {
-		fmt.Printf("Error reading config: %s", err)
+		slog.Info("Error reading config,", "err", err)
 	}
 	conf := Config{}
 	err = json.Unmarshal(confFile, &conf)
