@@ -152,6 +152,11 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 				if err != nil {
 					return fmt.Errorf("error creating option group %s", err)
 				}
+				optConfigs := optionsToConfiguration(og.Options)
+				err = instances.ModifyOptionGroup(*og.OptionGroupName, optConfigs)
+				if err != nil {
+					fmt.Printf("error modifying option group %s", err)
+				}
 			}
 		}
 		//Wait five minutes for parameter sets per aws docs
