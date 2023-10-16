@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"encoding/json"
-	"fmt"
 	"log/slog"
 	"os"
 
@@ -103,7 +102,7 @@ func genConfig(mr, br func() string) Config {
 func writeConfig(c Config, filename string) error {
 	conf, err := json.Marshal(c)
 	if err != nil {
-		fmt.Printf("Error writing config: %s", err)
+		slog.Warn("Error writing config: ", "error", err)
 		return err
 	}
 	err = os.WriteFile(filename, conf, 0644)
@@ -118,7 +117,7 @@ func readConfig(filename string) (Config, error) {
 	conf := Config{}
 	err = json.Unmarshal(confFile, &conf)
 	if err != nil {
-		fmt.Printf("Error unmarshalling json: %s\n", err)
+		slog.Warn("Error unmarshalling json", "error", err)
 	}
 	return conf, err
 }
