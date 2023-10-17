@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
+	"log/slog"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -58,10 +58,10 @@ func (instances *DbInstances) GetInstance(instanceName string) (
 	if err != nil {
 		var notFoundError *types.DBInstanceNotFoundFault
 		if errors.As(err, &notFoundError) {
-			log.Printf("DB instance %v does not exist.\n", instanceName)
+			slog.Warn("DB instance %v does not exist.\n", instanceName)
 			err = nil
 		} else {
-			log.Printf("Couldn't get instance %v: %v\n", instanceName, err)
+			slog.Warn("Couldn't get instance %v: %v\n", instanceName, err)
 		}
 		return nil, err
 	}
@@ -77,10 +77,10 @@ func (instances *DbInstances) GetCluster(clusterName string) (*types.DBCluster, 
 	if err != nil {
 		var notFoundError *types.DBClusterNotFoundFault
 		if errors.As(err, &notFoundError) {
-			log.Printf("DB cluster %v does not exist.\n", clusterName)
+			slog.Warn("DB cluster %v does not exist.\n", clusterName)
 			err = nil
 		} else {
-			log.Printf("Couldn't get DB cluster %v: %v\n", clusterName, err)
+			slog.Warn("Couldn't get DB cluster %v: %v\n", clusterName, err)
 		}
 		return nil, err
 	}
@@ -96,7 +96,7 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 	for _, v := range c.DBClusterMembers {
 		db, err := instances.GetInstance(*v.DBInstanceIdentifier)
 		if err != nil {
-			log.Printf("error with get instance %s", err)
+			slog.Warn("error with get instance %s", err)
 		}
 		dbs = append(dbs, *db)
 	}
@@ -120,7 +120,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 	first := s.Objects[1]
 	var pgName *string
 	if len(first) < 1 {
-		fmt.Println("skipping the parameter set")
+		slog.Info("skipping the parameter set")
 	} else {
 		for _, p := range first {
 			pb := p.ReadObject()
@@ -147,7 +147,6 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 				}
 			case *types.OptionGroup:
 				og := pb.(*types.OptionGroup)
-				fmt.Printf("option group is %v", og)
 				_, err := instances.RestoreOptionGroup(*og.EngineName, *og.MajorEngineVersion, *og.OptionGroupName, *og.OptionGroupDescription)
 				if err != nil {
 					return fmt.Errorf("error creating option group %s", err)
@@ -155,7 +154,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 				optConfigs := optionsToConfiguration(og.Options)
 				err = instances.ModifyOptionGroup(*og.OptionGroupName, optConfigs)
 				if err != nil {
-					fmt.Printf("error modifying option group %s", err)
+					slog.Warn("error modifying option group", "error", err)
 				}
 			}
 		}
@@ -190,7 +189,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 			ins := o.(*rds.CreateDBInstanceInput)
 			_, err := instances.RestoreInstanceForCluster(*ins)
 			if err != nil {
-				fmt.Printf("error creating instance %s", err)
+				slog.Error("error creating instance", "error", err)
 			}
 		}(i)
 	}
@@ -202,7 +201,7 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 	pgs := s.Objects[1]
 	var pgName *string
 	if len(pgs) == 0 {
-		fmt.Printf("No parameter groups using the default parameter group")
+		slog.Info("No parameter groups using the default parameter group")
 	} else {
 		for _, p := range pgs {
 			pb := p.ReadObject()
@@ -231,12 +230,12 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 				og := pb.(*types.OptionGroup)
 				_, err := instances.RestoreOptionGroup(*og.EngineName, *og.MajorEngineVersion, *og.OptionGroupName, *og.OptionGroupDescription)
 				if err != nil {
-					fmt.Printf("failed to restore option group %s", err)
+					slog.Warn("failed to restore option group", "error", err)
 				}
 				optConfigs := optionsToConfiguration(og.Options)
 				err = instances.ModifyOptionGroup(*og.OptionGroupName, optConfigs)
 				if err != nil {
-					fmt.Printf("error modifying option group %s", err)
+					slog.Warn("error modifying option group", "Error", err)
 				}
 			}
 		}
@@ -306,7 +305,7 @@ func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName s
 		DBSnapshotIdentifier: aws.String(snapshotName),
 	})
 	if err != nil {
-		log.Printf("Couldn't create snapshot %v: %v\n", snapshotName, err)
+		slog.Warn("Couldn't create snapshot", "snapshot", snapshotName, "error", err)
 		return nil, err
 	}
 	return output.DBSnapshot, nil
@@ -319,7 +318,7 @@ func (instances *DbInstances) CreateClusterSnapshot(clusterName string, snapshot
 		DBClusterSnapshotIdentifier: aws.String(snapshotName),
 	})
 	if err != nil {
-		log.Printf("Couldn't create snapshot %s: because of %s\n", snapshotName, err)
+		slog.Warn("Couldn't create snapshot", "snapshot", snapshotName, "error", err)
 		return nil, err
 	}
 	return output.DBClusterSnapshot, nil
@@ -335,7 +334,7 @@ func (instances *DbInstances) CopySnapshot(originalSnapshotName string, newSnaps
 		KmsKeyId:                   aws.String(KmsKey),
 	})
 	if err != nil {
-		log.Printf("Couldn't copy snapshot %s: %s\n", newSnapshotName, err)
+		slog.Warn("Couldn't copy snapshot", "snapshot", originalSnapshotName, "error", err)
 		return nil, err
 	}
 	return output.DBSnapshot, nil
@@ -351,7 +350,7 @@ func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, ne
 		KmsKeyId:                          aws.String(kmsKey),
 	})
 	if err != nil {
-		log.Printf("Couldn't copy snapshot %s: %s\n", newSnapshotName, err)
+		slog.Warn("Couldn't copy snapshot %s: %s\n", newSnapshotName, err)
 		return nil, err
 	}
 	return output.DBClusterSnapshot, nil
@@ -382,10 +381,10 @@ func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string
 	if err != nil {
 		var notFoundError *types.DBClusterParameterGroupNotFoundFault
 		if errors.As(err, &notFoundError) {
-			log.Printf("Parameter group %v does not exist.\n", ParameterGroupName)
+			slog.Warn("Parameter group %v does not exist.\n", ParameterGroupName)
 			err = nil
 		} else {
-			log.Printf("Error getting parameter group %v: %v\n", ParameterGroupName, err)
+			slog.Warn("Error getting parameter group %v: %v\n", ParameterGroupName, err)
 		}
 		return nil, err
 	}
@@ -398,7 +397,7 @@ func (instances *DbInstances) GetParametersForClusterParameterGroup(ParameterGro
 		DBClusterParameterGroupName: aws.String(ParameterGroupName),
 	})
 	if err != nil {
-		log.Printf("Error getting parameters %s", err)
+		slog.Warn("Error getting parameters", "error", err)
 		return nil, err
 	}
 	parameters := output.Parameters
@@ -411,7 +410,7 @@ func (instances *DbInstances) GetParametersForClusterParameterGroup(ParameterGro
 			Marker:                      output.Marker,
 		})
 		if err != nil {
-			log.Printf("Error getting parameters %s", err)
+			slog.Warn("Error getting parameters", "error", err)
 			return nil, err
 		}
 		parameters = append(parameters, output.Parameters...)
@@ -429,10 +428,10 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 	if err != nil {
 		var notFoundError *types.DBParameterGroupNotFoundFault
 		if errors.As(err, &notFoundError) {
-			log.Printf("Parameter group %v does not exist.\n", parameterGroupName)
+			slog.Warn("Parameter group does not exist.", "parameterGroup", parameterGroupName)
 			err = nil
 		} else {
-			log.Printf("Error getting parameter group %v: %v\n", parameterGroupName, err)
+			slog.Warn("Error getting parameter group", "parametergroup", parameterGroupName, "Error", err)
 		}
 		return nil, err
 	}
@@ -446,7 +445,7 @@ func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (
 		DBParameterGroupName: aws.String(ParameterGroupName),
 	})
 	if err != nil {
-		log.Printf("Error getting parameters %s", err)
+		slog.Warn("Error getting parameters", "error", err)
 		return nil, err
 	}
 	parameters := output.Parameters
@@ -459,7 +458,7 @@ func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (
 			Marker:               output.Marker,
 		})
 		if err != nil {
-			log.Printf("Error getting parameters %s", err)
+			slog.Warn("Error getting parameters", "error", err)
 			return nil, err
 		}
 		parameters = append(parameters, output.Parameters...)
@@ -477,7 +476,7 @@ func (instances *DbInstances) CreateParameterGroup(p *types.DBParameterGroup) (*
 	}
 	output, err := instances.RdsClient.CreateDBParameterGroup(context.TODO(), &input)
 	if err != nil {
-		log.Printf("error creating parameter group %s", err)
+		slog.Warn("error creating parameter group", "error", err)
 		return output, err
 	}
 	return output, err
@@ -492,7 +491,7 @@ func (instances *DbInstances) CreateClusterParameterGroup(p *types.DBClusterPara
 	}
 	output, err := instances.RdsClient.CreateDBClusterParameterGroup(context.TODO(), &input)
 	if err != nil {
-		log.Printf("error creating parameter group %s", err)
+		slog.Warn("error creating parameter group ", "error", err)
 		return output, err
 	}
 	return output, nil
@@ -526,7 +525,7 @@ func (instances *DbInstances) ModifyParameterGroup(pg string, parameters []types
 			Parameters:           batch,
 		})
 		if err != nil {
-			fmt.Printf("error updating parameters %s", err)
+			slog.Warn("error updating parameters", "Error", err)
 		}
 	}
 	return nil
@@ -549,7 +548,7 @@ func (instances *DbInstances) ModifyClusterParameterGroup(pg string, parameters 
 			Parameters:                  batch,
 		})
 		if err != nil {
-			fmt.Printf("error updating parameters %s", err)
+			slog.Warn("error updating parameters", "Error", err)
 		}
 	}
 	return nil
@@ -559,7 +558,7 @@ func (instances *DbInstances) ModifyClusterParameterGroup(pg string, parameters 
 func (instances *DbInstances) RestoreSnapshotCluster(input rds.RestoreDBClusterFromSnapshotInput) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
 	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(context.TODO(), &input)
 	if err != nil {
-		log.Printf("error creating snapshot cluster")
+		slog.Error("error creating snapshot cluster")
 		return nil, err
 	}
 	return output, nil
@@ -570,7 +569,7 @@ func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanc
 
 	output, err := instances.RdsClient.RestoreDBInstanceFromDBSnapshot(context.TODO(), &input)
 	if err != nil {
-		log.Printf("error creating instance from snapshot %s", err)
+		slog.Error("error creating instance from snapshot", "error", err)
 		return nil, err
 	}
 	return output, nil
@@ -580,7 +579,7 @@ func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanc
 func (instances *DbInstances) RestoreInstanceForCluster(input rds.CreateDBInstanceInput) (*rds.CreateDBInstanceOutput, error) {
 	output, err := instances.RdsClient.CreateDBInstance(context.TODO(), &input)
 	if err != nil {
-		log.Printf("error creating instance %s", err)
+		slog.Error("error creating instance", "error", err)
 		return nil, err
 	}
 	return output, nil
@@ -588,17 +587,15 @@ func (instances *DbInstances) RestoreInstanceForCluster(input rds.CreateDBInstan
 
 //GetInstanceSnapshotARN get the arn for an instance snapshot
 func (instances *DbInstances) GetInstanceSnapshotARN(name string, marker *string) (*string, error) {
-	fmt.Printf("in instance snapshots\n\n")
 	output, err := instances.RdsClient.DescribeDBSnapshots(context.TODO(), &rds.DescribeDBSnapshotsInput{
 		// Marker: marker,
 		DBSnapshotIdentifier: aws.String(name),
 	})
 	if err != nil {
-		fmt.Printf("error with snapshots %s", err)
+		slog.Error("error with snapshots", "error", err)
 		return nil, fmt.Errorf("error retreiving snapshot: %s", err)
 	}
 	for _, v := range output.DBSnapshots {
-		fmt.Printf("%v\n", v)
 		if *v.DBSnapshotIdentifier == name {
 			return v.DBSnapshotArn, nil
 		}
@@ -631,7 +628,6 @@ func (instances *DbInstances) GetClusterSnapshotARN(name string, marker *string)
 
 //GetSnapshotARN get's the snapshot ARN from the snapshot name
 func (instances *DbInstances) GetSnapshotARN(name string, cluster bool) (*string, error) {
-	fmt.Printf("getting snapshot ARN\n\n")
 	if cluster {
 		snap, err := instances.GetClusterSnapshotARN(name, nil)
 		if err != nil {
