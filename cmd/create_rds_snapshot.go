@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
@@ -40,7 +40,7 @@ func CreateSnapshot() {
 	dbi := aws.Init(config.MainRegion)
 	cluster, err := dbi.GetCluster(dbName)
 	if err != nil {
-		log.Fatalf("error with step 1 get cluster %s", err)
+		slog.Error("error with step 1 get cluster ", "error", err)
 	}
 	if cluster == nil && err == nil {
 		createSnapshotForInstance(dbi, sm, config.StateFileName)
@@ -52,7 +52,7 @@ func CreateSnapshot() {
 func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluster *types.DBCluster, sfn string) {
 	snapshot, err := dbi.CreateClusterSnapshot(dbName, snapshotName)
 	if err != nil {
-		log.Fatalf("error creating snapshot %s", err)
+		slog.Error("error creating snapshot", "error", err)
 	}
 	// create a stack
 	store := state.RDSRestorationStore{
@@ -67,12 +67,12 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 	}
 	stack, err := rdsstate.GenerateRDSClusterStack(input)
 	if err != nil {
-		log.Fatalf("error generating stack %s", err)
+		slog.Error("error generating stack ", "error", err)
 	}
 	stackFn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	err = stack.Write(stackFn)
 	if err != nil {
-		log.Fatalf("error writing stack %s", err)
+		slog.Error("error writing stack ", "error", err)
 	}
 	sm.UpdateState(snapshotName, stackFn, "stack")
 	sm.SyncState(sfn)
@@ -81,11 +81,11 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn string) {
 	db, err := dbi.GetInstance(dbName)
 	if err != nil {
-		log.Printf("didn't get instance %s", err)
+		slog.Warn("didn't get instance", "problem", err)
 	}
 	snapshot, err := dbi.CreateSnapshot(dbName, snapshotName)
 	if err != nil {
-		log.Fatalf("error creating snapshot: %s", err)
+		slog.Error("error creating snapshot: ", "error", err)
 	}
 
 	store := state.RDSRestorationStore{
@@ -94,7 +94,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 	}
 	pgs, err := aws.GetParameterGroups(store, dbi)
 	if err != nil {
-		fmt.Printf("error getting parameter groups %s", err)
+		slog.Warn("error getting parameter groups", "error", err)
 	}
 	stackInput := rdsstate.InstanceStackInputs{
 		R:               store,
@@ -103,12 +103,12 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 	}
 	stack, err := rdsstate.GenerateRDSInstanceStack(stackInput)
 	if err != nil {
-		log.Fatalf("error generating stack %s", err)
+		slog.Warn("error generating stack", "error", err)
 	}
 	stackFn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	err = stack.Write(stackFn)
 	if err != nil {
-		log.Fatalf("error writing stack %s", err)
+		slog.Warn("error writing stack", "error", err)
 	}
 	sm.UpdateState(snapshotName, stackFn, "stack")
 	sm.SyncState(sfn)
@@ -118,12 +118,12 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 func GetState() (Config, state.StateManager) {
 	config, err := readConfig(".latsConfig.json")
 	if err != nil {
-		log.Fatalf("Error reading config %s", err)
+		slog.Warn("Error reading config", "error", err)
 	}
 	stateFileName := config.StateFileName
 	sm, err := state.ReadState(stateFileName)
 	if err != nil {
-		log.Fatalf("Error reading state %s", err)
+		slog.Warn("Error reading state", "error", err)
 	}
 	return config, sm
 }
