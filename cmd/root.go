@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -20,7 +21,7 @@ var rootCmd = &cobra.Command{
 // Execute is the main function for cobra that we will run in our main.go
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		slog.Error("error starting lats", "error", err)
 		os.Exit(1)
 	}
 }
