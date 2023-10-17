@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
@@ -42,21 +42,20 @@ func init() {
 func copySnapshot() {
 	config, err := readConfig(".latsConfig.json")
 	if err != nil {
-		log.Fatalf("Error reading config %s", err)
+		slog.Error("Error reading config", "error", err)
 	}
 	stateFileName := config.StateFileName
 	sm, err := state.ReadState(stateFileName)
 	if err != nil {
-		log.Fatalf("Error reading state %s", err)
+		slog.Error("Error reading state", "error", err)
 	}
-	fmt.Printf("state file is %s", sm.StateLocations)
 
 	if configFile != "" {
 		viper.SetConfigFile(configFile)
 		viper.AddConfigPath(".")
 		err := viper.ReadInConfig() // Find and read the config file
 		if err != nil {             // Handle errors reading the config file
-			fmt.Printf("Error reading config file: %s", err)
+			slog.Error("Viper Error reading config", "error", err)
 		}
 		getKey := fmt.Sprintf("%s", viper.Get("kmsKey"))
 		kmsKey = getKey
@@ -79,26 +78,25 @@ func copySnapshot() {
 
 	// Copy Snapshot
 	origStack := FindStack(sm, originalSnapshotName)
-	fmt.Printf("orig stack is %v\n", origStack)
 
 	if origStack.RestorationObjectName == stack.Cluster {
 		arn, err := dbi2.GetSnapshotARN(originalSnapshotName, true)
 		if err != nil {
-			log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
+			slog.Error("Couldn't find snapshot ", "snapshot", originalSnapshotName)
 		}
 		_, err = dbi.CopyClusterSnaphot(*arn, copySnapshotName, config.MainRegion, kmsKey)
 		if err != nil {
-			log.Fatalf("Error copying snapshot %s", err)
+			slog.Error("Couldn't copy snapshot ", "error", err)
 		}
 	}
 	if origStack.RestorationObjectName == stack.LoneInstance {
 		iarn, err := dbi2.GetSnapshotARN(originalSnapshotName, false)
 		if err != nil {
-			log.Fatalf("Couldn't find snapshot %s", originalSnapshotName)
+			slog.Error("Couldn't find snapshot ", "snapshot", originalSnapshotName)
 		}
 		_, err = dbi.CopySnapshot(*iarn, copySnapshotName, config.MainRegion, kmsKey)
 		if err != nil {
-			log.Fatalf("Error copying snapshot %s", err)
+			slog.Error("Couldn't copy snapshot ", "error", err)
 		}
 	}
 	stack := NewStack(*origStack, config.BackupRegion)
@@ -106,7 +104,7 @@ func copySnapshot() {
 	fn := helpers.RandomStateFileName()
 	err = stack.Write(*fn)
 	if err != nil {
-		fmt.Printf("error writing stack %s", err)
+		slog.Error("Couldn't write stack", "error", err)
 	}
 
 	sm.UpdateState(stack.Name, *fn, "stack")
@@ -117,7 +115,7 @@ func createKMSKey(config Config, sm state.StateManager) string {
 	c := aws.InitKms(config.BackupRegion)
 	kmsStruct, err := c.CreateKMSKey(nil)
 	if err != nil {
-		log.Fatalf("failed creating KMS key %s", err)
+		slog.Error("failed creating KMS key", "error", err)
 	}
 	return *kmsStruct.KeyId
 
@@ -125,23 +123,19 @@ func createKMSKey(config Config, sm state.StateManager) string {
 
 //FindStack get's a stack for creating our new stack when we copy the snapshot
 func FindStack(sm state.StateManager, snapshot string) *stack.Stack {
-	fmt.Println("in find stack")
 	sm.Mu.Lock()
 	defer sm.Mu.Unlock()
-	fmt.Printf("sm state locations is %v\n", sm.StateLocations)
 	if len(sm.StateLocations) == 0 {
-		log.Fatalln("There are no state locations create a snapshot with Lats before attempting to copy it")
+		slog.Error("There are no state locations create a snapshot with Lats before attempting to copy it")
 	}
 	for _, v := range sm.StateLocations {
-		fmt.Printf("\n state location %v\n", v)
 		if v.ObjectType != "stack" {
 			continue
 		}
 		stack, err := stack.ReadStack(v.FileLocation)
 		if err != nil {
-			log.Printf("error reading stack %s", err)
+			slog.Error("error reading stack", "error", err)
 		}
-		fmt.Printf("\n%v\n", stack)
 		if stack.Name == snapshot {
 			return stack
 		}
@@ -193,7 +187,7 @@ func getLoneInstanceObject(obj interface{}, ending string, order int) stack.Obje
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
 	if err != nil {
-		log.Fatalf("Error writing ouptut %s", err)
+		slog.Error("Error writing ouptut", "error", err)
 	}
 	s := stack.Object{
 		FileName: *fn,
@@ -217,7 +211,7 @@ func getClusterObject(obj interface{}, ending string, order int) stack.Object {
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
 	if err != nil {
-		log.Fatalf("Error writing ouptut %s", err)
+		slog.Error("Error writing output", "Error", err)
 	}
 	return stack.Object{
 		FileName: *fn,
@@ -239,7 +233,7 @@ func getInstanceObject(obj interface{}, ending string, order int) stack.Object {
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
 	if err != nil {
-		log.Fatalf("Error writing ouptut %s", err)
+		slog.Error("Error writing output", "Error", err)
 	}
 	return stack.Object{
 		FileName: *fn,
