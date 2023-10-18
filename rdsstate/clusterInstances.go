@@ -2,6 +2,7 @@ package rdsstate
 
 import (
 	"fmt"
+	"log/slog"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
