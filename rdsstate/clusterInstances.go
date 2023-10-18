@@ -21,7 +21,7 @@ func ClusterInstancesToObjects(t *types.DBCluster, c aws.DbInstances, folder str
 		// GEtInstance here that will get us an error an instanc type we then need to generate an object from this instance
 		inst, err := c.GetInstance(*v.DBInstanceIdentifier)
 		if err != nil {
-			fmt.Printf("error %s getting instance %s", err, *v.DBInstanceIdentifier)
+			slog.Warn("error getting instance", "error", err, "instance", *v.DBInstanceIdentifier)
 		}
 		input := state.CreateDbInstanceInput(inst, t.DBClusterIdentifier)
 		b := state.EncodeCreateDBInstanceInput(input)
