@@ -3,7 +3,7 @@ package pgstate
 import (
 	"bytes"
 	"encoding/gob"
-	"log"
+	"log/slog"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
@@ -19,7 +19,7 @@ func EncodeParameterGroups(pgs []ParameterGroup) bytes.Buffer {
 	enc := gob.NewEncoder(&encoder)
 	err := enc.Encode(&pgs)
 	if err != nil {
-		log.Fatalf("Error encoding our parameters %s", err)
+		slog.Error("Error encoding parameters", "Error", err)
 	}
 	return encoder
 }
@@ -30,7 +30,7 @@ func DecodeParameterGroups(b bytes.Buffer) []ParameterGroup {
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&pg)
 	if err != nil {
-		log.Fatalf("Error decoding parameters %s", err)
+		slog.Error("Error decoding parameters", "Error", err)
 	}
 	return pg
 }
