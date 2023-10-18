@@ -2,19 +2,19 @@ package helpers
 
 import (
 	"bytes"
-	"log"
+	"log/slog"
 	"os"
 )
 
 func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 	f, err := os.Create(filename)
 	if err != nil {
-		log.Fatalf("Error creating file: %s", err)
+		slog.Error("Error creating file:", "error", err)
 	}
 	defer f.Close()
 	n, err := b.WriteTo(f)
 	if err != nil {
-		log.Fatalf("error writing to file %s", err)
+		slog.Error("error writing to file:", "error", err)
 	}
 	return n, err
 }
