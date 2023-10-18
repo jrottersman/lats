@@ -58,10 +58,10 @@ func (instances *DbInstances) GetInstance(instanceName string) (
 	if err != nil {
 		var notFoundError *types.DBInstanceNotFoundFault
 		if errors.As(err, &notFoundError) {
-			slog.Warn("DB instance %v does not exist.\n", instanceName)
+			slog.Warn("DB instance does not exist.\n", "Instance", instanceName)
 			err = nil
 		} else {
-			slog.Warn("Couldn't get instance %v: %v\n", instanceName, err)
+			slog.Warn("Couldn't get instance", "Instance", instanceName, "error", err)
 		}
 		return nil, err
 	}
@@ -77,10 +77,10 @@ func (instances *DbInstances) GetCluster(clusterName string) (*types.DBCluster, 
 	if err != nil {
 		var notFoundError *types.DBClusterNotFoundFault
 		if errors.As(err, &notFoundError) {
-			slog.Warn("DB cluster %v does not exist.\n", clusterName)
+			slog.Warn("DB cluster does not exist.", "Cluster", clusterName)
 			err = nil
 		} else {
-			slog.Warn("Couldn't get DB cluster %v: %v\n", clusterName, err)
+			slog.Warn("Couldn't get DB cluster", "Cluster", clusterName, "Error", err)
 		}
 		return nil, err
 	}
@@ -381,10 +381,10 @@ func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string
 	if err != nil {
 		var notFoundError *types.DBClusterParameterGroupNotFoundFault
 		if errors.As(err, &notFoundError) {
-			slog.Warn("Parameter group %v does not exist.\n", ParameterGroupName)
+			slog.Warn("Parameter group does not exist.", "ParameterGroup", ParameterGroupName)
 			err = nil
 		} else {
-			slog.Warn("Error getting parameter group %v: %v\n", ParameterGroupName, err)
+			slog.Warn("Error getting parameter group", "ParameterGroup", ParameterGroupName, "Error", err)
 		}
 		return nil, err
 	}
