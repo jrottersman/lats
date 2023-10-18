@@ -3,8 +3,7 @@ package stack
 import (
 	"bytes"
 	"encoding/gob"
-	"fmt"
-	"log"
+	"log/slog"
 	"os"
 	"sort"
 
@@ -30,7 +29,7 @@ type Object struct {
 func (o Object) ReadObject() interface{} {
 	dat, err := os.ReadFile(o.FileName)
 	if err != nil {
-		fmt.Printf("error reading object file %s", err)
+		slog.Warn("error reading object file", "error", err)
 	}
 	buf := bytes.NewBuffer(dat)
 	switch o.ObjType {
@@ -68,7 +67,7 @@ func (s Stack) Encoder() (*bytes.Buffer, error) {
 
 	err := enc.Encode(s)
 	if err != nil {
-		log.Fatalf("Error encoding our stack: %s", err)
+		slog.Error("Error encoding our stack", "error", err)
 		return nil, err
 	}
 	return &encoder, nil
@@ -77,12 +76,12 @@ func (s Stack) Encoder() (*bytes.Buffer, error) {
 func (s Stack) Write(filename string) error {
 	b, err := s.Encoder()
 	if err != nil {
-		log.Fatalf("Error creating bytes %s", err)
+		slog.Error("Error creating bytes", "error", err)
 		return err
 	}
 	_, err = helpers.WriteOutput(filename, *b)
 	if err != nil {
-		log.Fatalf("error writing output %s", err)
+		slog.Error("error writing output", "error", err)
 		return err
 	}
 	return nil
@@ -119,7 +118,7 @@ func NewStack(name string, restorationObjectName string, objects []Object) Stack
 func ReadStack(filename string) (*Stack, error) {
 	f, err := os.ReadFile(filename)
 	if err != nil {
-		fmt.Printf("Error reading the file %s", err)
+		slog.Error("Error reading the stack", "error", err)
 		return nil, err
 	}
 	buf := bytes.NewBuffer(f)
@@ -127,7 +126,7 @@ func ReadStack(filename string) (*Stack, error) {
 	dec := gob.NewDecoder(buf)
 	err = dec.Decode(&stack)
 	if err != nil {
-		fmt.Printf("error decoding the gob %s", err)
+		slog.Error("Error Decoding Stack", "error", err)
 		return nil, err
 	}
 	return &stack, nil
