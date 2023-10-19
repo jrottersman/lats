@@ -1,7 +1,7 @@
 package state
 
 import (
-	"fmt"
+	"log/slog"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/helpers"
@@ -191,13 +191,13 @@ func (r RDSRestorationStore) GetDBClusterMembers() *[]types.DBClusterMember {
 func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSRestorationStore, error) {
 	snap, err := GetRDSSnapshotOutput(sm, snapshotName)
 	if err != nil {
-		fmt.Printf("got error getting snapshot %s", err)
+		slog.Error("got error getting snapshot", "error", err)
 		return nil, err
 	}
 	dbi := snap.DBInstanceIdentifier
 	db, err := GetRDSDatabaseInstanceOutput(sm, *dbi)
 	if err != nil {
-		fmt.Printf("error getting database %s", err)
+		slog.Error("error getting database", "error", err)
 	}
 
 	cID := helpers.GetClusterId(db)
@@ -209,7 +209,7 @@ func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSResto
 	}
 	cluster, err := GetRDSDatabaseClusterOutput(sm, *cID)
 	if err != nil {
-		fmt.Printf("error getting cluster %s", err)
+		slog.Error("error getting cluster", "error", err)
 	}
 	return &RDSRestorationStore{
 		Snapshot: snap,
