@@ -5,7 +5,7 @@ import (
 	"encoding/gob"
 	"errors"
 	"fmt"
-	"log"
+	"log/slog"
 
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
 )
@@ -17,7 +17,7 @@ func EncodeKmsOutput(kmd *types.KeyMetadata) bytes.Buffer {
 
 	err := enc.Encode(kmd)
 	if err != nil {
-		log.Fatalf("Error encoding our database: %s", err)
+		slog.Error("Error encoding our database:", "Error", err)
 	}
 	return encoder
 }
@@ -28,7 +28,7 @@ func DecodeKmsOutput(b bytes.Buffer) types.KeyMetadata {
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&kmsMetadata)
 	if err != nil {
-		log.Fatalf("Error decoding state for KMS Key: %s", err)
+		slog.Error("Error decoding state for KMS Key:", "error", err)
 	}
 	return kmsMetadata
 }
