@@ -165,6 +165,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 	// get the one which is the cluster and create it
 	second := s.Objects[2]
 	if len(second) != 1 {
+		slog.Error("Multiple clusters and there should only be one")
 		return fmt.Errorf("Multiple clusters and there should only be one")
 	}
 	for _, v := range second {
