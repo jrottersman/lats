@@ -3,7 +3,7 @@ package state
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"log/slog"
 	"os"
 	"sync"
 )
@@ -44,12 +44,12 @@ func (s *StateManager) SyncState(filename string) error {
 	defer s.Mu.Unlock()
 	m, err := json.Marshal(s.StateLocations)
 	if err != nil {
-		fmt.Printf("Error creating json: %s", err)
+		slog.Error("Error creating json", "error", err)
 		return err
 	}
 	err = os.WriteFile(filename, m, 0644)
 	if err != nil {
-		fmt.Printf("Error writing file %s", err)
+		slog.Error("Error writing file", "error", err)
 		return err
 	}
 	return nil
@@ -63,7 +63,7 @@ func (s *StateManager) GetStateObject(object string) interface{} {
 		if s.StateLocations[i].Object == object {
 			dat, err := os.ReadFile(s.StateLocations[i].FileLocation)
 			if err != nil {
-				fmt.Printf("error reading the file %s", err)
+				slog.Error("error reading the file", "error", err)
 			}
 			buf := bytes.NewBuffer(dat)
 			switch objType := s.StateLocations[i].ObjectType; objType {
@@ -92,12 +92,12 @@ func InitState(filename string) error {
 	initStr := []string{}
 	m, err := json.Marshal(initStr)
 	if err != nil {
-		fmt.Printf("Error initing empty string to json %s", err)
+		slog.Error("Error initing empty string to json", "error", err)
 		return err
 	}
 	err = os.WriteFile(filename, m, 0644)
 	if err != nil {
-		fmt.Printf("Error writing file %s", err)
+		slog.Error("Error writing file", "error", err)
 		return err
 	}
 	return nil
@@ -106,12 +106,12 @@ func InitState(filename string) error {
 func ReadState(filename string) (StateManager, error) {
 	f, err := os.ReadFile(filename)
 	if err != nil {
-		fmt.Printf("Error reading the file %s", err)
+		slog.Error("Error reading the file", "error", err)
 	}
 	var s []StateKV
 	err = json.Unmarshal(f, &s)
 	if err != nil {
-		fmt.Printf("Error reading the file %s", err)
+		slog.Error("Error reading the file", "error", err)
 	}
 	var mu sync.Mutex
 	sm := StateManager{
