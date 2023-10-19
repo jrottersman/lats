@@ -5,7 +5,7 @@ import (
 	"encoding/gob"
 	"errors"
 	"fmt"
-	"log"
+	"log/slog"
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds"
@@ -19,7 +19,7 @@ func EncodeRDSDatabaseOutput(db *types.DBInstance) bytes.Buffer {
 
 	err := enc.Encode(db)
 	if err != nil {
-		log.Fatalf("Error encoding our database: %s", err)
+		slog.Error("Error encoding our database", "error", err)
 	}
 	return encoder
 }
@@ -31,7 +31,7 @@ func EncodeOptionGroup(og *types.OptionGroup) bytes.Buffer {
 
 	err := enc.Encode(og)
 	if err != nil {
-		log.Fatalf("Error encoding our option group: %s", err)
+		slog.Error("Error encoding our option group", "error", err)
 	}
 	return encoder
 }
@@ -42,7 +42,7 @@ func DecodeOptionGroup(b bytes.Buffer) types.OptionGroup {
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&optionGroup)
 	if err != nil {
-		log.Fatalf("Error decoding state for Option Group: %s", err)
+		slog.Error("Error decoding state for Option Group", "error", err)
 	}
 	return optionGroup
 }
@@ -53,7 +53,7 @@ func DecodeRDSClusterOutput(b bytes.Buffer) types.DBCluster {
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&dbCluster)
 	if err != nil {
-		log.Fatalf("Error decoding state for RDS Cluster: %s", err)
+		slog.Error("Error decoding state for RDS Cluster", "error", err)
 	}
 	return dbCluster
 }
@@ -65,7 +65,7 @@ func EncodeRDSClusterOutput(db *types.DBCluster) bytes.Buffer {
 
 	err := enc.Encode(db)
 	if err != nil {
-		log.Fatalf("Error encoding our database: %s", err)
+		slog.Error("Error encoding our database", "error", err)
 	}
 	return encoder
 }
@@ -76,7 +76,7 @@ func DecodeRDSDatabaseOutput(b bytes.Buffer) types.DBInstance {
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&dbInstance)
 	if err != nil {
-		log.Fatalf("Error decoding state for RDS Instance: %s", err)
+		slog.Error("Error decoding state for RDS Instance", "error", err)
 	}
 	return dbInstance
 }
@@ -88,7 +88,7 @@ func EncodeRDSSnapshotOutput(snapshot *types.DBSnapshot) bytes.Buffer {
 
 	err := enc.Encode(snapshot)
 	if err != nil {
-		log.Fatalf("Error encoding our snapshot: %s", err)
+		slog.Error("Error encoding our snapshot", "error", err)
 	}
 	return encoder
 }
@@ -110,7 +110,7 @@ func EncodeRDSClusterSnapshotOutput(snapshot *types.DBClusterSnapshot) bytes.Buf
 
 	err := enc.Encode(snapshot)
 	if err != nil {
-		log.Fatalf("Error encoding our snapshot: %s", err)
+		slog.Error("Error encoding our snapshot", "error", err)
 	}
 	return encoder
 }
@@ -147,7 +147,7 @@ func EncodeRestoreDBInstanceFromDBSnapshotInput(r *rds.RestoreDBInstanceFromDBSn
 
 	err := enc.Encode(r)
 	if err != nil {
-		log.Fatalf("Error encoding our snapshot: %s", err)
+		slog.Error("Error encoding our snapshot", "error", err)
 	}
 	return encoder
 }
@@ -157,7 +157,7 @@ func DecodeRestoreDBInstanceFromDBSnapshotInput(b bytes.Buffer) *rds.RestoreDBIn
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&Restore)
 	if err != nil {
-		log.Fatalf("Error decoding state for RestoreDBInstance struct: %s", err)
+		slog.Error("Error decoding state for RestoreDBInstance struct", "error", err)
 	}
 	return &Restore
 }
@@ -176,7 +176,7 @@ func EncodeRestoreDBClusterFromSnapshotInput(r *rds.RestoreDBClusterFromSnapshot
 
 	err := enc.Encode(r)
 	if err != nil {
-		log.Fatalf("Error encoding our snapshot: %s", err)
+		slog.Error("Error encoding our snapshot", "error", err)
 	}
 	return encoder
 }
@@ -186,7 +186,7 @@ func DecodeRestoreDBClusterFromSnapshotInput(b bytes.Buffer) *rds.RestoreDBClust
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&Restore)
 	if err != nil {
-		log.Fatalf("Error decoding state for RestoreDBCluster struct: %s", err)
+		slog.Error("Error decoding state for RestoreDBCluster struct", "error", err)
 	}
 	return &Restore
 }
@@ -196,7 +196,7 @@ func DecodeRDSClusterSnapshotOutput(b bytes.Buffer) types.DBClusterSnapshot {
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&dbSnapshot)
 	if err != nil {
-		log.Fatalf("Error decoding state for cluster snapshot: %s", err)
+		slog.Error("Error decoding state for cluster snapshot", "error", err)
 	}
 	return dbSnapshot
 }
@@ -246,7 +246,7 @@ func DecodeRDSSnapshotOutput(b bytes.Buffer) types.DBSnapshot {
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&dbSnapshot)
 	if err != nil {
-		log.Fatalf("Error decoding state for snapshot: %s", err)
+		slog.Error("Error decoding state for snapshot", "error", err)
 	}
 	return dbSnapshot
 }
@@ -254,12 +254,12 @@ func DecodeRDSSnapshotOutput(b bytes.Buffer) types.DBSnapshot {
 func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 	f, err := os.Create(filename)
 	if err != nil {
-		log.Fatalf("Error creating file: %s", err)
+		slog.Error("Error creating file", "error", err)
 	}
 	defer f.Close()
 	n, err := b.WriteTo(f)
 	if err != nil {
-		log.Fatalf("error writing to file %s", err)
+		slog.Error("error writing to file", "error", err)
 	}
 	return n, err
 }
@@ -284,7 +284,7 @@ func EncodeCreateDBInstanceInput(c *rds.CreateDBInstanceInput) bytes.Buffer {
 	enc := gob.NewEncoder(&encoder)
 	err := enc.Encode(&c)
 	if err != nil {
-		log.Fatalf("Error encoding our database: %s", err)
+		slog.Error("Error encoding our database", "error", err)
 	}
 	return encoder
 }
@@ -295,7 +295,7 @@ func DecodeCreateDBInstanceInput(b bytes.Buffer) *rds.CreateDBInstanceInput {
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&dbCluster)
 	if err != nil {
-		log.Fatalf("Error decoding state for RDS Cluster: %s", err)
+		slog.Error("Error decoding state for RDS Cluster", "error", err)
 	}
 	return &dbCluster
 }
