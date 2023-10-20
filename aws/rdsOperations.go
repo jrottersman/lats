@@ -180,7 +180,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 		}
 	}
 
-	// get three which is the instances create them in parrallel
+	// get three which is the instances create them in parallel
 	third := s.Objects[3]
 	waitChan := make(chan struct{}, MaxConcurrentJobs)
 	for _, i := range third {
@@ -243,6 +243,7 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 		// Sleep for 5 minutes per AWS documentation to wait for a parameter group to be ready
 		time.Sleep(300 * time.Second)
 	}
+
 	instance := s.Objects[2]
 	if len(instance) != 1 {
 		return fmt.Errorf("There should only be a single instance")
@@ -296,7 +297,7 @@ func (instances *DbInstances) getClusterStatus(name string) (*string, error) {
 
 }
 
-// CreateSnapshot cretaes an AWS snapshot
+// CreateSnapshot creates an AWS snapshot
 // :instanceName - name of the database we want to backup
 // :snapShotName name of the backup we are creating
 func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName string) (

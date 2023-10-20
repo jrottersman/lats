@@ -7,6 +7,7 @@ import (
 	"github.com/jrottersman/lats/state"
 )
 
+//GetParameterGroups get a list of paramter groups
 func GetParameterGroups(r state.RDSRestorationStore, i DbInstances) ([]pgstate.ParameterGroup, error) {
 	pgs := r.GetParameterGroups()
 	groups := []pgstate.ParameterGroup{}
