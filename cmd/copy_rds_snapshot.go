@@ -198,7 +198,7 @@ func getLoneInstanceObject(obj interface{}, ending string, order int) stack.Obje
 }
 
 func getClusterObject(obj interface{}, ending string, order int) stack.Object {
-	obj2 := obj.(rds.RestoreDBClusterFromSnapshotInput)
+	obj2 := obj.(*rds.RestoreDBClusterFromSnapshotInput)
 	clsID := fmt.Sprintf("%s-%s", *obj2.DBClusterIdentifier, ending)
 	obj2.DBClusterIdentifier = &clsID
 	obj2.SnapshotIdentifier = &copySnapshotName
@@ -207,7 +207,7 @@ func getClusterObject(obj interface{}, ending string, order int) stack.Object {
 	obj2.DBSubnetGroupName = nil
 	obj2.KmsKeyId = nil
 	obj2.VpcSecurityGroupIds = nil
-	b := state.EncodeRestoreDBClusterFromSnapshotInput(&obj2)
+	b := state.EncodeRestoreDBClusterFromSnapshotInput(obj2)
 	fn := helpers.RandomStateFileName()
 	_, err := state.WriteOutput(*fn, b)
 	if err != nil {
