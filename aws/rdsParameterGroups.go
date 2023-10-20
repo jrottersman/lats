@@ -30,6 +30,7 @@ func GetParameterGroups(r state.RDSRestorationStore, i DbInstances) ([]pgstate.P
 	return groups, nil
 }
 
+//GetClusterParameterGroup take in restoration store return list of parameter groups associated with a cluster
 func GetClusterParameterGroup(r state.RDSRestorationStore, i DbInstances) ([]pgstate.ParameterGroup, error) {
 	pg := r.GetClusterParameterGroups()
 	groups := []pgstate.ParameterGroup{}
