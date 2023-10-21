@@ -153,7 +153,7 @@ func FindStack(sm state.StateManager, snapshot string) (*stack.Stack, error) {
 }
 
 // NewStack generates the new stack that we are going to use
-func NewStack(oldStack stack.Stack, ending string) *stack.Stack {
+func NewStack(oldStack stack.Stack, name string) *stack.Stack {
 	objs := make(map[int][]stack.Object)
 	for k, v := range oldStack.Objects {
 		objs[k] = []stack.Object{}
@@ -161,13 +161,13 @@ func NewStack(oldStack stack.Stack, ending string) *stack.Stack {
 			obj := i.ReadObject()
 			switch i.ObjType {
 			case stack.LoneInstance:
-				s := getLoneInstanceObject(obj, ending, k)
+				s := getLoneInstanceObject(obj, name, k)
 				objs[k] = append(objs[k], s)
 			case stack.Cluster:
-				s := getClusterObject(obj, ending, k)
+				s := getClusterObject(obj, name, k)
 				objs[k] = append(objs[k], s)
 			case stack.Instance:
-				s := getInstanceObject(obj, ending, k)
+				s := getInstanceObject(obj, name, k)
 				objs[k] = append(objs[k], s)
 			case stack.DBClusterParameterGroup:
 				objs[k] = append(objs[k], i)
@@ -177,7 +177,7 @@ func NewStack(oldStack stack.Stack, ending string) *stack.Stack {
 		}
 	}
 	return &stack.Stack{
-		Name:                  fmt.Sprintf("%s-%s", oldStack.Name, ending),
+		Name:                  fmt.Sprintf("%s", name),
 		RestorationObjectName: oldStack.RestorationObjectName,
 	}
 }
@@ -206,9 +206,9 @@ func getLoneInstanceObject(obj interface{}, name string, order int) stack.Object
 	return s
 }
 
-func getClusterObject(obj interface{}, ending string, order int) stack.Object {
+func getClusterObject(obj interface{}, name string, order int) stack.Object {
 	obj2 := obj.(*rds.RestoreDBClusterFromSnapshotInput)
-	clsID := fmt.Sprintf("%s-%s", *obj2.DBClusterIdentifier, ending)
+	clsID := fmt.Sprintf("%s", name)
 	obj2.DBClusterIdentifier = &clsID
 	obj2.SnapshotIdentifier = &copySnapshotName
 	obj2.AvailabilityZones = nil
