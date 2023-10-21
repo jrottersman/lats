@@ -18,7 +18,7 @@ func TestFindStack(t *testing.T) {
 	obj := "boo"
 	ot := "bar"
 	sm.UpdateState(obj, filename, ot)
-	resp := FindStack(sm, "baz")
+	resp, _ := FindStack(sm, "baz")
 	if resp != nil {
 		t.Errorf("Expected nil got %v", resp)
 	}
@@ -29,7 +29,10 @@ func TestFindStack(t *testing.T) {
 	stk.Write(filename)
 	defer os.Remove(filename)
 	sm.UpdateState("foo", filename, "stack")
-	exp := FindStack(sm, "foo")
+	exp, err := FindStack(sm, "foo")
+	if err != nil {
+		t.Errorf("got %v as an error", err)
+	}
 	if exp.Name != stk.Name {
 		t.Errorf("got %s expected %s", exp.Name, stk.Name)
 	}

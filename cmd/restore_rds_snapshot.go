@@ -1,10 +1,8 @@
 package cmd
 
 import (
-	"fmt"
+	"log/slog"
 
-	"github.com/jrottersman/lats/aws"
-	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
 )
@@ -36,12 +34,17 @@ func init() {
 
 //RestoreSnapshot is the function that restores a snapshot
 func RestoreSnapshot(stateKV state.StateManager, snapshotName string) error {
-	dbi := aws.Init(region)
-	SnapshotStack := FindStack(stateKV, snapshotName)
-	if SnapshotStack.RestorationObjectName == stack.Cluster {
-		return dbi.CreateClusterFromStack(SnapshotStack)
-	} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
-		return dbi.CreateInstanceFromStack(SnapshotStack)
+	// dbi := aws.Init(region)
+	SnapshotStack, err := FindStack(stateKV, snapshotName)
+	if err != nil {
+		slog.Error("Error finding stack", "error", err)
 	}
-	return fmt.Errorf("Error invalid type of stack to restore a snapshot")
+	slog.Info("Stack is", "stack", SnapshotStack)
+	return nil
+	// if SnapshotStack.RestorationObjectName == stack.Cluster {
+	// 	return dbi.CreateClusterFromStack(SnapshotStack)
+	// } else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
+	// 	return dbi.CreateInstanceFromStack(SnapshotStack)
+	// }
+	// return fmt.Errorf("Error invalid type of stack to restore a snapshot")
 }

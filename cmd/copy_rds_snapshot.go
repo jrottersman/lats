@@ -77,7 +77,10 @@ func copySnapshot() {
 	dbi2 := aws.Init(config.MainRegion)
 
 	// Copy Snapshot
-	origStack := FindStack(sm, originalSnapshotName)
+	origStack, err := FindStack(sm, originalSnapshotName)
+	if err != nil {
+		slog.Error("Error finding stack", "error", err)
+	}
 
 	if origStack.RestorationObjectName == stack.Cluster {
 		arn, err := dbi2.GetSnapshotARN(originalSnapshotName, true)
@@ -122,7 +125,7 @@ func createKMSKey(config Config, sm state.StateManager) string {
 }
 
 //FindStack get's a stack for creating our new stack when we copy the snapshot
-func FindStack(sm state.StateManager, snapshot string) *stack.Stack {
+func FindStack(sm state.StateManager, snapshot string) (*stack.Stack, error) {
 	sm.Mu.Lock()
 	defer sm.Mu.Unlock()
 	if len(sm.StateLocations) == 0 {
@@ -135,12 +138,13 @@ func FindStack(sm state.StateManager, snapshot string) *stack.Stack {
 		stack, err := stack.ReadStack(v.FileLocation)
 		if err != nil {
 			slog.Error("error reading stack", "error", err)
+			return nil, err
 		}
 		if stack.Name == snapshot {
-			return stack
+			return stack, nil
 		}
 	}
-	return nil
+	return nil, nil
 }
 
 // NewStack generates the new stack that we are going touse
