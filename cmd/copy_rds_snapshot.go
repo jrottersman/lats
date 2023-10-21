@@ -182,9 +182,9 @@ func NewStack(oldStack stack.Stack, ending string) *stack.Stack {
 	}
 }
 
-func getLoneInstanceObject(obj interface{}, ending string, order int) stack.Object {
+func getLoneInstanceObject(obj interface{}, name string, order int) stack.Object {
 	obj2 := obj.(*rds.RestoreDBInstanceFromDBSnapshotInput)
-	insID := fmt.Sprintf("%s-%s", *obj2.DBInstanceIdentifier, ending)
+	insID := fmt.Sprintf("%s-instance", name)
 	obj2.DBInstanceIdentifier = &insID
 	obj2.DBSnapshotIdentifier = &copySnapshotName
 	obj2.AvailabilityZone = nil
