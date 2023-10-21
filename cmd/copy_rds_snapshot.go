@@ -152,7 +152,7 @@ func FindStack(sm state.StateManager, snapshot string) (*stack.Stack, error) {
 	return nil, nil
 }
 
-// NewStack generates the new stack that we are going touse
+// NewStack generates the new stack that we are going to use
 func NewStack(oldStack stack.Stack, ending string) *stack.Stack {
 	objs := make(map[int][]stack.Object)
 	for k, v := range oldStack.Objects {
