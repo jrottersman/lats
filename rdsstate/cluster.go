@@ -28,13 +28,13 @@ type ClusterStackInput struct {
 //GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.
 func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 	if c.Filename == "" {
-		c.Filename = *helpers.RandomStateFileName()
+		c.Filename = fmt.Sprintf(".state/%s",*helpers.RandomStateFileName())
 	}
 	if c.ParameterFileName == "" {
-		c.ParameterFileName = *helpers.RandomStateFileName()
+		c.ParameterFileName = fmt.Sprintf(".state/%s",*helpers.RandomStateFileName())
 	}
 	if c.OptionGroupFileName == "" {
-		c.OptionGroupFileName = *helpers.RandomStateFileName()
+		c.OptionGroupFileName = fmt.Sprintf(".state/%s",*helpers.RandomStateFileName())
 	}
 	objMap := make(map[int][]stack.Object)
 	bp := pgstate.EncodeParameterGroups(c.ParameterGroups)
