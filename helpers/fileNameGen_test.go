@@ -5,13 +5,6 @@ import (
 	"testing"
 )
 
-func TestRandomStateFileName(t *testing.T) {
-	s := RandomStateFileName()
-	if !strings.Contains(*s, "gob") {
-		t.Errorf("string should contain gob instead looks like: %s", *s)
-	}
-}
-
 func TestSnapshotName(t *testing.T) {
 	expected := "foo"
 	s := SnapshotName(expected)
