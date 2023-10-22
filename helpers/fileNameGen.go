@@ -8,6 +8,6 @@ import (
 
 func RandomStateFileName() *string {
 	u := uuid.New()
-	filename := fmt.Sprintf(".state/%s.gob", u)
+	filename := fmt.Sprintf("%s.gob", u)
 	return &filename
 }
