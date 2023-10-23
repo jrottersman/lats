@@ -25,15 +25,15 @@ type InstanceStackInputs struct {
 //GenerateRDSInstanceStack creates a stack for restoration for an RDS instance
 func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 	if i.InstanceFileName == "" {
-		i.InstanceFileName = *helpers.RandomStateFileName()
+		i.InstanceFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	}
 
 	if i.ParameterFileName == "" {
-		i.ParameterFileName = *helpers.RandomStateFileName()
+		i.ParameterFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	}
 
 	if i.OptionGroupFileName == "" {
-		i.OptionGroupFileName = *helpers.RandomStateFileName()
+		i.OptionGroupFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	}
 	b := pgstate.EncodeParameterGroups(i.ParameterGroups)
 	_, err := state.WriteOutput(i.ParameterFileName, b)
