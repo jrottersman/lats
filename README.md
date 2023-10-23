@@ -1,5 +1,7 @@
 # Lats
 
+## WARNING: Still in rapid development and not suited for production use
+
 ## Features
 * Snapshot creation for RDS databases
 * Copy Snapshots, parameter groups and option groups to another region
