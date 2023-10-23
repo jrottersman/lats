@@ -102,7 +102,7 @@ func copySnapshot() {
 			slog.Error("Couldn't copy snapshot ", "error", err)
 		}
 	}
-	stack := NewStack(*origStack, config.BackupRegion)
+	stack := NewStack(*origStack, copySnapshotName)
 
 	fn := helpers.RandomStateFileName()
 	err = stack.Write(*fn)
