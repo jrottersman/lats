@@ -148,6 +148,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 				}
 			case *types.OptionGroup:
 				og := pb.(*types.OptionGroup)
+				slog.Info("restoring option group")
 				_, err := instances.RestoreOptionGroup(*og.EngineName, *og.MajorEngineVersion, *og.OptionGroupName, *og.OptionGroupDescription)
 				if err != nil {
 					return fmt.Errorf("error creating option group %s", err)
