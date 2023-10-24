@@ -24,7 +24,7 @@ var (
 		Long:    "Restores an RDS snapshot",
 		Run: func(cmd *cobra.Command, args []string) {
 			_, sm := GetState()
-			RestoreSnapshot(sm, snapshotName)
+			RestoreSnapshot(sm, restoreSnapshotName)
 		},
 	}
 )
@@ -36,9 +36,9 @@ func init() {
 }
 
 //RestoreSnapshot is the function that restores a snapshot
-func RestoreSnapshot(stateKV state.StateManager, snapshotName string) error {
+func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) error {
 	dbi := aws.Init(region)
-	SnapshotStack, err := FindStack(stateKV, snapshotName)
+	SnapshotStack, err := FindStack(stateKV, restoreSnapshotName)
 	if err != nil {
 		slog.Error("Error finding stack", "error", err)
 	}

@@ -143,7 +143,7 @@ func FindStack(sm state.StateManager, snapshot string) (*stack.Stack, error) {
 		if stack == nil {
 			slog.Error("Read stack returned a nil value")
 		}
-		slog.Info("stack name is", "name", stack.Name)
+		slog.Info("stack name is", "name", stack.Name, "snapshot", snapshot)
 		if stack.Name == snapshot {
 			return stack, nil
 		}
