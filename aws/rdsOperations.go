@@ -128,6 +128,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 			case *pgstate.ParameterGroup:
 				pg := pb.(*pgstate.ParameterGroup)
 				pgName = pg.ClusterParameterGroup.DBClusterParameterGroupName
+				slog.Info("creating parameter group", "name", *pgName)
 				_, err := instances.CreateClusterParameterGroup(&pg.ClusterParameterGroup)
 				if err != nil {
 					return err
