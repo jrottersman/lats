@@ -18,6 +18,7 @@ In the near future it will allow
 ## Running Lats
 
 to build lats run `go run .`
+Add lats to your path
 The first time you run lats you will need to run `./lats init` this will prompt you for your aws regions and create a state file entry for running lats. 
 The state file entry are json files however do not edit them manually or lats will fail to resotre snapshots
 
