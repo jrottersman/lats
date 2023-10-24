@@ -104,13 +104,13 @@ func copySnapshot() {
 	}
 	stack := NewStack(*origStack, copySnapshotName)
 
-	fn := helpers.RandomStateFileName()
-	err = stack.Write(*fn)
+	fn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
+	err = stack.Write(fn)
 	if err != nil {
 		slog.Error("Couldn't write stack", "error", err)
 	}
 
-	sm.UpdateState(stack.Name, *fn, "stack")
+	sm.UpdateState(stack.Name, fn, "stack")
 }
 
 func createKMSKey(config Config, sm state.StateManager) string {
@@ -193,13 +193,13 @@ func getLoneInstanceObject(obj interface{}, name string, order int) stack.Object
 	obj2.VpcSecurityGroupIds = nil
 	obj2.OptionGroupName = nil
 	b := state.EncodeRestoreDBInstanceFromDBSnapshotInput(obj2)
-	fn := helpers.RandomStateFileName()
-	_, err := state.WriteOutput(*fn, b)
+	fn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
+	_, err := state.WriteOutput(fn, b)
 	if err != nil {
 		slog.Error("Error writing ouptut", "error", err)
 	}
 	s := stack.Object{
-		FileName: *fn,
+		FileName: fn,
 		Order:    order,
 		ObjType:  stack.LoneInstance,
 	}
@@ -217,13 +217,13 @@ func getClusterObject(obj interface{}, name string, order int) stack.Object {
 	obj2.KmsKeyId = nil
 	obj2.VpcSecurityGroupIds = nil
 	b := state.EncodeRestoreDBClusterFromSnapshotInput(obj2)
-	fn := helpers.RandomStateFileName()
-	_, err := state.WriteOutput(*fn, b)
+	fn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
+	_, err := state.WriteOutput(fn, b)
 	if err != nil {
 		slog.Error("Error writing output", "Error", err)
 	}
 	return stack.Object{
-		FileName: *fn,
+		FileName: fn,
 		Order:    order,
 		ObjType:  stack.Cluster,
 	}
@@ -239,13 +239,13 @@ func getInstanceObject(obj interface{}, ending string, order int) stack.Object {
 	obj2.DBParameterGroupName = nil
 	obj2.DBSubnetGroupName = nil
 	b := state.EncodeCreateDBInstanceInput(&obj2)
-	fn := helpers.RandomStateFileName()
-	_, err := state.WriteOutput(*fn, b)
+	fn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
+	_, err := state.WriteOutput(fn, b)
 	if err != nil {
 		slog.Error("Error writing output", "Error", err)
 	}
 	return stack.Object{
-		FileName: *fn,
+		FileName: fn,
 		Order:    order,
 		ObjType:  stack.Instance,
 	}
