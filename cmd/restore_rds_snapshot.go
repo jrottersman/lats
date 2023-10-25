@@ -37,6 +37,7 @@ func init() {
 
 //RestoreSnapshot is the function that restores a snapshot
 func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) error {
+	slog.Info("Starting restore snapshot procedure")
 	dbi := aws.Init(region)
 	SnapshotStack, err := FindStack(stateKV, restoreSnapshotName)
 	if err != nil {
@@ -44,9 +45,12 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 	}
 	slog.Info("Stack is", "stack", SnapshotStack)
 	if SnapshotStack.RestorationObjectName == stack.Cluster {
+		slog.Info("Restoring a cluster")
 		return dbi.CreateClusterFromStack(SnapshotStack)
 	} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
+		slog.Info("Restoring an Instance")
 		return dbi.CreateInstanceFromStack(SnapshotStack)
 	}
+	slog.Error("Invalid type of stack for restoring an object", "StackType", SnapshotStack.RestorationObjectName)
 	return fmt.Errorf("Error invalid type of stack to restore a snapshot")
 }
