@@ -246,7 +246,10 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 			}
 		}
 		// Sleep for 5 minutes per AWS documentation to wait for a parameter group to be ready
-		time.Sleep(300 * time.Second)
+		for i := 0; i < 10; i++ {
+			slog.Info("waiting for five minutes for Parameter group per AWS documentation", "seconds", 30*i)
+			time.Sleep(30 * time.Second)
+		}
 	}
 
 	instance := s.Objects[2]
