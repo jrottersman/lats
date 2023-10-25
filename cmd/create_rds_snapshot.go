@@ -82,10 +82,12 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 }
 
 func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn string) {
+	slog.Info("starting create snapshot for instance")
 	db, err := dbi.GetInstance(dbName)
 	if err != nil {
 		slog.Warn("didn't get instance", "problem", err)
 	}
+	slog.Debug("creating snapshot")
 	snapshot, err := dbi.CreateSnapshot(dbName, snapshotName)
 	if err != nil {
 		slog.Error("error creating snapshot: ", "error", err)
@@ -95,6 +97,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 		Instance: db,
 		Snapshot: snapshot,
 	}
+	slog.Debug("getting parameter gorups")
 	pgs, err := aws.GetParameterGroups(store, dbi)
 	if err != nil {
 		slog.Warn("error getting parameter groups", "error", err)
@@ -104,6 +107,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 		StackName:       snapshotName,
 		ParameterGroups: pgs,
 	}
+	slog.Debug("generating stack")
 	stack, err := rdsstate.GenerateRDSInstanceStack(stackInput)
 	if err != nil {
 		slog.Warn("error generating stack", "error", err)
