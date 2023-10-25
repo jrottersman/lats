@@ -50,6 +50,7 @@ func CreateSnapshot() {
 }
 
 func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluster *types.DBCluster, sfn string) {
+	slog.Info("creating snapshot for cluster")
 	snapshot, err := dbi.CreateClusterSnapshot(dbName, snapshotName)
 	if err != nil {
 		slog.Error("error creating snapshot", "error", err)
@@ -65,11 +66,13 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 		Client:    dbi,
 		Folder:    ".state",
 	}
+	slog.Info("generating the stack")
 	stack, err := rdsstate.GenerateRDSClusterStack(input)
 	if err != nil {
 		slog.Error("error generating stack ", "error", err)
 	}
 	stackFn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
+	slog.Info("Writing the stack")
 	err = stack.Write(stackFn)
 	if err != nil {
 		slog.Error("error writing stack ", "error", err)
