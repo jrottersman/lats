@@ -123,10 +123,12 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 
 //GetState reads in our statefile and config for future processing
 func GetState() (Config, state.StateManager) {
+	slog.Debug("getting config")
 	config, err := readConfig(".latsConfig.json")
 	if err != nil {
 		slog.Warn("Error reading config", "error", err)
 	}
+	slog.Debug("Getting state")
 	stateFileName := config.StateFileName
 	sm, err := state.ReadState(stateFileName)
 	if err != nil {
