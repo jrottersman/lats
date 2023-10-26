@@ -69,6 +69,7 @@ func copySnapshot() {
 
 	// Create KMS key
 	if kmsKey == "" {
+		slog.Info("creating KMS key")
 		kmsKey = createKMSKey(config, sm)
 	}
 
@@ -83,6 +84,7 @@ func copySnapshot() {
 	}
 
 	if origStack.RestorationObjectName == stack.Cluster {
+		slog.Info("copying cluster snapshot")
 		arn, err := dbi2.GetSnapshotARN(originalSnapshotName, true)
 		if err != nil {
 			slog.Error("Couldn't find snapshot ", "snapshot", originalSnapshotName)
@@ -93,6 +95,7 @@ func copySnapshot() {
 		}
 	}
 	if origStack.RestorationObjectName == stack.LoneInstance {
+		slog.Info("copying instance snapshot")
 		iarn, err := dbi2.GetSnapshotARN(originalSnapshotName, false)
 		if err != nil {
 			slog.Error("Couldn't find snapshot ", "snapshot", originalSnapshotName)
