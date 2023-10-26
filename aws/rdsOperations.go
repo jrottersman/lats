@@ -77,7 +77,7 @@ func (instances *DbInstances) GetCluster(clusterName string) (*types.DBCluster, 
 	if err != nil {
 		var notFoundError *types.DBClusterNotFoundFault
 		if errors.As(err, &notFoundError) {
-			slog.Warn("DB cluster does not exist.", "Cluster", clusterName)
+			slog.Info("DB cluster does not exist.", "Cluster", clusterName)
 			err = nil
 		} else {
 			slog.Warn("Couldn't get DB cluster", "Cluster", clusterName, "Error", err)
