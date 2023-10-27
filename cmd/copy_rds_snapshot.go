@@ -114,6 +114,7 @@ func copySnapshot() {
 	}
 
 	sm.UpdateState(stack.Name, fn, "stack")
+	sm.SyncState(stateFileName)
 }
 
 func createKMSKey(config Config, sm state.StateManager) string {
