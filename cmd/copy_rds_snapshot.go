@@ -134,7 +134,9 @@ func FindStack(sm state.StateManager, snapshot string) (*stack.Stack, error) {
 	if len(sm.StateLocations) == 0 {
 		slog.Error("There are no state locations create a snapshot with Lats before attempting to copy it")
 	}
+	slog.Info("state locations", "locations", sm.StateLocations)
 	for _, v := range sm.StateLocations {
+		slog.Info("Looping through objects this one is ", "name", v.Object)
 		if v.ObjectType != "stack" {
 			continue
 		}

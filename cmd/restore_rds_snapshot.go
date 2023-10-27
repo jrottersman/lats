@@ -39,6 +39,7 @@ func init() {
 func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) error {
 	slog.Info("Starting restore snapshot procedure")
 	dbi := aws.Init(region)
+	slog.Info("finding the stack")
 	SnapshotStack, err := FindStack(stateKV, restoreSnapshotName)
 	if err != nil {
 		slog.Error("Error finding stack", "error", err)
