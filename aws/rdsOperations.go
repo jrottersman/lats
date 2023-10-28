@@ -202,6 +202,12 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 	return nil
 }
 
+type CreateInstanceFromStackInput struct {
+	Stack         *stack.Stack
+	DBName        *string
+	DBSubnetGroup *string
+}
+
 //CreateInstanceFromStack creates an RDS instance from a stack object
 func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack, dbName string) error {
 	pgs := s.Objects[1]
