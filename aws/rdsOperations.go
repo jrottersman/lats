@@ -270,7 +270,12 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 		if pgName != nil {
 			ins.DBParameterGroupName = pgName
 		}
-		ins.DBInstanceIdentifier = c.DBName
+		if c.DBName != nil {
+			ins.DBInstanceIdentifier = c.DBName
+		}
+		if c.DBSubnetGroup != nil {
+			ins.DBSubnetGroupName = c.DBSubnetGroup
+		}
 		_, err := instances.RestoreSnapshotInstance(*ins)
 		if err != nil {
 			return err
