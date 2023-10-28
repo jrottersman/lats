@@ -15,6 +15,7 @@ var (
 	restoreSnapshotName string
 	restoreDbName       string
 	region              string
+	dbSubnetGroupName   string
 
 	//RestoreRDSSnapshotCmd restores an RDS snapshot
 	RestoreRDSSnapshotCmd = &cobra.Command{
@@ -33,6 +34,7 @@ func init() {
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&restoreSnapshotName, "snapshot-name", "s", "", "name of the snapshot we want to restore: choose one of snapshotName or db name")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&restoreDbName, "database-name", "d", "", "name of the database we want to restore the snapshot for")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&region, "region", "r", "", "AWS region we are restoring in")
+	RestoreRDSSnapshotCmd.Flags().StringVarP(&region, "subnet-group", "g", "", "DB subnet group we are restoring the snapshot to")
 }
 
 //RestoreSnapshot is the function that restores a snapshot
