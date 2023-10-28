@@ -34,7 +34,7 @@ func init() {
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&restoreSnapshotName, "snapshot-name", "s", "", "name of the snapshot we want to restore: choose one of snapshotName or db name")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&restoreDbName, "database-name", "d", "", "name of the database we want to restore the snapshot for")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&region, "region", "r", "", "AWS region we are restoring in")
-	RestoreRDSSnapshotCmd.Flags().StringVarP(&region, "subnet-group", "g", "", "DB subnet group we are restoring the snapshot to")
+	RestoreRDSSnapshotCmd.Flags().StringVarP(&dbSubnetGroupName, "subnet-group", "g", "", "DB subnet group we are restoring the snapshot to")
 }
 
 //RestoreSnapshot is the function that restores a snapshot
@@ -52,7 +52,12 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		return dbi.CreateClusterFromStack(SnapshotStack)
 	} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
 		slog.Info("Restoring an Instance")
-		return dbi.CreateInstanceFromStack(SnapshotStack, restoreDbName)
+		c := aws.CreateInstanceFromStackInput{
+			Stack:         SnapshotStack,
+			DBName:        &restoreDbName,
+			DBSubnetGroup: &dbSubnetGroupName,
+		}
+		return dbi.CreateInstanceFromStack(c)
 	}
 	slog.Error("Invalid type of stack for restoring an object", "StackType", SnapshotStack.RestorationObjectName)
 	return fmt.Errorf("Error invalid type of stack to restore a snapshot")
