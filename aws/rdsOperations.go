@@ -209,8 +209,8 @@ type CreateInstanceFromStackInput struct {
 }
 
 //CreateInstanceFromStack creates an RDS instance from a stack object
-func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack, dbName string) error {
-	pgs := s.Objects[1]
+func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackInput) error {
+	pgs := c.Stack.Objects[1]
 	var pgName *string
 	if len(pgs) == 0 {
 		slog.Info("No parameter groups using the default parameter group")
@@ -258,7 +258,7 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack, dbName str
 		}
 	}
 
-	instance := s.Objects[2]
+	instance := c.Stack.Objects[2]
 	slog.Info("starting to restore the instance")
 	if len(instance) != 1 {
 		slog.Error("No instances")
@@ -270,7 +270,7 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack, dbName str
 		if pgName != nil {
 			ins.DBParameterGroupName = pgName
 		}
-		ins.DBInstanceIdentifier = aws.String(dbName)
+		ins.DBInstanceIdentifier = c.DBName
 		_, err := instances.RestoreSnapshotInstance(*ins)
 		if err != nil {
 			return err
