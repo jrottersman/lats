@@ -253,7 +253,9 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 	}
 
 	instance := s.Objects[2]
+	slog.Info("starting to restore the instance")
 	if len(instance) != 1 {
+		slog.Error("No instances")
 		return fmt.Errorf("There should only be a single instance")
 	}
 	for _, v := range instance {
