@@ -413,7 +413,8 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 		RdsClient Client
 	}
 	type args struct {
-		s *stack.Stack
+		s    *stack.Stack
+		name string
 	}
 	field := fields{RdsClient: mock.MockRDSClient{}}
 	// Create long args
@@ -427,7 +428,7 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 	longStack := stack.Stack{
 		Objects: objects,
 	}
-	failArg := args{s: &longStack}
+	failArg := args{s: &longStack, name: "foo"}
 
 	//Create a valid object and instance
 	filename := "/tmp/foo"
@@ -451,7 +452,7 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 	goodstack := stack.Stack{
 		Objects: object,
 	}
-	passArgs := args{s: &goodstack}
+	passArgs := args{s: &goodstack, name: "foo"}
 
 	tests := []struct {
 		name    string
@@ -467,7 +468,7 @@ func TestDbInstances_CreateInstanceFromStack(t *testing.T) {
 			instances := &DbInstances{
 				RdsClient: tt.fields.RdsClient,
 			}
-			if err := instances.CreateInstanceFromStack(tt.args.s); (err != nil) != tt.wantErr {
+			if err := instances.CreateInstanceFromStack(tt.args.s, tt.args.name); (err != nil) != tt.wantErr {
 				t.Errorf("DbInstances.CreateInstanceFromStack() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

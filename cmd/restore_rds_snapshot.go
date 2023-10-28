@@ -50,7 +50,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		return dbi.CreateClusterFromStack(SnapshotStack)
 	} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
 		slog.Info("Restoring an Instance")
-		return dbi.CreateInstanceFromStack(SnapshotStack)
+		return dbi.CreateInstanceFromStack(SnapshotStack, restoreDbName)
 	}
 	slog.Error("Invalid type of stack for restoring an object", "StackType", SnapshotStack.RestorationObjectName)
 	return fmt.Errorf("Error invalid type of stack to restore a snapshot")

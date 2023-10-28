@@ -203,7 +203,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 }
 
 //CreateInstanceFromStack creates an RDS instance from a stack object
-func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
+func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack, dbName string) error {
 	pgs := s.Objects[1]
 	var pgName *string
 	if len(pgs) == 0 {
@@ -264,6 +264,7 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack) error {
 		if pgName != nil {
 			ins.DBParameterGroupName = pgName
 		}
+		ins.DBName = aws.String(dbName)
 		_, err := instances.RestoreSnapshotInstance(*ins)
 		if err != nil {
 			return err
