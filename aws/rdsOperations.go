@@ -264,7 +264,7 @@ func (instances *DbInstances) CreateInstanceFromStack(s *stack.Stack, dbName str
 		if pgName != nil {
 			ins.DBParameterGroupName = pgName
 		}
-		ins.DBName = aws.String(dbName)
+		ins.DBInstanceIdentifier = aws.String(dbName)
 		_, err := instances.RestoreSnapshotInstance(*ins)
 		if err != nil {
 			return err
