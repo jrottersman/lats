@@ -6,4 +6,4 @@ sleep 300
 ./lats CopyRDSSnapshot --snapshot test --new-snapshot test2
 echo "sleep for five minutes to copy snapshot TODO change this as above"
 sleep 300
-./lats restoreRDSSnapshot --snapshot-name test2 --database-name testRestore --region us-east-2
+./lats restoreRDSSnapshot --snapshot-name test2 --database-name testRestore --region us-east-2 --subnet-group sg-name
