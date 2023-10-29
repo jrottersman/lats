@@ -210,6 +210,7 @@ func getLoneInstanceObject(obj interface{}, name string, order int) stack.Object
 		Order:    order,
 		ObjType:  stack.LoneInstance,
 	}
+	slog.Info("created stack object", "stack", s)
 	return s
 }
 
