@@ -281,6 +281,7 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 			slog.Error("Failed to restore the instance", "error", err)
 			return err
 		}
+		slog.Info("Database creation in progress")
 	}
 	return nil
 }
