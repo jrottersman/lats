@@ -278,6 +278,7 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 		}
 		_, err := instances.RestoreSnapshotInstance(*ins)
 		if err != nil {
+			slog.Error("Failed to restore the instance", "error", err)
 			return err
 		}
 	}
