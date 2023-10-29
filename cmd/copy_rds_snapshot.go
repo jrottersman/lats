@@ -167,6 +167,7 @@ func NewStack(oldStack stack.Stack, name string) *stack.Stack {
 			obj := i.ReadObject()
 			switch i.ObjType {
 			case stack.LoneInstance:
+				slog.Info("Generating lone instance object")
 				s := getLoneInstanceObject(obj, name, k)
 				objs[k] = append(objs[k], s)
 			case stack.Cluster:
