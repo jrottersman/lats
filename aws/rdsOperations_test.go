@@ -910,3 +910,38 @@ func Test_optionsToConfiguration(t *testing.T) {
 		})
 	}
 }
+
+func TestDbInstances_CreateDBSubnetGroup(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		name        string
+		description string
+		subnets     []string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *rds.CreateDBSubnetGroupOutput
+		wantErr bool
+	}{
+		{name: "nil", fields: fields{mock.MockRDSClient{}}, args: args{name: "", description: "", subnets: []string{}}, want: &rds.CreateDBSubnetGroupOutput{}, wantErr: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			got, err := instances.CreateDBSubnetGroup(tt.args.name, tt.args.description, tt.args.subnets)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DbInstances.CreateDBSubnetGroup() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DbInstances.CreateDBSubnetGroup() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

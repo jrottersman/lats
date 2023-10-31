@@ -63,7 +63,9 @@ func (m MockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateD
 	}
 	return r, nil
 }
-func (m MockRDSClient) CreateDBSubnetGroup(ctx context.Context, params *rds.CreateDBSubnetGroupInput, optFns ...func(*rds.Options)) (*rds.CreateDBSubnetGroupOutput, error)
+func (m MockRDSClient) CreateDBSubnetGroup(ctx context.Context, params *rds.CreateDBSubnetGroupInput, optFns ...func(*rds.Options)) (*rds.CreateDBSubnetGroupOutput, error) {
+	return &rds.CreateDBSubnetGroupOutput{}, nil
+}
 
 func (m MockRDSClient) CreateDBParameterGroup(ctx context.Context, params *rds.CreateDBParameterGroupInput, optFns ...func(*rds.Options)) (*rds.CreateDBParameterGroupOutput, error) {
 	parameters := types.DBParameterGroup{
