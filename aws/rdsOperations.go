@@ -116,6 +116,16 @@ func (instances *DbInstances) GetOptionGroup(OptionGroupName string) (*types.Opt
 	return &output.OptionGroupsList[0], nil
 }
 
+// Create a DB subnetGroup
+func (instances *DbInstances) CreateDBSubnetGroup(name string, description string, subnets []string) (*rds.CreateDBSubnetGroupOutput, error) {
+	group, err := instances.RdsClient.CreateDBSubnetGroup(context.TODO(), &rds.CreateDBSubnetGroupInput{
+		DBSubnetGroupDescription: aws.String(description),
+		DBSubnetGroupName:        aws.String(name),
+		SubnetIds:                subnets,
+	})
+	return group, err
+}
+
 //CreateClusterFromStack creates an RDS cluster from a stack
 func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 	first := s.Objects[1]
