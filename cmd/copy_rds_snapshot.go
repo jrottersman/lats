@@ -186,6 +186,7 @@ func NewStack(oldStack stack.Stack, name string) *stack.Stack {
 	return &stack.Stack{
 		Name:                  fmt.Sprintf("%s", name),
 		RestorationObjectName: oldStack.RestorationObjectName,
+		Objects:               objs,
 	}
 }
 
