@@ -144,7 +144,7 @@ func GenerateRestoreDBInstanceFromDBClusterSnapshotInput(r RDSRestorationStore) 
 func EncodeRestoreDBInstanceFromDBSnapshotInput(r *rds.RestoreDBInstanceFromDBSnapshotInput) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
-
+	slog.Info("encoding db instance")
 	err := enc.Encode(r)
 	if err != nil {
 		slog.Error("Error encoding our snapshot", "error", err)
