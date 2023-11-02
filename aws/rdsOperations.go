@@ -126,6 +126,12 @@ func (instances *DbInstances) CreateDBSubnetGroup(name string, description strin
 	return group, err
 }
 
+//CreateClusterFromStackInput creates a stack all inputs required
+type CreateClusterFromStackInput struct {
+	S             *stack.Stack
+	DBSubnetGroup *string
+}
+
 //CreateClusterFromStack creates an RDS cluster from a stack
 func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 	first := s.Objects[1]
