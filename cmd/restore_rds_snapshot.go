@@ -49,23 +49,25 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		slog.Error("Error finding stack", "error", err)
 	}
 	slog.Info("Stack is", "stack", SnapshotStack)
-	if SnapshotStack.RestorationObjectName == stack.Cluster {
-		slog.Info("Restoring a cluster")
-		c := aws.CreateClusterFromStackInput{
-			S:             SnapshotStack,
-			DBSubnetGroup: &dbSubnetGroupName,
+	// Creating subnet group
+	if dbSubnetGroupName == "" {
+		slog.Info("creating a subnet group")
+		name := fmt.Sprintf("%s-subnets", restoreDbName)
+		desc := fmt.Sprintf("%s-subnets created by lats for restoring database", restoreDbName)
+		sg, err := dbi.CreateDBSubnetGroup(name, desc, subnets)
+		if err != nil {
+			slog.Error("problem creating subnet group", "error", err)
 		}
-		return dbi.CreateClusterFromStack(c)
-	} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
-		slog.Info("Restoring an Instance")
-		if dbSubnetGroupName == "" {
-			name := fmt.Sprintf("%s-subnets", restoreDbName)
-			desc := fmt.Sprintf("%s-subnets created by lats for restoring database", restoreDbName)
-			sg, err := dbi.CreateDBSubnetGroup(name, desc, subnets)
-			if err != nil {
-				slog.Error("problem creating subnet group", "error", err)
+		dbSubnetGroupName = *sg.DBSubnetGroup.DBSubnetGroupName
+		if SnapshotStack.RestorationObjectName == stack.Cluster {
+			slog.Info("Restoring a cluster")
+			c := aws.CreateClusterFromStackInput{
+				S:             SnapshotStack,
+				DBSubnetGroup: &dbSubnetGroupName,
 			}
-			dbSubnetGroupName = *sg.DBSubnetGroup.DBSubnetGroupName
+			return dbi.CreateClusterFromStack(c)
+		} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
+			slog.Info("Restoring an Instance")
 		}
 		c := aws.CreateInstanceFromStackInput{
 			Stack:         SnapshotStack,
