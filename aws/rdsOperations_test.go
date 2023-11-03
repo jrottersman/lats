@@ -523,7 +523,7 @@ func TestDbInstances_CreateClusterFromStack(t *testing.T) {
 		RdsClient Client
 	}
 	type args struct {
-		s *stack.Stack
+		c CreateClusterFromStackInput
 	}
 
 	field := fields{RdsClient: mock.MockRDSClient{}}
@@ -538,7 +538,10 @@ func TestDbInstances_CreateClusterFromStack(t *testing.T) {
 	longStack := stack.Stack{
 		Objects: objects,
 	}
-	failArg := args{s: &longStack}
+	c := CreateClusterFromStackInput{
+		S: &longStack,
+	}
+	failArg := args{c: c}
 
 	tests := []struct {
 		name    string
@@ -553,7 +556,7 @@ func TestDbInstances_CreateClusterFromStack(t *testing.T) {
 			instances := &DbInstances{
 				RdsClient: tt.fields.RdsClient,
 			}
-			if err := instances.CreateClusterFromStack(tt.args.s); (err != nil) != tt.wantErr {
+			if err := instances.CreateClusterFromStack(tt.args.c); (err != nil) != tt.wantErr {
 				t.Errorf("DbInstances.CreateClusterFromStack() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

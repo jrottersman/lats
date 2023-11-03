@@ -51,7 +51,11 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 	slog.Info("Stack is", "stack", SnapshotStack)
 	if SnapshotStack.RestorationObjectName == stack.Cluster {
 		slog.Info("Restoring a cluster")
-		return dbi.CreateClusterFromStack(SnapshotStack)
+		c := aws.CreateClusterFromStackInput{
+			S:             SnapshotStack,
+			DBSubnetGroup: &dbSubnetGroupName,
+		}
+		return dbi.CreateClusterFromStack(c)
 	} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
 		slog.Info("Restoring an Instance")
 		if dbSubnetGroupName == "" {
