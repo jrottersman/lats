@@ -133,8 +133,8 @@ type CreateClusterFromStackInput struct {
 }
 
 //CreateClusterFromStack creates an RDS cluster from a stack
-func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
-	first := s.Objects[1]
+func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInput) error {
+	first := c.S.Objects[1]
 	var pgName *string
 	if len(first) < 1 {
 		slog.Info("skipping the parameter set")
@@ -185,7 +185,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 	}
 
 	// get the one which is the cluster and create it
-	second := s.Objects[2]
+	second := c.S.Objects[2]
 	if len(second) != 1 {
 		slog.Error("Multiple clusters and there should only be one")
 		return fmt.Errorf("Multiple clusters and there should only be one")
@@ -203,7 +203,7 @@ func (instances *DbInstances) CreateClusterFromStack(s *stack.Stack) error {
 	}
 
 	// get three which is the instances create them in parallel
-	third := s.Objects[3]
+	third := c.S.Objects[3]
 	waitChan := make(chan struct{}, MaxConcurrentJobs)
 	for _, i := range third {
 		waitChan <- struct{}{}
