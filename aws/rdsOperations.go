@@ -196,6 +196,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 		if pgName != nil {
 			dbi.DBClusterParameterGroupName = pgName
 		}
+		dbi.DBSubnetGroupName = c.DBSubnetGroup
 		_, err := instances.RestoreSnapshotCluster(*dbi) // we might need to do something with the output in which case this changes
 		if err != nil {
 			return err
