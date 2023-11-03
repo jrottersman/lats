@@ -210,6 +210,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 		go func(inst stack.Object) {
 			o := inst.ReadObject()
 			ins := o.(*rds.CreateDBInstanceInput)
+			ins.DBSubnetGroupName = c.DBSubnetGroup
 			_, err := instances.RestoreInstanceForCluster(*ins)
 			if err != nil {
 				slog.Error("error creating instance", "error", err)
