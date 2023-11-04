@@ -3,6 +3,7 @@ package aws
 import (
 	"context"
 	"log/slog"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
@@ -31,7 +32,9 @@ func (k KmsOperations) CreateKMSKey(cfg *KmsConfig) (*types.KeyMetadata, error) 
 	if cfg != nil {
 		input = handleKmsConfig(*cfg)
 	}
-	output, err := k.Client.CreateKey(context.TODO(), input)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	output, err := k.Client.CreateKey(ctx, input)
 	if err != nil {
 		slog.Warn("Error creating KMS key", "error", err)
 		return nil, err
