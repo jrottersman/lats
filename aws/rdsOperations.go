@@ -402,7 +402,9 @@ func (instances *DbInstances) CopySnapshot(originalSnapshotName string, newSnaps
 //CopyClusterSnaphot see CopySnapshot now for a Cluster
 func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, newSnapshotName string, sourceRegion string, kmsKey string) (
 	*types.DBClusterSnapshot, error) {
-	output, err := instances.RdsClient.CopyDBClusterSnapshot(context.TODO(), &rds.CopyDBClusterSnapshotInput{
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.CopyDBClusterSnapshot(ctx, &rds.CopyDBClusterSnapshotInput{
 		SourceDBClusterSnapshotIdentifier: aws.String(originalSnapshotName),
 		TargetDBClusterSnapshotIdentifier: aws.String(newSnapshotName),
 		SourceRegion:                      aws.String(sourceRegion),
