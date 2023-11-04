@@ -438,7 +438,9 @@ func (instances *DbInstances) RestoreOptionGroup(EngineName string, MajorEngineV
 //GetClusterParameterGroup get the cluster parameter group so we can make a new one in a new region or you know store it for restoration (actually we won't need to do that cause the data is stored on the snapshot :P)
 func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string) (
 	*types.DBClusterParameterGroup, error) {
-	output, err := instances.RdsClient.DescribeDBClusterParameterGroups(context.TODO(), &rds.DescribeDBClusterParameterGroupsInput{
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.DescribeDBClusterParameterGroups(ctx, &rds.DescribeDBClusterParameterGroupsInput{
 		DBClusterParameterGroupName: aws.String(ParameterGroupName),
 	})
 	if err != nil {
