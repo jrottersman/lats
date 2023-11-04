@@ -384,7 +384,9 @@ func (instances *DbInstances) CreateClusterSnapshot(clusterName string, snapshot
 // CopySnapshot copies a snapshot to a new region note it needs to run from the destination region so it needs a different client then CreateSnapshot!
 func (instances *DbInstances) CopySnapshot(originalSnapshotName string, newSnapshotName string, sourceRegion string, KmsKey string) (
 	*types.DBSnapshot, error) {
-	output, err := instances.RdsClient.CopyDBSnapshot(context.TODO(), &rds.CopyDBSnapshotInput{
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.CopyDBSnapshot(ctx, &rds.CopyDBSnapshotInput{
 		SourceDBSnapshotIdentifier: aws.String(originalSnapshotName),
 		TargetDBSnapshotIdentifier: aws.String(newSnapshotName),
 		SourceRegion:               aws.String(sourceRegion), // this generates a presigned URL under the hood which enables cross region copies
