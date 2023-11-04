@@ -368,7 +368,9 @@ func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName s
 
 //CreateClusterSnapshot so it turns out AWS is annoying and makes us create snapshots seperatly for clusters and instaces how fun!
 func (instances *DbInstances) CreateClusterSnapshot(clusterName string, snapshotName string) (*types.DBClusterSnapshot, error) {
-	output, err := instances.RdsClient.CreateDBClusterSnapshot(context.TODO(), &rds.CreateDBClusterSnapshotInput{
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.CreateDBClusterSnapshot(ctx, &rds.CreateDBClusterSnapshotInput{
 		DBClusterIdentifier:         aws.String(clusterName),
 		DBClusterSnapshotIdentifier: aws.String(snapshotName),
 	})
