@@ -420,13 +420,15 @@ func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, ne
 //RestoreOptionGroup creates the option group for our database this is very optional
 func (instances *DbInstances) RestoreOptionGroup(EngineName string, MajorEngineVersion string, OptionGroupName string, Description string) (
 	*rds.CreateOptionGroupOutput, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
 	input := rds.CreateOptionGroupInput{
 		EngineName:             &EngineName,
 		MajorEngineVersion:     &MajorEngineVersion,
 		OptionGroupName:        &OptionGroupName,
 		OptionGroupDescription: &Description,
 	}
-	out, err := instances.RdsClient.CreateOptionGroup(context.TODO(), &input)
+	out, err := instances.RdsClient.CreateOptionGroup(ctx, &input)
 	if err != nil {
 		return nil, fmt.Errorf("Restore option group had an error %s", err)
 	}
