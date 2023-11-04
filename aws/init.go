@@ -36,7 +36,7 @@ func getKMSClient(cfg aws.Config) *kms.Client {
 }
 
 func createConfig(region string) aws.Config {
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	cfg, err := config.LoadDefaultConfig(context.Background(), config.WithRegion(region))
 	if err != nil {
 		panic("configuration error, " + err.Error())
 	}
