@@ -113,7 +113,9 @@ func (instances *DbInstances) GetOptionGroup(OptionGroupName string) (*types.Opt
 	input := rds.DescribeOptionGroupsInput{
 		OptionGroupName: &OptionGroupName,
 	}
-	output, err := instances.RdsClient.DescribeOptionGroups(context.TODO(), &input)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	output, err := instances.RdsClient.DescribeOptionGroups(ctx, &input)
 	if err != nil {
 		return nil, fmt.Errorf("Error getting Option group %s", err)
 	}
