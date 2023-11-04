@@ -73,7 +73,9 @@ func (instances *DbInstances) GetInstance(instanceName string) (
 
 //GetCluster describes an RDS cluster
 func (instances *DbInstances) GetCluster(clusterName string) (*types.DBCluster, error) {
-	output, err := instances.RdsClient.DescribeDBClusters(context.TODO(),
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.DescribeDBClusters(ctx,
 		&rds.DescribeDBClustersInput{
 			DBClusterIdentifier: aws.String(clusterName),
 		})
