@@ -353,7 +353,9 @@ func (instances *DbInstances) getClusterStatus(name string) (*string, error) {
 // :snapShotName name of the backup we are creating
 func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName string) (
 	*types.DBSnapshot, error) {
-	output, err := instances.RdsClient.CreateDBSnapshot(context.TODO(), &rds.CreateDBSnapshotInput{
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.CreateDBSnapshot(ctx, &rds.CreateDBSnapshotInput{
 		DBInstanceIdentifier: aws.String(instanceName),
 		DBSnapshotIdentifier: aws.String(snapshotName),
 	})
