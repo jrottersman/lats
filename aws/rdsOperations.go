@@ -458,7 +458,9 @@ func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string
 
 //GetParametersForClusterParameterGroup returns parameters for a cluster group
 func (instances *DbInstances) GetParametersForClusterParameterGroup(ParameterGroupName string) (*[]types.Parameter, error) {
-	output, err := instances.RdsClient.DescribeDBClusterParameters(context.TODO(), &rds.DescribeDBClusterParametersInput{
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.DescribeDBClusterParameters(ctx, &rds.DescribeDBClusterParametersInput{
 		DBClusterParameterGroupName: aws.String(ParameterGroupName),
 	})
 	if err != nil {
