@@ -52,7 +52,9 @@ type DbInstances struct {
 // GetInstance describes an RDS instance and returns it's output
 func (instances *DbInstances) GetInstance(instanceName string) (
 	*types.DBInstance, error) {
-	output, err := instances.RdsClient.DescribeDBInstances(context.TODO(),
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.DescribeDBInstances(ctx,
 		&rds.DescribeDBInstancesInput{
 			DBInstanceIdentifier: aws.String(instanceName),
 		})
