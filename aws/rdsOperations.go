@@ -510,7 +510,9 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 
 //GetParametersForGroup returns the parameters for a parameter group
 func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (*[]types.Parameter, error) {
-	output, err := instances.RdsClient.DescribeDBParameters(context.TODO(), &rds.DescribeDBParametersInput{
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.DescribeDBParameters(ctx, &rds.DescribeDBParametersInput{
 		DBParameterGroupName: aws.String(ParameterGroupName),
 	})
 	if err != nil {
@@ -522,7 +524,7 @@ func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (
 		if output.Marker == nil {
 			break
 		}
-		output, err := instances.RdsClient.DescribeDBParameters(context.TODO(), &rds.DescribeDBParametersInput{
+		output, err := instances.RdsClient.DescribeDBParameters(ctx, &rds.DescribeDBParametersInput{
 			DBParameterGroupName: aws.String(ParameterGroupName),
 			Marker:               output.Marker,
 		})
