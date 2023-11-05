@@ -472,7 +472,7 @@ func (instances *DbInstances) GetParametersForClusterParameterGroup(ParameterGro
 		if output.Marker == nil {
 			break
 		}
-		output, err := instances.RdsClient.DescribeDBClusterParameters(context.TODO(), &rds.DescribeDBClusterParametersInput{
+		output, err := instances.RdsClient.DescribeDBClusterParameters(ctx, &rds.DescribeDBClusterParametersInput{
 			DBClusterParameterGroupName: aws.String(ParameterGroupName),
 			Marker:                      output.Marker,
 		})
