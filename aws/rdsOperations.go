@@ -488,8 +488,10 @@ func (instances *DbInstances) GetParametersForClusterParameterGroup(ParameterGro
 // GetParameterGroup we will use this for moving custom parameter groups
 func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 	*types.DBParameterGroup, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer cancel()
 	output, err := instances.RdsClient.DescribeDBParameterGroups(
-		context.TODO(), &rds.DescribeDBParameterGroupsInput{
+		ctx, &rds.DescribeDBParameterGroupsInput{
 			DBParameterGroupName: aws.String(parameterGroupName),
 		})
 	if err != nil {
