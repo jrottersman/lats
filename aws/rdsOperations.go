@@ -562,7 +562,9 @@ func (instances *DbInstances) CreateClusterParameterGroup(p *types.DBClusterPara
 		DBClusterParameterGroupName: p.DBClusterParameterGroupName,
 		Description:                 p.Description,
 	}
-	output, err := instances.RdsClient.CreateDBClusterParameterGroup(context.TODO(), &input)
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.CreateDBClusterParameterGroup(ctx, &input)
 	if err != nil {
 		slog.Warn("error creating parameter group ", "error", err)
 		return output, err
