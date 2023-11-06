@@ -545,7 +545,9 @@ func (instances *DbInstances) CreateParameterGroup(p *types.DBParameterGroup) (*
 		DBParameterGroupName:   p.DBParameterGroupName,
 		Description:            p.Description,
 	}
-	output, err := instances.RdsClient.CreateDBParameterGroup(context.TODO(), &input)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.CreateDBParameterGroup(ctx, &input)
 	if err != nil {
 		slog.Warn("error creating parameter group", "error", err)
 		return output, err
