@@ -579,7 +579,9 @@ func (instances *DbInstances) ModifyOptionGroup(OptionGroupName string, Include 
 		ApplyImmediately: true,
 		OptionsToInclude: Include,
 	}
-	_, err := instances.RdsClient.ModifyOptionGroup(context.TODO(), &input)
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer cancel()
+	_, err := instances.RdsClient.ModifyOptionGroup(ctx, &input)
 	return err
 }
 
