@@ -621,8 +621,10 @@ func (instances *DbInstances) ModifyClusterParameterGroup(pg string, parameters 
 	}
 	batches = append(batches, parameters)
 
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
 	for _, batch := range batches {
-		_, err := instances.RdsClient.ModifyDBClusterParameterGroup(context.TODO(), &rds.ModifyDBClusterParameterGroupInput{
+		_, err := instances.RdsClient.ModifyDBClusterParameterGroup(ctx, &rds.ModifyDBClusterParameterGroupInput{
 			DBClusterParameterGroupName: aws.String(pg),
 			Parameters:                  batch,
 		})
