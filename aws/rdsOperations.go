@@ -595,9 +595,9 @@ func (instances *DbInstances) ModifyParameterGroup(pg string, parameters []types
 		parameters, batches = parameters[batchSize:], append(batches, parameters[0:batchSize:batchSize])
 	}
 	batches = append(batches, parameters)
-}
+
 	for _, batch := range batches {
-		_, err := instances.RdsClient.ModifyDBParameterGroup(ctx, &rds.ModifyDBParameterGroupInput{
+		_, err := instances.RdsClient.ModifyDBParameterGroup(context.TODO(), &rds.ModifyDBParameterGroupInput{
 			DBParameterGroupName: aws.String(pg),
 			Parameters:           batch,
 		})
