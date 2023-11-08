@@ -661,7 +661,9 @@ func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanc
 
 //RestoreInstanceForCluster our cluster has no instances by default it need's instances to be usable this makes them exist
 func (instances *DbInstances) RestoreInstanceForCluster(input rds.CreateDBInstanceInput) (*rds.CreateDBInstanceOutput, error) {
-	output, err := instances.RdsClient.CreateDBInstance(context.TODO(), &input)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.CreateDBInstance(ctx, &input)
 	if err != nil {
 		slog.Error("error creating instance", "error", err)
 		return nil, err
