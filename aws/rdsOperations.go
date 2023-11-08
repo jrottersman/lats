@@ -697,7 +697,9 @@ func (instances *DbInstances) GetInstanceSnapshotARN(name string, marker *string
 
 //GetClusterSnapshotARN get's the cluster snapshot arn from snapshot name
 func (instances *DbInstances) GetClusterSnapshotARN(name string, marker *string) (*string, error) {
-	output, err := instances.RdsClient.DescribeDBClusterSnapshots(context.TODO(), &rds.DescribeDBClusterSnapshotsInput{
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.DescribeDBClusterSnapshots(ctx, &rds.DescribeDBClusterSnapshotsInput{
 		Marker: marker,
 	})
 	if err != nil {
