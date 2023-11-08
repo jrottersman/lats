@@ -649,8 +649,9 @@ func (instances *DbInstances) RestoreSnapshotCluster(input rds.RestoreDBClusterF
 
 // RestoreSnapshotInstance restores a single db instance from a snapshot
 func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanceFromDBSnapshotInput) (*rds.RestoreDBInstanceFromDBSnapshotOutput, error) {
-
-	output, err := instances.RdsClient.RestoreDBInstanceFromDBSnapshot(context.TODO(), &input)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.RestoreDBInstanceFromDBSnapshot(ctx, &input)
 	if err != nil {
 		slog.Error("error creating instance from snapshot", "error", err)
 		return nil, err
