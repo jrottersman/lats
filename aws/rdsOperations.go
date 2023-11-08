@@ -673,7 +673,9 @@ func (instances *DbInstances) RestoreInstanceForCluster(input rds.CreateDBInstan
 
 //GetInstanceSnapshotARN get the arn for an instance snapshot
 func (instances *DbInstances) GetInstanceSnapshotARN(name string, marker *string) (*string, error) {
-	output, err := instances.RdsClient.DescribeDBSnapshots(context.TODO(), &rds.DescribeDBSnapshotsInput{
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.DescribeDBSnapshots(ctx, &rds.DescribeDBSnapshotsInput{
 		// Marker: marker,
 		DBSnapshotIdentifier: aws.String(name),
 	})
