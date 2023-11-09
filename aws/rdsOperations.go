@@ -122,7 +122,7 @@ func (instances *DbInstances) GetOptionGroup(OptionGroupName string) (*types.Opt
 	return &output.OptionGroupsList[0], nil
 }
 
-// Create a DB subnetGroup
+//CreateDBSubnetGroup creates a subnet group to allow for the creation of databases
 func (instances *DbInstances) CreateDBSubnetGroup(name string, description string, subnets []string) (*rds.CreateDBSubnetGroupOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
@@ -229,6 +229,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 	return nil
 }
 
+//CreateInstanceFromStackInput input for creating a stack
 type CreateInstanceFromStackInput struct {
 	Stack         *stack.Stack
 	DBName        *string
