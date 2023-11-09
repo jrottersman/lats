@@ -5,12 +5,12 @@ go 1.21
 require (
 	github.com/aws/aws-sdk-go-v2 v1.21.0
 	github.com/aws/aws-sdk-go-v2/config v1.18.36
+	github.com/aws/aws-sdk-go-v2/service/kms v1.24.5
 	github.com/aws/aws-sdk-go-v2/service/rds v1.52.0
+	github.com/google/uuid v1.3.1
 	github.com/manifoldco/promptui v0.9.0
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.16.0
-	github.com/aws/aws-sdk-go-v2/service/kms v1.24.5 
-	github.com/google/uuid v1.3.1 
 )
 
 require (
