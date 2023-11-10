@@ -696,7 +696,7 @@ func (instances *DbInstances) GetInstanceSnapshotARN(name string, marker *string
 	return nil, fmt.Errorf("snapshot not found")
 }
 
-//GetInstanceSnapshotARN get the arn for an instance snapshot
+//GetInstanceSnapshotStatus get the status for an instance snapshot
 func (instances *DbInstances) GetInstanceSnapshotStatus(name string) (*string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer cancel()
