@@ -715,6 +715,25 @@ func (instances *DbInstances) GetInstanceSnapshotStatus(name string) (*string, e
 	return nil, fmt.Errorf("snapshot not found")
 }
 
+//GetInstanceSnapshotPercentage get the status for an instance snapshot
+func (instances *DbInstances) GetInstanceSnapshotPercentage(name string) (*int32, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	defer cancel()
+	output, err := instances.RdsClient.DescribeDBSnapshots(ctx, &rds.DescribeDBSnapshotsInput{
+		DBSnapshotIdentifier: aws.String(name),
+	})
+	if err != nil {
+		slog.Error("error with snapshots", "error", err)
+		return nil, fmt.Errorf("error retreiving snapshot: %s", err)
+	}
+	for _, v := range output.DBSnapshots {
+		if *v.DBSnapshotIdentifier == name {
+			return &v.PercentProgress, nil
+		}
+	}
+	return nil, fmt.Errorf("snapshot not found")
+}
+
 //GetClusterSnapshotARN get's the cluster snapshot arn from snapshot name
 func (instances *DbInstances) GetClusterSnapshotARN(name string, marker *string) (*string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
