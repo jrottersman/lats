@@ -44,6 +44,7 @@ func (m MockRDSClient) DescribeDBSnapshots(ctx context.Context, params *rds.Desc
 	snap := types.DBSnapshot{
 		DBSnapshotIdentifier: aws.String("foo"),
 		DBSnapshotArn:        aws.String("foo"),
+		Status:               aws.String("Completed"),
 	}
 	snapshots = append(snapshots, snap)
 	return &rds.DescribeDBSnapshotsOutput{
