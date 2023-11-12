@@ -642,7 +642,7 @@ func (instances *DbInstances) RestoreSnapshotCluster(input rds.RestoreDBClusterF
 	defer cancel()
 	output, err := instances.RdsClient.RestoreDBClusterFromSnapshot(ctx, &input)
 	if err != nil {
-		slog.Error("error creating snapshot cluster")
+		slog.Error("creating snapshot cluster", "ERROR", err)
 		return nil, err
 	}
 	return output, nil
