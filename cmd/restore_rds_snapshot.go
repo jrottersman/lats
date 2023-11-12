@@ -59,6 +59,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 			slog.Error("problem creating subnet group", "error", err)
 		}
 		dbSubnetGroupName = *sg.DBSubnetGroup.DBSubnetGroupName
+		slog.Info("starting restore", "type", SnapshotStack.RestorationObjectName)
 		if SnapshotStack.RestorationObjectName == stack.Cluster {
 			slog.Info("Restoring a cluster")
 			c := aws.CreateClusterFromStackInput{
