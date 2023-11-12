@@ -299,7 +299,8 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 			ins.DBParameterGroupName = pgName
 		}
 		if c.DBName != nil {
-			ins.DBInstanceIdentifier = c.DBName
+			name := fmt.Sprintf("%s-backup", *c.DBName)
+			ins.DBInstanceIdentifier = &name
 		}
 		if c.DBSubnetGroup != nil {
 			ins.DBSubnetGroupName = c.DBSubnetGroup
