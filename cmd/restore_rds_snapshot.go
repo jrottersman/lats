@@ -66,6 +66,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		slog.Info("Restoring a cluster")
 		c := aws.CreateClusterFromStackInput{
 			S:             SnapshotStack,
+			ClusterName:   &restoreDbName,
 			DBSubnetGroup: &dbSubnetGroupName,
 		}
 		return dbi.CreateClusterFromStack(c)
