@@ -137,6 +137,7 @@ func (instances *DbInstances) CreateDBSubnetGroup(name string, description strin
 //CreateClusterFromStackInput creates a stack all inputs required
 type CreateClusterFromStackInput struct {
 	S             *stack.Stack
+	ClusterName   *string
 	DBSubnetGroup *string
 }
 
