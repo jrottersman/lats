@@ -577,7 +577,8 @@ func TestDbInstances_CreateClusterFromStack(t *testing.T) {
 		Objects: objects,
 	}
 	c := CreateClusterFromStackInput{
-		S: &longStack,
+		S:           &longStack,
+		ClusterName: aws.String("foo"),
 	}
 	failArg := args{c: c}
 
