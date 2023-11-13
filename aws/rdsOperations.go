@@ -206,6 +206,9 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			dbi.DBClusterParameterGroupName = pgName
 		}
 		dbi.DBSubnetGroupName = c.DBSubnetGroup
+		if c.ClusterName != nil {
+			dbi.DBClusterIdentifier = c.ClusterName
+		}
 		_, err := instances.RestoreSnapshotCluster(*dbi) // we might need to do something with the output in which case this changes
 		if err != nil {
 			return err
@@ -300,8 +303,7 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 			ins.DBParameterGroupName = pgName
 		}
 		if c.DBName != nil {
-			name := fmt.Sprintf("%s-backup", *c.DBName)
-			ins.DBInstanceIdentifier = &name
+			ins.DBInstanceIdentifier = c.DBName
 		}
 		if c.DBSubnetGroup != nil {
 			ins.DBSubnetGroupName = c.DBSubnetGroup
