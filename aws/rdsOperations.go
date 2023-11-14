@@ -206,8 +206,8 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			dbi.DBClusterParameterGroupName = pgName
 		}
 		dbi.DBSubnetGroupName = c.DBSubnetGroup
-		slog.Info("cluster name to restore", "ClusterName", c.ClusterName)
 		if c.ClusterName != nil {
+			slog.Info("creating cluster", "ClusterName", *c.ClusterName)
 			dbi.DBClusterIdentifier = c.ClusterName
 		}
 		_, err := instances.RestoreSnapshotCluster(*dbi) // we might need to do something with the output in which case this changes
