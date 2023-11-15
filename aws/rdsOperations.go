@@ -223,9 +223,11 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 	for _, i := range third {
 		slog.Info("inside the for loop for restore instances")
 		waitChan <- struct{}{}
+		slog.Info("after the wait chan")
 		go func(inst stack.Object) {
-			slog.Info("Creating Instance	")
+			slog.Info("Creating Instance")
 			o := inst.ReadObject()
+			slog.Info("Read the object")
 			ins := o.(*rds.CreateDBInstanceInput)
 			ins.DBSubnetGroupName = c.DBSubnetGroup
 			_, err := instances.RestoreInstanceForCluster(*ins)
