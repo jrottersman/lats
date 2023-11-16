@@ -223,6 +223,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 	var wg sync.WaitGroup
 	for _, i := range third {
 		slog.Info("inside the for loop for restore instances")
+		wg.Add(1)
 		go func(inst stack.Object, wg *sync.WaitGroup) {
 			defer wg.Done()
 			slog.Info("Creating Instance")
