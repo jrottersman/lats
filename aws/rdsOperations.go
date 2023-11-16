@@ -219,11 +219,8 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 	// get three which is the instances create them in parallel
 	third := c.S.Objects[3]
 	slog.Info("Starting restore cluster instances")
-	waitChan := make(chan struct{}, MaxConcurrentJobs)
 	for _, i := range third {
 		slog.Info("inside the for loop for restore instances")
-		waitChan <- struct{}{}
-		slog.Info("after the wait chan")
 		go func(inst stack.Object) {
 			slog.Info("Creating Instance")
 			o := inst.ReadObject()
