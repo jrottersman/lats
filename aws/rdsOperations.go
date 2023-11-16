@@ -235,9 +235,9 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 				slog.Error("error creating instance", "error", err)
 			}
 		}(i, &wg)
-		wg.Wait()
-		slog.Info("Restored cluster instances")
 	}
+	wg.Wait()
+	slog.Info("Restored cluster instances")
 	return nil
 }
 
