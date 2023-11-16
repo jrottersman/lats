@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"sync"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -219,9 +220,11 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 	// get three which is the instances create them in parallel
 	third := c.S.Objects[3]
 	slog.Info("Starting restore cluster instances")
+	var wg sync.WaitGroup
 	for _, i := range third {
 		slog.Info("inside the for loop for restore instances")
-		go func(inst stack.Object) {
+		go func(inst stack.Object, wg *sync.WaitGroup) {
+			defer wg.Done()
 			slog.Info("Creating Instance")
 			o := inst.ReadObject()
 			slog.Info("Read the object")
@@ -231,7 +234,9 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			if err != nil {
 				slog.Error("error creating instance", "error", err)
 			}
-		}(i)
+		}(i, &wg)
+		wg.Wait()
+		slog.Info("Restored cluster instances")
 	}
 	return nil
 }
