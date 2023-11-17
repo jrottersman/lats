@@ -231,7 +231,11 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			if o == nil {
 				slog.Error("object from instance is nil")
 			}
-			ins := o.(*rds.CreateDBInstanceInput)
+			ins, ok := o.(*rds.CreateDBInstanceInput)
+			if !ok {
+				slog.Error("failed to cast to createDBInstanceInput")
+				return
+			}
 			ins.DBSubnetGroupName = c.DBSubnetGroup
 			_, err := instances.RestoreInstanceForCluster(*ins)
 			if err != nil {
