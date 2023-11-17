@@ -230,6 +230,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			o := inst.ReadObject()
 			if o == nil {
 				slog.Error("object from instance is nil")
+				return
 			}
 			ins, ok := o.(*rds.CreateDBInstanceInput)
 			if !ok {
