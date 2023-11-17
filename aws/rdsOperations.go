@@ -228,7 +228,9 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			defer wg.Done()
 			slog.Info("Creating Instance")
 			o := inst.ReadObject()
-			slog.Info("Read the object")
+			if o == nil {
+				slog.Error("object from instance is nil")
+			}
 			ins := o.(*rds.CreateDBInstanceInput)
 			ins.DBSubnetGroupName = c.DBSubnetGroup
 			_, err := instances.RestoreInstanceForCluster(*ins)
