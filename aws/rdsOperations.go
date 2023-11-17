@@ -153,7 +153,11 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			pb := p.ReadObject()
 			switch pb.(type) {
 			case *pgstate.ParameterGroup:
-				pg := pb.(*pgstate.ParameterGroup)
+				pg, ok := pb.(*pgstate.ParameterGroup)
+				if !ok {
+					slog.Error("error casting to parameter group")
+					return fmt.Errorf("Type Error parameter group")
+				}
 				pgName = pg.ClusterParameterGroup.DBClusterParameterGroupName
 				slog.Info("creating parameter group", "name", *pgName)
 				_, err := instances.CreateClusterParameterGroup(&pg.ClusterParameterGroup)
