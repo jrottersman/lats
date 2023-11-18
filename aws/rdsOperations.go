@@ -178,7 +178,10 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 					}
 				}
 			case *types.OptionGroup:
-				og := pb.(*types.OptionGroup)
+				og, ok := pb.(*types.OptionGroup)
+				if !ok {
+					slog.Error("getting option group")
+				}
 				slog.Info("restoring option group")
 				_, err := instances.RestoreOptionGroup(*og.EngineName, *og.MajorEngineVersion, *og.OptionGroupName, *og.OptionGroupDescription)
 				if err != nil {
