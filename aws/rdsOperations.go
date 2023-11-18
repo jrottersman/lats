@@ -277,7 +277,10 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 			pb := p.ReadObject()
 			switch pb.(type) {
 			case *pgstate.ParameterGroup:
-				pg := pb.(*pgstate.ParameterGroup)
+				pg, ok := pb.(*pgstate.ParameterGroup)
+				if !ok {
+					slog.Error("Could not decode parameter group")
+				}
 				pgName = pg.ParameterGroup.DBParameterGroupName
 				_, err := instances.CreateParameterGroup(&pg.ParameterGroup)
 				if err != nil {
