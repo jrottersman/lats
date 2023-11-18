@@ -28,6 +28,7 @@ type Object struct {
 // ReadObject Read the file for the object
 func (o Object) ReadObject() interface{} {
 	dat, err := os.ReadFile(o.FileName)
+	slog.Info("filename is", "Filename", o.FileName)
 	if err != nil {
 		slog.Warn("error reading object file", "error", err)
 	}
