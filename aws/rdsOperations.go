@@ -300,7 +300,10 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 					}
 				}
 			case *types.OptionGroup:
-				og := pb.(*types.OptionGroup)
+				og, ok := pb.(*types.OptionGroup)
+				if !ok {
+					slog.Error("Could not decode option group")
+				}
 				_, err := instances.RestoreOptionGroup(*og.EngineName, *og.MajorEngineVersion, *og.OptionGroupName, *og.OptionGroupDescription)
 				if err != nil {
 					slog.Warn("failed to restore option group", "error", err)
