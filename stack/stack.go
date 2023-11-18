@@ -14,7 +14,7 @@ import (
 
 const LoneInstance = "SingleRDSInstance"
 const Cluster = "RDSCluster"
-const Instance = "ClusterInstance"
+const Instance = "RDSInstance"
 const DBParameterGroup = "DBParameterGroup"
 const DBClusterParameterGroup = "DBClusterParameterGroup"
 const OptionGroup = "OptionGroup"
