@@ -209,7 +209,10 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 	}
 	for _, v := range second {
 		b := v.ReadObject()
-		dbi := b.(*rds.RestoreDBClusterFromSnapshotInput)
+		dbi, ok := b.(*rds.RestoreDBClusterFromSnapshotInput)
+		if !ok {
+			slog.Error("Can't read cluster object")
+		}
 		if pgName != nil {
 			dbi.DBClusterParameterGroupName = pgName
 		}
