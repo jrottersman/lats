@@ -257,9 +257,9 @@ func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 
 // CreateInstanceInput creates an instance to prep for creating our Cluster
 func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanceInput {
-	dbId := fmt.Sprintf("%s-backup", *i.DBInstanceIdentifier)
+	dbID := fmt.Sprintf("%s-backup", *i.DBInstanceIdentifier)
 	return &rds.CreateDBInstanceInput{
-		DBInstanceIdentifier: &dbId,
+		DBInstanceIdentifier: &dbID,
 		DBName:               i.DBName,
 		Engine:               i.Engine,
 		EngineVersion:        i.EngineVersion,
