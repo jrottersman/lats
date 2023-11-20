@@ -260,7 +260,6 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 	dbID := fmt.Sprintf("%s-backup", *i.DBInstanceIdentifier)
 	return &rds.CreateDBInstanceInput{
 		DBInstanceIdentifier: &dbID,
-		DBName:               i.DBName,
 		Engine:               i.Engine,
 		EngineVersion:        i.EngineVersion,
 		DBInstanceClass:      i.DBInstanceClass,
