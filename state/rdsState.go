@@ -130,6 +130,7 @@ func GenerateRestoreDBInstanceFromDBSnapshotInput(r RDSRestorationStore) *rds.Re
 	}
 }
 
+//GenerateRestoreDBInstanceFromDBClusterSnapshotInput create a db cluster input
 func GenerateRestoreDBInstanceFromDBClusterSnapshotInput(r RDSRestorationStore) *rds.RestoreDBInstanceFromDBSnapshotInput {
 	return &rds.RestoreDBInstanceFromDBSnapshotInput{
 		DBInstanceClass:             r.GetInstanceClass(),
