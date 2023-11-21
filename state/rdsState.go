@@ -116,6 +116,7 @@ func EncodeRDSClusterSnapshotOutput(snapshot *types.DBClusterSnapshot) bytes.Buf
 	return encoder
 }
 
+//GenerateRestoreDBInstanceFromDBSnapshotInput create a db instance input
 func GenerateRestoreDBInstanceFromDBSnapshotInput(r RDSRestorationStore) *rds.RestoreDBInstanceFromDBSnapshotInput {
 	return &rds.RestoreDBInstanceFromDBSnapshotInput{
 		DBInstanceClass:             r.GetInstanceClass(),
