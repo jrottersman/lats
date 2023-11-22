@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log/slog"
+	"os"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
@@ -54,6 +55,7 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 	snapshot, err := dbi.CreateClusterSnapshot(dbName, snapshotName)
 	if err != nil {
 		slog.Error("error creating snapshot", "error", err)
+		os.Exit(1)
 	}
 	// create a stack
 	store := state.RDSRestorationStore{
@@ -70,15 +72,18 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 	stack, err := rdsstate.GenerateRDSClusterStack(input)
 	if err != nil {
 		slog.Error("error generating stack ", "error", err)
+		os.Exit(1)
 	}
 	stackFn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	slog.Info("Writing the stack")
 	err = stack.Write(stackFn)
 	if err != nil {
 		slog.Error("error writing stack ", "error", err)
+		os.Exit(1)
 	}
 	sm.UpdateState(snapshotName, stackFn, "stack")
 	sm.SyncState(sfn)
+	slog.Info("Snapshot created")
 }
 
 func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn string) {
