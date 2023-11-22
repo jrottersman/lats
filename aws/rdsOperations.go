@@ -248,6 +248,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 				return
 			}
 			ins.DBSubnetGroupName = c.DBSubnetGroup
+			ins.DBClusterIdentifier = c.ClusterName
 			_, err := instances.RestoreInstanceForCluster(*ins)
 			if err != nil {
 				slog.Error("error creating instance", "error", err)
