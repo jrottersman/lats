@@ -11,3 +11,10 @@ func TestRandomStateFileName(t *testing.T) {
 		t.Errorf("string should contain gob instead looks like: %s", *s)
 	}
 }
+
+func TestInstanceName(t *testing.T) {
+	s := InstanceName()
+	if !strings.Contains(*s, "instance") {
+		t.Errorf("string should contain instance instead looks like: %s", *s)
+	}
+}
