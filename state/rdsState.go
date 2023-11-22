@@ -10,6 +10,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
+	"github.com/jrottersman/lats/helpers"
 )
 
 // EncodeRDSDatabaseOutput converts a dbInstace to an array of bytes in preperation for wrtiing it to disk
@@ -260,10 +261,10 @@ func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 
 // CreateInstanceInput creates an instance to prep for creating our Cluster
 func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanceInput {
-	dbID := fmt.Sprintf("%s-backup", *i.DBInstanceIdentifier)
+	dbID := helpers.InstanceName()
 	slog.Info("Creating database input")
 	return &rds.CreateDBInstanceInput{
-		DBInstanceIdentifier: &dbID,
+		DBInstanceIdentifier: dbID,
 		Engine:               i.Engine,
 		EngineVersion:        i.EngineVersion,
 		DBInstanceClass:      i.DBInstanceClass,
