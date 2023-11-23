@@ -705,6 +705,7 @@ func (instances *DbInstances) RestoreInstanceForCluster(input rds.CreateDBInstan
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer cancel()
 	output, err := instances.RdsClient.CreateDBInstance(ctx, &input)
+	slog.Info("Cluster being created", "output", output)
 	if err != nil {
 		slog.Error("error creating instance", "error", err)
 		return nil, err
