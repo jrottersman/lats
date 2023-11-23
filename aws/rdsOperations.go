@@ -146,6 +146,7 @@ type CreateClusterFromStackInput struct {
 func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInput) error {
 	first := c.S.Objects[1]
 	var pgName *string
+	var pgExists bool
 	if len(first) < 1 {
 		slog.Info("skipping the parameter set")
 	} else {
@@ -159,22 +160,29 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 					return fmt.Errorf("Type Error parameter group")
 				}
 				pgName = pg.ClusterParameterGroup.DBClusterParameterGroupName
-				slog.Info("creating parameter group", "name", *pgName)
-				_, err := instances.CreateClusterParameterGroup(&pg.ClusterParameterGroup)
+				_, err := instances.GetParameterGroup(*pgName)
 				if err != nil {
-					return err
-				}
-				batchSize := 20
-				params := pg.Params
-				batches := make([][]types.Parameter, 0, (len(params)+batchSize-1)/batchSize)
-				for batchSize < len(params) {
-					params, batches = params[batchSize:], append(batches, params[0:batchSize:batchSize])
-				}
-				batches = append(batches, params)
-				for _, b := range batches {
-					err = instances.ModifyClusterParameterGroup(*pg.ClusterParameterGroup.DBClusterParameterGroupName, b)
+					pgExists = true
+					slog.Info("parameter group exists hopefully we should do better error handling", "error", err)
+					continue
+				} else {
+					slog.Info("creating parameter group", "name", *pgName)
+					_, err = instances.CreateClusterParameterGroup(&pg.ClusterParameterGroup)
 					if err != nil {
 						return err
+					}
+					batchSize := 20
+					params := pg.Params
+					batches := make([][]types.Parameter, 0, (len(params)+batchSize-1)/batchSize)
+					for batchSize < len(params) {
+						params, batches = params[batchSize:], append(batches, params[0:batchSize:batchSize])
+					}
+					batches = append(batches, params)
+					for _, b := range batches {
+						err = instances.ModifyClusterParameterGroup(*pg.ClusterParameterGroup.DBClusterParameterGroupName, b)
+						if err != nil {
+							return err
+						}
 					}
 				}
 			case *types.OptionGroup:
@@ -195,9 +203,11 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			}
 		}
 		//Wait five minutes for parameter sets per aws docs
-		for i := 0; i < 10; i++ {
-			slog.Info("waiting for five minutes for Parameter group per AWS documentation", "seconds", 30*i)
-			time.Sleep(30 * time.Second)
+		if !pgExists {
+			for i := 0; i < 10; i++ {
+				slog.Info("waiting for five minutes for Parameter group per AWS documentation", "seconds", 30*i)
+				time.Sleep(30 * time.Second)
+			}
 		}
 	}
 
