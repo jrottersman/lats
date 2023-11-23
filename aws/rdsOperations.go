@@ -202,6 +202,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 	}
 
 	// get the one which is the cluster and create it
+	var engineVersion *string
 	second := c.S.Objects[2]
 	if len(second) != 1 {
 		slog.Error("Multiple clusters and there should only be one")
@@ -221,7 +222,8 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			slog.Info("creating cluster", "ClusterName", *c.ClusterName)
 			dbi.DBClusterIdentifier = c.ClusterName
 		}
-		_, err := instances.RestoreSnapshotCluster(*dbi) // we might need to do something with the output in which case this changes
+		cl, err := instances.RestoreSnapshotCluster(*dbi) // we might need to do something with the output in which case this changes
+		engineVersion = cl.DBCluster.EngineVersion
 		if err != nil {
 			return err
 		}
@@ -249,6 +251,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			}
 			ins.DBSubnetGroupName = c.DBSubnetGroup
 			ins.DBClusterIdentifier = c.ClusterName
+			ins.EngineVersion = engineVersion
 			_, err := instances.RestoreInstanceForCluster(*ins)
 			if err != nil {
 				slog.Error("error creating instance", "error", err)
