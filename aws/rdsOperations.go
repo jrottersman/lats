@@ -284,6 +284,7 @@ type CreateInstanceFromStackInput struct {
 func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackInput) error {
 	pgs := c.Stack.Objects[1]
 	var pgName *string
+	var pgExists bool
 	if len(pgs) == 0 {
 		slog.Info("No parameter groups using the default parameter group")
 	} else {
@@ -296,21 +297,28 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 					slog.Error("Could not decode parameter group")
 				}
 				pgName = pg.ParameterGroup.DBParameterGroupName
-				_, err := instances.CreateParameterGroup(&pg.ParameterGroup)
+				_, err := instances.GetParameterGroup(*pgName)
 				if err != nil {
-					return err
-				}
-				batchSize := 20
-				params := pg.Params
-				batches := make([][]types.Parameter, 0, (len(params)+batchSize-1)/batchSize)
-				for batchSize < len(params) {
-					params, batches = params[batchSize:], append(batches, params[0:batchSize:batchSize])
-				}
-				batches = append(batches, params)
-				for _, b := range batches {
-					err = instances.ModifyParameterGroup(*pg.ParameterGroup.DBParameterGroupName, b)
+					slog.Info("hopefully pg exists", "error", err)
+					pgExists = true
+					continue
+				} else {
+					_, err = instances.CreateParameterGroup(&pg.ParameterGroup)
 					if err != nil {
 						return err
+					}
+					batchSize := 20
+					params := pg.Params
+					batches := make([][]types.Parameter, 0, (len(params)+batchSize-1)/batchSize)
+					for batchSize < len(params) {
+						params, batches = params[batchSize:], append(batches, params[0:batchSize:batchSize])
+					}
+					batches = append(batches, params)
+					for _, b := range batches {
+						err = instances.ModifyParameterGroup(*pg.ParameterGroup.DBParameterGroupName, b)
+						if err != nil {
+							return err
+						}
 					}
 				}
 			case *types.OptionGroup:
@@ -329,10 +337,12 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 				}
 			}
 		}
-		// Sleep for 5 minutes per AWS documentation to wait for a parameter group to be ready
-		for i := 0; i < 10; i++ {
-			slog.Info("waiting for five minutes for Parameter group per AWS documentation", "seconds", 30*i)
-			time.Sleep(30 * time.Second)
+		if !pgExists {
+			// Sleep for 5 minutes per AWS documentation to wait for a parameter group to be ready
+			for i := 0; i < 10; i++ {
+				slog.Info("waiting for five minutes for Parameter group per AWS documentation", "seconds", 30*i)
+				time.Sleep(30 * time.Second)
+			}
 		}
 	}
 
