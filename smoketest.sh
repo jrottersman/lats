@@ -4,7 +4,8 @@ go build .
 echo "sleep for five minutes to create snapshot TODO change this to actually check status and then go to next step"
 while :
 do 
-    aws rds describe-db-snapshot --snapshot-identifier test
+    aws rds describe-db-snapshots --db-snapshot-identifier test
+    sleep 15
 done
 sleep 300
 ./lats CopyRDSSnapshot --snapshot test --new-snapshot test2
