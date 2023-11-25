@@ -269,6 +269,23 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 		}(i, &wg)
 	}
 	wg.Wait()
+	counter := 0
+	for {
+		status, err := instances.getClusterStatus(*c.ClusterName)
+		if err != nil {
+			return err
+		}
+		if *status == "availaible" {
+			slog.Info("Status is ", "status", *status)
+			break
+		}
+		counter++
+		if counter == 20 {
+			slog.Error("cluster not avaible after 10 minutes")
+			break
+		}
+		time.Sleep(30 * time.Second)
+	}
 	slog.Info("Restored cluster instances")
 	return nil
 }
