@@ -33,8 +33,9 @@ func (m MockRDSClient) DescribeDBClusterSnapshots(ctx context.Context, params *r
 
 func (m MockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput, optFns ...func(*rds.Options)) (*rds.DescribeDBInstancesOutput, error) {
 	f := "foo"
+	status := "availaible"
 	r := &rds.DescribeDBInstancesOutput{
-		DBInstances: []types.DBInstance{{DBInstanceIdentifier: &f}},
+		DBInstances: []types.DBInstance{{DBInstanceIdentifier: &f, DBInstanceStatus: &status}},
 	}
 	return r, nil
 }
