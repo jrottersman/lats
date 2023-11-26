@@ -135,6 +135,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 		if counter == 10 {
 			break
 		}
+		slog.Info("snapshot creation in progess", "Status", *status)
 		counter++
 		time.Sleep(30 * time.Second)
 	}
