@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
@@ -121,6 +122,21 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 	err = stack.Write(stackFn)
 	if err != nil {
 		slog.Warn("error writing stack", "error", err)
+	}
+	counter := 0
+	for {
+		status, err := dbi.GetInstanceSnapshotStatus(snapshotName)
+		if err != nil {
+			slog.Error("error getting status", "error", err)
+		}
+		if *status == "availiable" {
+			break
+		}
+		if counter == 10 {
+			break
+		}
+		counter++
+		time.Sleep(30 * time.Second)
 	}
 	sm.UpdateState(snapshotName, stackFn, "stack")
 	sm.SyncState(sfn)
