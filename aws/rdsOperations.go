@@ -388,6 +388,23 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 		}
 		slog.Info("Database creation in progress")
 	}
+	counter := 0
+	for {
+		status, err := instances.GetInstance(*c.DBName)
+		if err != nil {
+			return err
+		}
+		if *status.DBInstanceStatus == "availaible" {
+			slog.Info("Status is ", "status", *status.DBInstanceStatus)
+			break
+		}
+		counter++
+		if counter == 20 {
+			slog.Error("cluster not avaible after 10 minutes")
+			break
+		}
+		time.Sleep(30 * time.Second)
+	}
 	return nil
 }
 
