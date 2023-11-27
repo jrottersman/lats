@@ -406,6 +406,44 @@ func TestDbInstances_GetSnapshotStatus(t *testing.T) {
 	}
 }
 
+func TestDbClusters_GetSnapshotStatus(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		name string
+	}
+
+	m := mock.MockRDSClient{}
+	field := fields{RdsClient: m}
+	arg := args{"foo"}
+
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *string
+		wantErr bool
+	}{
+		{name: "test", fields: field, args: arg, want: aws.String("Completed"), wantErr: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			got, err := instances.GetClusterSnapshotStatus(tt.args.name)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DbClusters.GetSnapshotARN() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if *got != *tt.want {
+				t.Errorf("DbClusters.GetSnapshotARN() = %v, want %v", *got, *tt.want)
+			}
+		})
+	}
+}
+
 func TestDbInstances_CopyClusterSnaphot(t *testing.T) {
 	type fields struct {
 		RdsClient Client

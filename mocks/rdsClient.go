@@ -23,6 +23,7 @@ func (m MockRDSClient) DescribeDBClusterSnapshots(ctx context.Context, params *r
 	snap := types.DBClusterSnapshot{
 		DBClusterSnapshotIdentifier: aws.String("foo"),
 		DBClusterSnapshotArn:        aws.String("foo"),
+		Status:                      aws.String("Completed"),
 	}
 	snapshots = append(snapshots, snap)
 
