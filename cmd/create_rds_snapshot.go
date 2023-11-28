@@ -75,6 +75,22 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 		slog.Error("error generating stack ", "error", err)
 		os.Exit(1)
 	}
+	counter := 0
+	for {
+		status, err := dbi.GetClusterSnapshotStatus(snapshotName)
+		if err != nil {
+			slog.Error("error getting status", "error", err)
+		}
+		if *status == "available" {
+			break
+		}
+		if counter == 10 {
+			break
+		}
+		slog.Info("snapshot creation in progess", "Status", *status)
+		counter++
+		time.Sleep(30 * time.Second)
+	}
 	stackFn := fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	slog.Info("Writing the stack")
 	err = stack.Write(stackFn)
