@@ -129,7 +129,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 		if err != nil {
 			slog.Error("error getting status", "error", err)
 		}
-		if *status == "availiable" {
+		if *status == "available" {
 			break
 		}
 		if counter == 10 {
