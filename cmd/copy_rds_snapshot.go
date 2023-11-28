@@ -91,9 +91,13 @@ func copySnapshot() {
 			slog.Error("Couldn't find snapshot ", "snapshot", originalSnapshotName)
 		}
 		_, err = dbi.CopyClusterSnaphot(*arn, copySnapshotName, config.MainRegion, kmsKey)
+		if err != nil {
+			slog.Error("Couldn't copy snapshot ", "error", err)
+		}
+
 		counter := 0
 		for {
-			status, err := dbi.GetClusterSnapshotStatus(snapshotName)
+			status, err := dbi.GetClusterSnapshotStatus(copySnapshotName)
 			if err != nil {
 				slog.Error("error getting status", "error", err)
 			}
@@ -107,9 +111,6 @@ func copySnapshot() {
 			counter++
 			time.Sleep(30 * time.Second)
 		}
-		if err != nil {
-			slog.Error("Couldn't copy snapshot ", "error", err)
-		}
 	}
 	if origStack.RestorationObjectName == stack.LoneInstance {
 		slog.Info("copying instance snapshot")
@@ -120,6 +121,23 @@ func copySnapshot() {
 		_, err = dbi.CopySnapshot(*iarn, copySnapshotName, config.MainRegion, kmsKey)
 		if err != nil {
 			slog.Error("Couldn't copy snapshot ", "error", err)
+		}
+
+		counter := 0
+		for {
+			status, err := dbi.GetInstanceSnapshotStatus(copySnapshotName)
+			if err != nil {
+				slog.Error("error getting status", "error", err)
+			}
+			if *status == "available" {
+				break
+			}
+			if counter == 10 {
+				break
+			}
+			slog.Info("snapshot creation in progess", "Status", *status)
+			counter++
+			time.Sleep(30 * time.Second)
 		}
 	}
 	stack := NewStack(*origStack, copySnapshotName)
