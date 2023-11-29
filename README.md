@@ -24,8 +24,9 @@ The state file entry are json files however do not edit them manually or lats wi
 
 ## Lats commands
 * lats init 
-* lats create-snapshot --database-name {dbName} --snapshot-name {snapshotName}
-* lats copy-snapshot --snapshot {origName} --new-snapshot {newSnapshotName} --kms-key {kms-key-in-backup-region}
+* lats CreateRDSSnapshot --database-name {dbName} --snapshot-name {snapshotName}
+* lats CopyRDSSnapshot --snapshot {origName} --new-snapshot {newSnapshotName} --kms-key {kms-key-in-backup-region}
+* lats restoreRDSSnapshot
 
 
 ## Contributing
