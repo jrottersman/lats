@@ -119,7 +119,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 		Instance: db,
 		Snapshot: snapshot,
 	}
-	slog.Debug("getting parameter gorups")
+	slog.Debug("getting parameter groups")
 	pgs, err := aws.GetParameterGroups(store, dbi)
 	if err != nil {
 		slog.Warn("error getting parameter groups", "error", err)
