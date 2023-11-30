@@ -669,9 +669,10 @@ func (instances *DbInstances) CreateClusterParameterGroup(p *types.DBClusterPara
 
 //ModifyOptionGroup modifies the option group
 func (instances *DbInstances) ModifyOptionGroup(OptionGroupName string, Include []types.OptionConfiguration) error {
+	t := true
 	input := rds.ModifyOptionGroupInput{
 		OptionGroupName:  &OptionGroupName,
-		ApplyImmediately: true,
+		ApplyImmediately: &t,
 		OptionsToInclude: Include,
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
@@ -840,7 +841,7 @@ func (instances *DbInstances) GetInstanceSnapshotPercentage(name string) (*int32
 	}
 	for _, v := range output.DBSnapshots {
 		if *v.DBSnapshotIdentifier == name {
-			return &v.PercentProgress, nil
+			return v.PercentProgress, nil
 		}
 	}
 	return nil, fmt.Errorf("snapshot not found")
