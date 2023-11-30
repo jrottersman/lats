@@ -42,9 +42,9 @@ func CreateSnapshot() {
 	dbi := aws.Init(config.MainRegion)
 	cluster, err := dbi.GetCluster(dbName)
 	if err != nil {
-		slog.Error("error with step 1 get cluster ", "error", err)
+		slog.Info("not a cluster with step 1 get cluster ", "error", err)
 	}
-	if cluster == nil && err == nil {
+	if cluster == nil {
 		createSnapshotForInstance(dbi, sm, config.StateFileName)
 	} else {
 		createSnapshotForCluster(dbi, sm, cluster, config.StateFileName)
