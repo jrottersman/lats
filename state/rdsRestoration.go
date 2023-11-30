@@ -42,10 +42,10 @@ func (r RDSRestorationStore) GetAllocatedStorage() *int32 {
 	if r.Snapshot == nil {
 		return nil
 	}
-	if r.Snapshot.AllocatedStorage == 0 {
+	if *r.Snapshot.AllocatedStorage == 0 {
 		return nil
 	}
-	return &r.Snapshot.AllocatedStorage
+	return r.Snapshot.AllocatedStorage
 }
 
 //GetParameterGroups gets the parameter groups for an instance
@@ -69,7 +69,7 @@ func (r RDSRestorationStore) GetAutoMinorVersionUpgrade() *bool {
 	if r.Instance == nil {
 		return nil
 	}
-	return &r.Instance.AutoMinorVersionUpgrade
+	return r.Instance.AutoMinorVersionUpgrade
 }
 
 //GetBackupTarget yet another getter
@@ -85,7 +85,7 @@ func (r RDSRestorationStore) GetDeleteProtection() *bool {
 	if r.Instance == nil {
 		return nil
 	}
-	return &r.Instance.DeletionProtection
+	return r.Instance.DeletionProtection
 }
 
 //GetSnapshotIdentifier yet another getter
