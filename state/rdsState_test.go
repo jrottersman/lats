@@ -99,8 +99,8 @@ func TestDecodeRestoreDBClusterFromSnapshotInput(t *testing.T) {
 func TestEncodeRDSDBOutput(t *testing.T) {
 
 	db := types.DBInstance{
-		AllocatedStorage:      1000,
-		BackupRetentionPeriod: 30,
+		AllocatedStorage:      aws.Int32(1000),
+		BackupRetentionPeriod: aws.Int32(30),
 	}
 	r := EncodeRDSDatabaseOutput(&db)
 	var result types.DBInstance
@@ -116,8 +116,8 @@ func TestEncodeRDSDBOutput(t *testing.T) {
 
 func TestDecodeRDSDBOutput(t *testing.T) {
 	db := types.DBInstance{
-		AllocatedStorage:      1000,
-		BackupRetentionPeriod: 30,
+		AllocatedStorage:      aws.Int32(1000),
+		BackupRetentionPeriod: aws.Int32(30),
 	}
 	r := EncodeRDSDatabaseOutput(&db)
 	resp := DecodeRDSDatabaseOutput(r)
@@ -166,9 +166,9 @@ func TestDecodeRDSClusterOutput(t *testing.T) {
 func TestEncodeRDSSnapshotOutput(t *testing.T) {
 
 	snap := types.DBSnapshot{
-		AllocatedStorage: 1000,
-		Encrypted:        true,
-		PercentProgress:  100,
+		AllocatedStorage: aws.Int32(1000),
+		Encrypted:        aws.Bool(true),
+		PercentProgress:  aws.Int32(100),
 	}
 	r := EncodeRDSSnapshotOutput(&snap)
 	var result types.DBSnapshot
@@ -184,9 +184,9 @@ func TestEncodeRDSSnapshotOutput(t *testing.T) {
 
 func TestDecodeRDSSnapshotOutput(t *testing.T) {
 	snap := types.DBSnapshot{
-		AllocatedStorage: 1000,
-		Encrypted:        true,
-		PercentProgress:  100,
+		AllocatedStorage: aws.Int32(1000),
+		Encrypted:        aws.Bool(true),
+		PercentProgress:  aws.Int32(100),
 	}
 	r := EncodeRDSSnapshotOutput(&snap)
 	resp := DecodeRDSSnapshotOutput(r)
@@ -199,8 +199,8 @@ func TestDecodeRDSSnapshotOutput(t *testing.T) {
 func TestEncodeRDSClusterSnapshotOutput(t *testing.T) {
 
 	snap := types.DBClusterSnapshot{
-		AllocatedStorage: 1000,
-		PercentProgress:  100,
+		AllocatedStorage: aws.Int32(1000),
+		PercentProgress:  aws.Int32(100),
 	}
 	r := EncodeRDSClusterSnapshotOutput(&snap)
 	var result types.DBClusterSnapshot
@@ -216,8 +216,8 @@ func TestEncodeRDSClusterSnapshotOutput(t *testing.T) {
 
 func TestDecodeRDSClusterSnapshotOutput(t *testing.T) {
 	snap := types.DBClusterSnapshot{
-		AllocatedStorage: 1000,
-		PercentProgress:  100,
+		AllocatedStorage: aws.Int32(1000),
+		PercentProgress:  aws.Int32(100),
 	}
 	r := EncodeRDSClusterSnapshotOutput(&snap)
 	resp := DecodeRDSClusterSnapshotOutput(r)
@@ -259,9 +259,9 @@ func TestWriteOutput(t *testing.T) {
 func TestGetRDSSnapshotOutput(t *testing.T) {
 	filename := "/tmp/foo"
 	snap := types.DBSnapshot{
-		AllocatedStorage:     1000,
-		Encrypted:            true,
-		PercentProgress:      100,
+		AllocatedStorage:     aws.Int32(1000),
+		Encrypted:            aws.Bool(true),
+		PercentProgress:      aws.Int32(100),
 		DBInstanceIdentifier: aws.String("foobar"),
 	}
 
@@ -289,7 +289,7 @@ func TestGetRDSSnapshotOutput(t *testing.T) {
 		t.Errorf("got error: %s", err)
 	}
 
-	if *&newSnap.AllocatedStorage != 1000 {
+	if *newSnap.AllocatedStorage != 1000 {
 		t.Errorf("expected %d got 1000", *&newSnap.AllocatedStorage)
 	}
 }
@@ -297,8 +297,8 @@ func TestGetRDSSnapshotOutput(t *testing.T) {
 func TestGetRDSClusterSnapshotOutput(t *testing.T) {
 	filename := "/tmp/foo"
 	snap := types.DBClusterSnapshot{
-		AllocatedStorage:    1000,
-		PercentProgress:     100,
+		AllocatedStorage:    aws.Int32(1000),
+		PercentProgress:     aws.Int32(100),
 		DBClusterIdentifier: aws.String("foobar"),
 	}
 
@@ -326,7 +326,7 @@ func TestGetRDSClusterSnapshotOutput(t *testing.T) {
 		t.Errorf("got error: %s", err)
 	}
 
-	if *&newSnap.AllocatedStorage != 1000 {
+	if *newSnap.AllocatedStorage != 1000 {
 		t.Errorf("expected %d got 1000", *&newSnap.AllocatedStorage)
 	}
 }
@@ -334,7 +334,7 @@ func TestGetRDSClusterSnapshotOutput(t *testing.T) {
 func TestGetRDSInstanceOutput(t *testing.T) {
 	filename := "/tmp/foo"
 	dbi := types.DBInstance{
-		AllocatedStorage:     1000,
+		AllocatedStorage:     aws.Int32(1000),
 		DBInstanceIdentifier: aws.String("foobar"),
 	}
 
@@ -362,7 +362,7 @@ func TestGetRDSInstanceOutput(t *testing.T) {
 		t.Errorf("got error: %s", err)
 	}
 
-	if *&newDbi.AllocatedStorage != 1000 {
+	if *newDbi.AllocatedStorage != 1000 {
 		t.Errorf("expected %d got 1000", *&newDbi.AllocatedStorage)
 	}
 }
