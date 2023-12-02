@@ -145,9 +145,11 @@ func (m MockRDSClient) CopyDBClusterSnapshot(ctx context.Context, params *rds.Co
 }
 
 func (m MockRDSClient) CopyDBSnapshot(ctx context.Context, params *rds.CopyDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CopyDBSnapshotOutput, error) {
+	var store int32
+	store = 1000
 	r := &rds.CopyDBSnapshotOutput{
 		DBSnapshot: &types.DBSnapshot{
-			AllocatedStorage: 1000,
+			AllocatedStorage: &store,
 		},
 	}
 	return r, nil
