@@ -87,10 +87,15 @@ func TestSyncState(t *testing.T) {
 
 func TestGetStateObject(t *testing.T) {
 	filename := "/tmp/foo"
+	var storage int32
+	storage = 1000
+	enc := true
+	var pp int32
+	pp = 100
 	snap := types.DBSnapshot{
-		AllocatedStorage:     1000,
-		Encrypted:            true,
-		PercentProgress:      100,
+		AllocatedStorage:     &storage,
+		Encrypted:            &enc,
+		PercentProgress:      &pp,
 		DBInstanceIdentifier: aws.String("foobar"),
 	}
 
@@ -130,8 +135,8 @@ func TestGetStateObject(t *testing.T) {
 func TestGetStateObjectClusterSnapshot(t *testing.T) {
 	filename := "/tmp/foo"
 	snap := types.DBClusterSnapshot{
-		AllocatedStorage:    1000,
-		PercentProgress:     100,
+		AllocatedStorage:    aws.Int32(1000),
+		PercentProgress:     aws.Int32(100),
 		DBClusterIdentifier: aws.String("foobar"),
 	}
 
@@ -171,7 +176,7 @@ func TestGetStateObjectClusterSnapshot(t *testing.T) {
 func TestGetStateObjectInstance(t *testing.T) {
 	filename := "/tmp/foo"
 	dbi := types.DBInstance{
-		AllocatedStorage:     1000,
+		AllocatedStorage:     aws.Int32(1000),
 		DBInstanceIdentifier: aws.String("foobar"),
 	}
 
