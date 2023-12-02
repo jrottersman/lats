@@ -87,7 +87,7 @@ func TestRDSRestorationStore_GetAllocatedStorage(t *testing.T) {
 	}{
 		{name: "totalNil", fields: fields{nil, nil, nil}, want: nil},
 		{name: "RegularNil", fields: fields{&types.DBSnapshot{}, nil, nil}, want: nil},
-		{name: "Value", fields: fields{&types.DBSnapshot{AllocatedStorage: 1000}, nil, nil}, want: &valueExpected},
+		{name: "Value", fields: fields{&types.DBSnapshot{AllocatedStorage: &valueExpected}, nil, nil}, want: &valueExpected},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
