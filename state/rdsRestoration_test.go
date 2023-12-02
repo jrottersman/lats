@@ -12,10 +12,15 @@ import (
 
 func TestRDSRestorationStoreBuilder(t *testing.T) {
 	filename := "/tmp/foo"
+	var storage int32
+	var progress int32
+	storage = 1000
+	progress = 100
+	tu := true
 	snap := types.DBSnapshot{
-		AllocatedStorage:     1000,
-		Encrypted:            true,
-		PercentProgress:      100,
+		AllocatedStorage:     &storage,
+		Encrypted:            &tu,
+		PercentProgress:      &progress,
 		DBInstanceIdentifier: aws.String("foobar"),
 	}
 
@@ -37,7 +42,7 @@ func TestRDSRestorationStoreBuilder(t *testing.T) {
 
 	filename2 := "/tmp/foo2"
 	dbi := types.DBInstance{
-		AllocatedStorage:     1000,
+		AllocatedStorage:     &storage,
 		DBInstanceIdentifier: aws.String("foobar"),
 	}
 
@@ -63,8 +68,8 @@ func TestRDSRestorationStoreBuilder(t *testing.T) {
 		t.Errorf("error writing file %s", err)
 	}
 
-	if resp.Snapshot.AllocatedStorage != 1000 {
-		t.Errorf("oops WTF wanted 1000 got %d", resp.Snapshot.AllocatedStorage)
+	if *resp.Snapshot.AllocatedStorage != 1000 {
+		t.Errorf("oops WTF wanted 1000 got %d", *resp.Snapshot.AllocatedStorage)
 	}
 }
 
