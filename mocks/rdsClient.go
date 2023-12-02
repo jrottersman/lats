@@ -59,9 +59,11 @@ func (m MockRDSClient) CreateDBInstance(ctx context.Context, params *rds.CreateD
 }
 
 func (m MockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error) {
+	var store int32
+	store = 1000
 	r := &rds.CreateDBSnapshotOutput{
 		DBSnapshot: &types.DBSnapshot{
-			AllocatedStorage: 1000,
+			AllocatedStorage: &store,
 		},
 	}
 	return r, nil
