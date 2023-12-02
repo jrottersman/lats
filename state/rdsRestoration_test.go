@@ -467,7 +467,7 @@ func TestRDSRestorationStore_GetAutoMinorVersionUpgrade(t *testing.T) {
 	}{
 		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
 		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil, nil}, want: &pFalse},
-		{name: "GetData", fields: fields{nil, &types.DBInstance{AutoMinorVersionUpgrade: true}, nil, nil}, want: &pTrue},
+		{name: "GetData", fields: fields{nil, &types.DBInstance{AutoMinorVersionUpgrade: &pTrue}, nil, nil}, want: &pTrue},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -545,7 +545,7 @@ func TestRDSRestorationStore_GetDeleteProtection(t *testing.T) {
 	}{
 		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
 		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil, nil}, want: &pFalse},
-		{name: "GetData", fields: fields{nil, &types.DBInstance{DeletionProtection: true}, nil, nil}, want: &pTrue},
+		{name: "GetData", fields: fields{nil, &types.DBInstance{DeletionProtection: &pTrue}, nil, nil}, want: &pTrue},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -607,6 +607,7 @@ func TestRDSRestorationStore_GetDBClusterMembers(t *testing.T) {
 		Cluster         *types.DBCluster
 		ClusterSnapshot *types.DBClusterSnapshot
 	}
+	pTrue := true
 	tests := []struct {
 		name   string
 		fields fields
@@ -614,7 +615,7 @@ func TestRDSRestorationStore_GetDBClusterMembers(t *testing.T) {
 	}{
 		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
 		{name: "RegularNil", fields: fields{nil, nil, &types.DBCluster{}, nil}, want: nil},
-		{name: "GetData", fields: fields{nil, &types.DBInstance{EnabledCloudwatchLogsExports: []string{"error"}}, &types.DBCluster{DBClusterMembers: []types.DBClusterMember{{IsClusterWriter: true}}}, nil}, want: &[]types.DBClusterMember{{IsClusterWriter: true}}},
+		{name: "GetData", fields: fields{nil, &types.DBInstance{EnabledCloudwatchLogsExports: []string{"error"}}, &types.DBCluster{DBClusterMembers: []types.DBClusterMember{{IsClusterWriter: &pTrue}}}, nil}, want: &[]types.DBClusterMember{{IsClusterWriter: &pTrue}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -638,6 +639,7 @@ func TestRDSRestorationStore_GetParameterGroups(t *testing.T) {
 		Cluster         *types.DBCluster
 		ClusterSnapshot *types.DBClusterSnapshot
 	}
+	pTrue := true
 	tests := []struct {
 		name   string
 		fields fields
@@ -645,7 +647,7 @@ func TestRDSRestorationStore_GetParameterGroups(t *testing.T) {
 	}{
 		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
 		{name: "RegularNil", fields: fields{nil, nil, &types.DBCluster{}, nil}, want: nil},
-		{name: "GetData", fields: fields{nil, &types.DBInstance{DBParameterGroups: []types.DBParameterGroupStatus{}}, &types.DBCluster{DBClusterMembers: []types.DBClusterMember{{IsClusterWriter: true}}}, nil}, want: []types.DBParameterGroupStatus{}},
+		{name: "GetData", fields: fields{nil, &types.DBInstance{DBParameterGroups: []types.DBParameterGroupStatus{}}, &types.DBCluster{DBClusterMembers: []types.DBClusterMember{{IsClusterWriter: &pTrue}}}, nil}, want: []types.DBParameterGroupStatus{}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
