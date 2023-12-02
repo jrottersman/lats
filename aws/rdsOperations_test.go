@@ -71,7 +71,7 @@ func TestCreateSnapshot(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
-	if resp.AllocatedStorage != 1000 {
+	if *resp.AllocatedStorage != 1000 {
 		t.Errorf("got %d expected 1000", resp.AllocatedStorage)
 	}
 }
@@ -85,7 +85,7 @@ func TestCreateClusterSnapshot(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
-	if resp.AllocatedStorage != 1000 {
+	if *resp.AllocatedStorage != 1000 {
 		t.Errorf("got %d expected 1000", resp.AllocatedStorage)
 	}
 }
@@ -113,7 +113,7 @@ func TestCopySnapshot(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
-	if resp.AllocatedStorage != 1000 {
+	if *resp.AllocatedStorage != 1000 {
 		t.Errorf("got %d expected 1000", resp.AllocatedStorage)
 	}
 }
@@ -121,10 +121,16 @@ func TestCopySnapshot(t *testing.T) {
 func TestRestoreSnapshotInstance(t *testing.T) {
 
 	filename := "/tmp/foo"
+	var store int32
+	store = 1000
+	enc := true
+	var pp int32
+	pp = 100
+
 	snap := types.DBSnapshot{
-		AllocatedStorage:     1000,
-		Encrypted:            true,
-		PercentProgress:      100,
+		AllocatedStorage:     &store,
+		Encrypted:            &enc,
+		PercentProgress:      &pp,
 		DBInstanceIdentifier: aws.String("foobar"),
 		DBSnapshotIdentifier: aws.String("foo"),
 	}
@@ -146,7 +152,7 @@ func TestRestoreSnapshotInstance(t *testing.T) {
 
 	filename2 := "/tmp/foo2"
 	dbz := types.DBInstance{
-		AllocatedStorage:     1000,
+		AllocatedStorage:     &store,
 		DBInstanceIdentifier: aws.String("foobar"),
 	}
 
@@ -187,10 +193,13 @@ func TestRestoreSnapshotInstance(t *testing.T) {
 }
 
 func TestRestoreSnapshotCluster(t *testing.T) {
-
+	var storage int32
+	storage = 1000
+	var pp int32
+	pp = 100
 	snap := types.DBClusterSnapshot{
-		AllocatedStorage:            1000,
-		PercentProgress:             100,
+		AllocatedStorage:            &storage,
+		PercentProgress:             &pp,
 		DBClusterIdentifier:         aws.String("foobar"),
 		DBClusterSnapshotIdentifier: aws.String("foo"),
 	}
