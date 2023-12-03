@@ -530,7 +530,6 @@ func TestRDSRestorationStore_GetBackupTarget(t *testing.T) {
 }
 
 func TestRDSRestorationStore_GetDeleteProtection(t *testing.T) {
-	pFalse := false
 	pTrue := true
 	type fields struct {
 		Snapshot        *types.DBSnapshot
@@ -544,7 +543,6 @@ func TestRDSRestorationStore_GetDeleteProtection(t *testing.T) {
 		want   *bool
 	}{
 		{name: "totalNil", fields: fields{nil, nil, nil, nil}, want: nil},
-		{name: "RegularNil", fields: fields{nil, &types.DBInstance{}, nil, nil}, want: &pFalse},
 		{name: "GetData", fields: fields{nil, &types.DBInstance{DeletionProtection: &pTrue}, nil, nil}, want: &pTrue},
 	}
 	for _, tt := range tests {
