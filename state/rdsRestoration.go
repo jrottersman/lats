@@ -42,9 +42,6 @@ func (r RDSRestorationStore) GetAllocatedStorage() *int32 {
 	if r.Snapshot == nil {
 		return nil
 	}
-	if *r.Snapshot.AllocatedStorage == 0 {
-		return nil
-	}
 	return r.Snapshot.AllocatedStorage
 }
 
