@@ -243,7 +243,7 @@ func TestWriteOutput(t *testing.T) {
 	}
 
 	var expected int64
-	expected = 33
+	expected = 36
 	filename := "/tmp/foo.gob"
 	defer os.Remove(filename)
 
