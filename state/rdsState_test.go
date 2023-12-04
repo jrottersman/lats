@@ -109,8 +109,8 @@ func TestEncodeRDSDBOutput(t *testing.T) {
 	if err != nil {
 		t.Errorf("decode error: %s", err)
 	}
-	if result.AllocatedStorage != db.AllocatedStorage {
-		t.Errorf("got %d expected %d", result.AllocatedStorage, db.AllocatedStorage)
+	if *result.AllocatedStorage != *db.AllocatedStorage {
+		t.Errorf("got %d expected %d", *result.AllocatedStorage, *db.AllocatedStorage)
 	}
 }
 
