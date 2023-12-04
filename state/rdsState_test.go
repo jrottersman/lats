@@ -209,8 +209,8 @@ func TestEncodeRDSClusterSnapshotOutput(t *testing.T) {
 	if err != nil {
 		t.Errorf("decode error: %s", err)
 	}
-	if result.AllocatedStorage != snap.AllocatedStorage {
-		t.Errorf("got %d expected %d", result.AllocatedStorage, snap.AllocatedStorage)
+	if *result.AllocatedStorage != *snap.AllocatedStorage {
+		t.Errorf("got %d expected %d", *result.AllocatedStorage, *snap.AllocatedStorage)
 	}
 }
 
@@ -221,8 +221,8 @@ func TestDecodeRDSClusterSnapshotOutput(t *testing.T) {
 	}
 	r := EncodeRDSClusterSnapshotOutput(&snap)
 	resp := DecodeRDSClusterSnapshotOutput(r)
-	if resp.AllocatedStorage != snap.AllocatedStorage {
-		t.Errorf("Expected %d, got %d", resp.AllocatedStorage, snap.AllocatedStorage)
+	if *resp.AllocatedStorage != *snap.AllocatedStorage {
+		t.Errorf("Expected %d, got %d", *resp.AllocatedStorage, *snap.AllocatedStorage)
 	}
 
 }
