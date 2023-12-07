@@ -10,12 +10,14 @@ import (
 type MockEC2Client struct {
 }
 
+//CreateSecurityGroup mock security group creaton
 func (m MockEC2Client) CreateSecurityGroup(ctx context.Context, params *ec2.CreateSecurityGroupInput) (*ec2.CreateSecurityGroupOutput, error) {
 	return &ec2.CreateSecurityGroupOutput{
 		GroupId: aws.String("foobar"),
 	}, nil
 }
 
+//AuthorizeSecurityGroupEgress mock authorize security group egress
 func (m MockEC2Client) AuthorizeSecurityGroupEgress(ctx context.Context, params *ec2.AuthorizeSecurityGroupEgressInput) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
 	boo := true
 	return &ec2.AuthorizeSecurityGroupEgressOutput{Return: &boo}, nil
