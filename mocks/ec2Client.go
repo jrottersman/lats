@@ -15,3 +15,8 @@ func (m MockEC2Client) CreateSecurityGroup(ctx context.Context, params *ec2.Crea
 		GroupId: aws.String("foobar"),
 	}, nil
 }
+
+func (m MockEC2Client) AuthorizeSecurityGroupEgress(ctx context.Context, params *ec2.AuthorizeSecurityGroupEgressInput) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
+	boo := true
+	return &ec2.AuthorizeSecurityGroupEgressOutput{Return: &boo}, nil
+}
