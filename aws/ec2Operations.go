@@ -5,11 +5,17 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
+	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 )
 
 type Ec2Client interface {
 	CreateSecurityGroup(ctx context.Context, params *ec2.CreateSecurityGroupInput) (*ec2.CreateSecurityGroupOutput, error)
 	AuthorizeSecurityGroupEgress(ctx context.Context, params *ec2.AuthorizeSecurityGroupEgressInput) (*ec2.AuthorizeSecurityGroupEgressOutput, error)
+}
+
+type SGEgressInput struct {
+	SGId          *string
+	IpPermissions []types.IpPermission
 }
 
 type EC2Instances struct {
@@ -32,3 +38,10 @@ func (c *EC2Instances) CreateSG(description *string, groupName *string, vpcID *s
 	}
 	return output, nil
 }
+
+// func (c *EC2Instances) SGEgress() {
+// 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+// 	defer cancel()
+
+// 	params := ec2.AuthorizeSecurityGroupEgressInput{}
+// }
