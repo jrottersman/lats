@@ -39,9 +39,18 @@ func (c *EC2Instances) CreateSG(description *string, groupName *string, vpcID *s
 	return output, nil
 }
 
-// func (c *EC2Instances) SGEgress() {
-// 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
-// 	defer cancel()
+func (c *EC2Instances) SGEgress(s SGEgressInput) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
 
-// 	params := ec2.AuthorizeSecurityGroupEgressInput{}
-// }
+	params := ec2.AuthorizeSecurityGroupEgressInput{
+		GroupId:       s.SGId,
+		IpPermissions: s.IpPermissions,
+	}
+
+	output, err := c.Client.AuthorizeSecurityGroupEgress(ctx, &params)
+	if err != nil {
+		return nil, err
+	}
+	return output, nil
+}
