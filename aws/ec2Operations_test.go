@@ -55,3 +55,44 @@ func TestEC2Instances_CreateSG(t *testing.T) {
 		})
 	}
 }
+
+func TestEC2Instances_SGEgress(t *testing.T) {
+	type fields struct {
+		Client Ec2Client
+	}
+	type args struct {
+		s SGEgressInput
+	}
+	tr := true
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *ec2.AuthorizeSecurityGroupEgressOutput
+		wantErr bool
+	}{
+		{name: "test",
+			fields: fields{Client: mock.MockEC2Client{}},
+			args:   args{s: SGEgressInput{}},
+			want: &ec2.AuthorizeSecurityGroupEgressOutput{
+				Return: &tr,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &EC2Instances{
+				Client: tt.fields.Client,
+			}
+			got, err := c.SGEgress(tt.args.s)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("EC2Instances.SGEgress() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("EC2Instances.SGEgress() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
