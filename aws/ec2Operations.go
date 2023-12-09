@@ -55,3 +55,18 @@ func (c *EC2Instances) SGEgress(s SGEgressInput) (*ec2.AuthorizeSecurityGroupEgr
 	}
 	return output, nil
 }
+
+func (c *EC2Instances) DescribeSG(sgName string) (*ec2.DescribeSecurityGroupsOutput, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+
+	params := ec2.DescribeSecurityGroupsInput{
+		GroupIds: []string{sgName},
+	}
+
+	output, err := c.Client.DescribeSecurityGroups(ctx, &params)
+	if err != nil {
+		return nil, err
+	}
+	return output, nil
+}
