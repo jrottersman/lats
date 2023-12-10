@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 )
 
+//MockEC2Client is a client for ec2 that's a mock
 type MockEC2Client struct {
 }
 
@@ -23,10 +24,12 @@ func (m MockEC2Client) AuthorizeSecurityGroupEgress(ctx context.Context, params 
 	return &ec2.AuthorizeSecurityGroupEgressOutput{Return: &boo}, nil
 }
 
+//DescribeSecurityGroups mock descirbe security groups
 func (m MockEC2Client) DescribeSecurityGroups(ctx context.Context, params *ec2.DescribeSecurityGroupsInput, optFns ...func(*ec2.Options)) (*ec2.DescribeSecurityGroupsOutput, error) {
 	return &ec2.DescribeSecurityGroupsOutput{}, nil
 }
 
+//AuthorizeSecurityGroupIngress another mock
 func (m MockEC2Client) AuthorizeSecurityGroupIngress(ctx context.Context, params *ec2.AuthorizeSecurityGroupIngressInput, optFns ...func(*ec2.Options)) (*ec2.AuthorizeSecurityGroupIngressOutput, error) {
 	boo := true
 	return &ec2.AuthorizeSecurityGroupIngressOutput{Return: &boo}, nil
