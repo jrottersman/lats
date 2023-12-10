@@ -26,3 +26,8 @@ func (m MockEC2Client) AuthorizeSecurityGroupEgress(ctx context.Context, params 
 func (m MockEC2Client) DescribeSecurityGroups(ctx context.Context, params *ec2.DescribeSecurityGroupsInput, optFns ...func(*ec2.Options)) (*ec2.DescribeSecurityGroupsOutput, error) {
 	return &ec2.DescribeSecurityGroupsOutput{}, nil
 }
+
+func (m MockEC2Client) AuthorizeSecurityGroupIngress(ctx context.Context, params *ec2.AuthorizeSecurityGroupIngressInput, optFns ...func(*ec2.Options)) (*ec2.AuthorizeSecurityGroupIngressOutput, error) {
+	boo := true
+	return &ec2.AuthorizeSecurityGroupIngressOutput{Return: &boo}, nil
+}
