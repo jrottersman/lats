@@ -61,7 +61,7 @@ func TestEC2Instances_SGEgress(t *testing.T) {
 		Client Ec2Client
 	}
 	type args struct {
-		s SGEgressInput
+		s SGInput
 	}
 	tr := true
 	tests := []struct {
@@ -73,7 +73,7 @@ func TestEC2Instances_SGEgress(t *testing.T) {
 	}{
 		{name: "test",
 			fields: fields{Client: mock.MockEC2Client{}},
-			args:   args{s: SGEgressInput{}},
+			args:   args{s: SGInput{}},
 			want: &ec2.AuthorizeSecurityGroupEgressOutput{
 				Return: &tr,
 			},

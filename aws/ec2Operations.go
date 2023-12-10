@@ -15,7 +15,7 @@ type Ec2Client interface {
 	AuthorizeSecurityGroupIngress(ctx context.Context, params *ec2.AuthorizeSecurityGroupIngressInput, optFns ...func(*ec2.Options)) (*ec2.AuthorizeSecurityGroupIngressOutput, error)
 }
 
-type SGEgressInput struct {
+type SGInput struct {
 	SGId          *string
 	IpPermissions []types.IpPermission
 }
@@ -41,7 +41,7 @@ func (c *EC2Instances) CreateSG(description *string, groupName *string, vpcID *s
 	return output, nil
 }
 
-func (c *EC2Instances) SGEgress(s SGEgressInput) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
+func (c *EC2Instances) SGEgress(s SGInput) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
@@ -51,6 +51,22 @@ func (c *EC2Instances) SGEgress(s SGEgressInput) (*ec2.AuthorizeSecurityGroupEgr
 	}
 
 	output, err := c.Client.AuthorizeSecurityGroupEgress(ctx, &params)
+	if err != nil {
+		return nil, err
+	}
+	return output, nil
+}
+
+func (c *EC2Instances) SGIngress(s SGInput) (*ec2.AuthorizeSecurityGroupIngressOutput, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+
+	params := ec2.AuthorizeSecurityGroupIngressInput{
+		GroupId:       s.SGId,
+		IpPermissions: s.IpPermissions,
+	}
+
+	output, err := c.Client.AuthorizeSecurityGroupIngress(ctx, &params)
 	if err != nil {
 		return nil, err
 	}
