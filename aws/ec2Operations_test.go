@@ -111,7 +111,15 @@ func TestEC2Instances_DescribeSG(t *testing.T) {
 		want    *ec2.DescribeSecurityGroupsOutput
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "pass",
+			fields: fields{
+				Client: mock.MockEC2Client{},
+			},
+			args:    args{sgName: "foo"},
+			want:    &ec2.DescribeSecurityGroupsOutput{},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
