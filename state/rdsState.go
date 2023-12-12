@@ -8,7 +8,6 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/helpers"
@@ -47,18 +46,6 @@ func DecodeOptionGroup(b bytes.Buffer) types.OptionGroup {
 		slog.Error("Error decoding state for Option Group", "error", err)
 	}
 	return optionGroup
-}
-
-//EncodeSecurityGroups encodes a list of security groups
-func EncodeSecurityGroups(s *ec2.CreateSecurityGroupOutput) bytes.Buffer {
-	var encoder bytes.Buffer
-	enc := gob.NewEncoder(&encoder)
-
-	err := enc.Encode(s)
-	if err != nil {
-		slog.Error("Error encoding our security group", "error", err)
-	}
-	return encoder
 }
 
 // DecodeRDSClusterOutput takes a bytes buffer and returns it to a DbCluster type in preperation of restoring the database
