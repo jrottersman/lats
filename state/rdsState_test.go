@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	ec2types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
@@ -37,6 +38,23 @@ func TestDecodeOptionGroup(t *testing.T) {
 	resp := DecodeOptionGroup(r)
 	if *resp.EngineName != *og.EngineName {
 		t.Errorf("got %s expected %s", *resp.EngineName, *og.EngineName)
+	}
+}
+
+func TestEncodeSecurityGroup(t *testing.T) {
+
+	sg := ec2types.SecurityGroup{
+		Description: aws.String("foo"),
+	}
+	r := EncodeSecurityGroup(sg)
+	var result ec2types.SecurityGroup
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if *result.Description != *sg.Description {
+		t.Errorf("got %s expected %s", *result.Description, *sg.Description)
 	}
 }
 
