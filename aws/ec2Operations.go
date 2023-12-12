@@ -73,12 +73,12 @@ func (c *EC2Instances) SGIngress(s SGInput) (*ec2.AuthorizeSecurityGroupIngressO
 	return output, nil
 }
 
-func (c *EC2Instances) DescribeSG(sgName string) (*ec2.DescribeSecurityGroupsOutput, error) {
+func (c *EC2Instances) DescribeSG(sgIds string) (*ec2.DescribeSecurityGroupsOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
 	params := ec2.DescribeSecurityGroupsInput{
-		GroupIds: []string{sgName},
+		GroupIds: []string{sgIds},
 	}
 
 	output, err := c.Client.DescribeSecurityGroups(ctx, &params)
