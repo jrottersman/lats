@@ -181,6 +181,7 @@ func EncodeRestoreDBInstanceFromDBSnapshotInput(r *rds.RestoreDBInstanceFromDBSn
 	return encoder
 }
 
+//DecodeRestoreDBInstanceFromDBSnapshot decodes snapshot from bytes
 func DecodeRestoreDBInstanceFromDBSnapshotInput(b bytes.Buffer) *rds.RestoreDBInstanceFromDBSnapshotInput {
 	var Restore rds.RestoreDBInstanceFromDBSnapshotInput
 	dec := gob.NewDecoder(&b)
