@@ -58,6 +58,17 @@ func TestEncodeSecurityGroup(t *testing.T) {
 	}
 }
 
+func TestDecodeSecurityGroup(t *testing.T) {
+	sg := ec2types.SecurityGroup{
+		Description: aws.String("foo"),
+	}
+	r := EncodeSecurityGroup(sg)
+	resp := DecodeSecurityGroup(r)
+	if *resp.Description != *sg.Description {
+		t.Errorf("got %s expected %s", *resp.Description, *sg.Description)
+	}
+}
+
 func TestEncodeRestoreDBInstanceFromDBSnapshotInput(t *testing.T) {
 
 	db := rds.RestoreDBInstanceFromDBSnapshotInput{
