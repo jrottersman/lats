@@ -49,7 +49,7 @@ func DecodeOptionGroup(b bytes.Buffer) types.OptionGroup {
 	return optionGroup
 }
 
-//EncodeOptionGroup converts a security group struct to bytes
+//EncodeSecurityGroup converts a security group struct to bytes
 func EncodeSecurityGroup(s ec2types.SecurityGroup) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
@@ -59,6 +59,17 @@ func EncodeSecurityGroup(s ec2types.SecurityGroup) bytes.Buffer {
 		slog.Error("Error encoding our option group", "error", err)
 	}
 	return encoder
+}
+
+// DecodeSecurityGroup takes a bytes buffer and returns it to a option group
+func DecodeSecurityGroup(b bytes.Buffer) ec2types.SecurityGroup {
+	var securityGroup ec2types.SecurityGroup
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&securityGroup)
+	if err != nil {
+		slog.Error("Error decoding state for Option Group", "error", err)
+	}
+	return securityGroup
 }
 
 // DecodeRDSClusterOutput takes a bytes buffer and returns it to a DbCluster type in preperation of restoring the database
