@@ -5,9 +5,9 @@ import (
 
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
+	"github.com/jrottersman/lats/pgstate"
 	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
-	"github.com/jrottersman/lats/pgstate"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
@@ -23,18 +23,19 @@ type ClusterStackInput struct {
 	ParameterGroups     []pgstate.ParameterGroup
 	OptionGroupFileName string
 	OptionGroup         *types.OptionGroup
+	SecurityGroups      []types.VpcSecurityGroupMembership
 }
 
 //GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.
 func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 	if c.Filename == "" {
-		c.Filename = fmt.Sprintf(".state/%s",*helpers.RandomStateFileName())
+		c.Filename = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	}
 	if c.ParameterFileName == "" {
-		c.ParameterFileName = fmt.Sprintf(".state/%s",*helpers.RandomStateFileName())
+		c.ParameterFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	}
 	if c.OptionGroupFileName == "" {
-		c.OptionGroupFileName = fmt.Sprintf(".state/%s",*helpers.RandomStateFileName())
+		c.OptionGroupFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	}
 	objMap := make(map[int][]stack.Object)
 	bp := pgstate.EncodeParameterGroups(c.ParameterGroups)
