@@ -20,6 +20,7 @@ type InstanceStackInputs struct {
 	OptionGroupFileName string
 	ParameterGroups     []pgstate.ParameterGroup
 	OptionGroup         *types.OptionGroup
+	SecurityGroups      []types.VpcSecurityGroupMembership
 }
 
 //GenerateRDSInstanceStack creates a stack for restoration for an RDS instance
