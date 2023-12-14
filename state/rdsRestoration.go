@@ -186,6 +186,7 @@ func (r RDSRestorationStore) GetDBClusterMembers() *[]types.DBClusterMember {
 
 //RDSRestorationStoreBuilder builds an RDSRestorationStore
 func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSRestorationStore, error) {
+	slog.Info("starting get restoration store")
 	snap, err := GetRDSSnapshotOutput(sm, snapshotName)
 	if err != nil {
 		slog.Error("got error getting snapshot", "error", err)
