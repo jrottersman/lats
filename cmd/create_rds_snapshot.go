@@ -109,6 +109,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 	if err != nil {
 		slog.Warn("didn't get instance", "problem", err)
 	}
+	sgs := db.VpcSecurityGroups
 	slog.Debug("creating snapshot")
 	snapshot, err := dbi.CreateSnapshot(dbName, snapshotName)
 	if err != nil {
@@ -128,6 +129,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn s
 		R:               store,
 		StackName:       snapshotName,
 		ParameterGroups: pgs,
+		SecurityGroups:  sgs,
 	}
 	slog.Debug("generating stack")
 	stack, err := rdsstate.GenerateRDSInstanceStack(stackInput)
