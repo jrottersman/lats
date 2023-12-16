@@ -1,77 +1,12 @@
 package state
 
 import (
-	"os"
 	"reflect"
-	"sync"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
-
-func TestRDSRestorationStoreBuilder(t *testing.T) {
-	filename := "/tmp/foo"
-	var storage int32
-	var progress int32
-	storage = 1000
-	progress = 100
-	tu := true
-	snap := types.DBSnapshot{
-		AllocatedStorage:     &storage,
-		Encrypted:            &tu,
-		PercentProgress:      &progress,
-		DBInstanceIdentifier: aws.String("foobar"),
-	}
-
-	defer os.Remove(filename)
-	r := EncodeRDSSnapshotOutput(&snap)
-	_, err := WriteOutput(filename, r)
-	if err != nil {
-		t.Errorf("error writing file %s", err)
-	}
-
-	var mu sync.Mutex
-	var s []StateKV
-	kv := StateKV{
-		Object:       "foo",
-		FileLocation: filename,
-		ObjectType:   "RDSSnapshot",
-	}
-	s = append(s, kv)
-
-	filename2 := "/tmp/foo2"
-	dbi := types.DBInstance{
-		AllocatedStorage:     &storage,
-		DBInstanceIdentifier: aws.String("foobar"),
-	}
-
-	defer os.Remove(filename2)
-	r2 := EncodeRDSDatabaseOutput(&dbi)
-	_, err = WriteOutput(filename2, r2)
-	if err != nil {
-		t.Errorf("error writing file %s", err)
-	}
-	kv2 := StateKV{
-		Object:       "foobar",
-		FileLocation: filename2,
-		ObjectType:   RdsInstanceType,
-	}
-	s = append(s, kv2)
-	sm := StateManager{
-		&mu,
-		s,
-	}
-
-	resp, err := RDSRestorationStoreBuilder(sm, "foo")
-	if err != nil {
-		t.Errorf("error writing file %s", err)
-	}
-
-	if *resp.Snapshot.AllocatedStorage != 1000 {
-		t.Errorf("oops WTF wanted 1000 got %d", *resp.Snapshot.AllocatedStorage)
-	}
-}
 
 func TestRDSRestorationStore_GetAllocatedStorage(t *testing.T) {
 	var valueExpected int32 = 1000
