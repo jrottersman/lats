@@ -28,10 +28,14 @@ func InitKms(region string) KmsOperations {
 	}
 }
 
-// func InitEc2(region string) EC2Instances {
-// 	cfg := createConfig(region)
-// 	cleint :=
-// }
+// InitEc2 creates an EC2 client
+func InitEc2(region string) EC2Instances {
+	cfg := createConfig(region)
+	client := getEC2Client(cfg)
+	return EC2Instances{
+		Client: client,
+	}
+}
 
 func getRDSClient(cfg aws.Config) *rds.Client {
 	return rds.NewFromConfig(cfg)
