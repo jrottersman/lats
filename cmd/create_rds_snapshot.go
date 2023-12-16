@@ -40,18 +40,19 @@ func CreateSnapshot() {
 	//Get Config and state
 	config, sm := GetState()
 	dbi := aws.Init(config.MainRegion)
+	ec2 := aws.InitEc2(config.MainRegion)
 	cluster, err := dbi.GetCluster(dbName)
 	if err != nil {
 		slog.Info("not a cluster with step 1 get cluster ", "error", err)
 	}
 	if cluster == nil {
-		createSnapshotForInstance(dbi, sm, config.StateFileName)
+		createSnapshotForInstance(dbi, ec2, sm, config.StateFileName)
 	} else {
-		createSnapshotForCluster(dbi, sm, cluster, config.StateFileName)
+		createSnapshotForCluster(dbi, ec2, sm, cluster, config.StateFileName)
 	}
 }
 
-func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluster *types.DBCluster, sfn string) {
+func createSnapshotForCluster(dbi aws.DbInstances, ec2 aws.EC2Instances, sm state.StateManager, cluster *types.DBCluster, sfn string) {
 	slog.Info("creating snapshot for cluster")
 	snapshot, err := dbi.CreateClusterSnapshot(dbName, snapshotName)
 	if err != nil {
@@ -103,7 +104,7 @@ func createSnapshotForCluster(dbi aws.DbInstances, sm state.StateManager, cluste
 	slog.Info("Snapshot created")
 }
 
-func createSnapshotForInstance(dbi aws.DbInstances, sm state.StateManager, sfn string) {
+func createSnapshotForInstance(dbi aws.DbInstances, ec2 aws.EC2Instances, sm state.StateManager, sfn string) {
 	slog.Info("starting create snapshot for instance")
 	db, err := dbi.GetInstance(dbName)
 	if err != nil {
