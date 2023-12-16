@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 )
@@ -27,12 +28,21 @@ func InitKms(region string) KmsOperations {
 	}
 }
 
+// func InitEc2(region string) EC2Instances {
+// 	cfg := createConfig(region)
+// 	cleint :=
+// }
+
 func getRDSClient(cfg aws.Config) *rds.Client {
 	return rds.NewFromConfig(cfg)
 }
 
 func getKMSClient(cfg aws.Config) *kms.Client {
 	return kms.NewFromConfig(cfg)
+}
+
+func getEC2Client(cfg aws.Config) *ec2.Client {
+	return ec2.NewFromConfig(cfg)
 }
 
 func createConfig(region string) aws.Config {
