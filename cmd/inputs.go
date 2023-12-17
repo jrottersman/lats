@@ -14,3 +14,11 @@ type CreateClusterSnapshotInput struct {
 	cluster *types.DBCluster
 	sfn     string
 }
+
+//CreateInstanceSnapshotInput input for create snapshot for instance
+type CreateInstanceSnapshotInput struct {
+	dbi aws.DbInstances
+	ec2 aws.EC2Instances
+	sm  state.StateManager
+	sfn string
+}
