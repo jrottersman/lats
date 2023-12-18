@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
 	"github.com/jrottersman/lats/rdsstate"
@@ -188,4 +189,8 @@ func GetState() (Config, state.StateManager) {
 		slog.Warn("Error reading state", "error", err)
 	}
 	return config, sm
+}
+
+func getSGs(ec2 aws.EC2Instances, sgs []types.VpcSecurityGroupMembership) ([]SecurityGroupOutput, error) {
+	return nil, nil
 }
