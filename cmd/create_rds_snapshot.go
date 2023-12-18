@@ -45,7 +45,13 @@ func CreateSnapshot() {
 		slog.Info("not a cluster with step 1 get cluster ", "error", err)
 	}
 	if cluster == nil {
-		createSnapshotForInstance(dbi, ec2, sm, config.StateFileName)
+		c := CreateInstanceSnapshotInput{
+			dbi: dbi,
+			ec2: ec2,
+			sm:  sm,
+			sfn: config.StateFileName,
+		}
+		createSnapshotForInstance(c)
 	} else {
 		c := CreateClusterSnapshotInput{
 			dbi:     dbi,
@@ -110,15 +116,15 @@ func createSnapshotForCluster(c CreateClusterSnapshotInput) {
 	slog.Info("Snapshot created")
 }
 
-func createSnapshotForInstance(dbi aws.DbInstances, ec2 aws.EC2Instances, sm state.StateManager, sfn string) {
+func createSnapshotForInstance(c CreateInstanceSnapshotInput) {
 	slog.Info("starting create snapshot for instance")
-	db, err := dbi.GetInstance(dbName)
+	db, err := c.dbi.GetInstance(dbName)
 	if err != nil {
 		slog.Warn("didn't get instance", "problem", err)
 	}
 	sgs := db.VpcSecurityGroups
 	slog.Debug("creating snapshot")
-	snapshot, err := dbi.CreateSnapshot(dbName, snapshotName)
+	snapshot, err := c.dbi.CreateSnapshot(dbName, snapshotName)
 	if err != nil {
 		slog.Error("error creating snapshot: ", "error", err)
 	}
@@ -128,7 +134,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, ec2 aws.EC2Instances, sm sta
 		Snapshot: snapshot,
 	}
 	slog.Debug("getting parameter groups")
-	pgs, err := aws.GetParameterGroups(store, dbi)
+	pgs, err := aws.GetParameterGroups(store, c.dbi)
 	if err != nil {
 		slog.Warn("error getting parameter groups", "error", err)
 	}
@@ -150,7 +156,7 @@ func createSnapshotForInstance(dbi aws.DbInstances, ec2 aws.EC2Instances, sm sta
 	}
 	counter := 0
 	for {
-		status, err := dbi.GetInstanceSnapshotStatus(snapshotName)
+		status, err := c.dbi.GetInstanceSnapshotStatus(snapshotName)
 		if err != nil {
 			slog.Error("error getting status", "error", err)
 		}
@@ -164,8 +170,8 @@ func createSnapshotForInstance(dbi aws.DbInstances, ec2 aws.EC2Instances, sm sta
 		counter++
 		time.Sleep(30 * time.Second)
 	}
-	sm.UpdateState(snapshotName, stackFn, "stack")
-	sm.SyncState(sfn)
+	c.sm.UpdateState(snapshotName, stackFn, "stack")
+	c.sm.SyncState(c.sfn)
 }
 
 //GetState reads in our statefile and config for future processing
