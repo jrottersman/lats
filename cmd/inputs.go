@@ -22,3 +22,5 @@ type CreateInstanceSnapshotInput struct {
 	sm  state.StateManager
 	sfn string
 }
+
+type SecurityGroupOutput struct{}
