@@ -192,5 +192,9 @@ func GetState() (Config, state.StateManager) {
 }
 
 func getSGs(ec2 aws.EC2Instances, sgs []types.VpcSecurityGroupMembership) ([]SecurityGroupOutput, error) {
+	for _, sg := range sgs {
+		id := sg.VpcSecurityGroupId
+		ec2.DescribeSG(*id)
+	}
 	return nil, nil
 }
