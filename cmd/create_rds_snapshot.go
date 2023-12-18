@@ -6,7 +6,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
 	"github.com/jrottersman/lats/rdsstate"
@@ -48,26 +47,33 @@ func CreateSnapshot() {
 	if cluster == nil {
 		createSnapshotForInstance(dbi, ec2, sm, config.StateFileName)
 	} else {
-		createSnapshotForCluster(dbi, ec2, sm, cluster, config.StateFileName)
+		c := CreateClusterSnapshotInput{
+			dbi:     dbi,
+			ec2:     ec2,
+			sm:      sm,
+			cluster: cluster,
+			sfn:     config.StateFileName,
+		}
+		createSnapshotForCluster(c)
 	}
 }
 
-func createSnapshotForCluster(dbi aws.DbInstances, ec2 aws.EC2Instances, sm state.StateManager, cluster *types.DBCluster, sfn string) {
+func createSnapshotForCluster(c CreateClusterSnapshotInput) {
 	slog.Info("creating snapshot for cluster")
-	snapshot, err := dbi.CreateClusterSnapshot(dbName, snapshotName)
+	snapshot, err := c.dbi.CreateClusterSnapshot(dbName, snapshotName)
 	if err != nil {
 		slog.Error("error creating snapshot", "error", err)
 		os.Exit(1)
 	}
 	// create a stack
 	store := state.RDSRestorationStore{
-		Cluster:         cluster,
+		Cluster:         c.cluster,
 		ClusterSnapshot: snapshot,
 	}
 	input := rdsstate.ClusterStackInput{
 		R:         store,
 		StackName: snapshotName,
-		Client:    dbi,
+		Client:    c.dbi,
 		Folder:    ".state",
 	}
 	slog.Info("generating the stack")
@@ -78,7 +84,7 @@ func createSnapshotForCluster(dbi aws.DbInstances, ec2 aws.EC2Instances, sm stat
 	}
 	counter := 0
 	for {
-		status, err := dbi.GetClusterSnapshotStatus(snapshotName)
+		status, err := c.dbi.GetClusterSnapshotStatus(snapshotName)
 		if err != nil {
 			slog.Error("error getting status", "error", err)
 		}
@@ -99,8 +105,8 @@ func createSnapshotForCluster(dbi aws.DbInstances, ec2 aws.EC2Instances, sm stat
 		slog.Error("error writing stack ", "error", err)
 		os.Exit(1)
 	}
-	sm.UpdateState(snapshotName, stackFn, "stack")
-	sm.SyncState(sfn)
+	c.sm.UpdateState(snapshotName, stackFn, "stack")
+	c.sm.SyncState(c.sfn)
 	slog.Info("Snapshot created")
 }
 
