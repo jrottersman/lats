@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	ec2types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/state"
@@ -23,4 +24,6 @@ type CreateInstanceSnapshotInput struct {
 	sfn string
 }
 
-type SecurityGroupOutput struct{}
+type SecurityGroupOutput struct {
+	SecurityGroups []ec2types.SecurityGroup
+}
