@@ -5,10 +5,14 @@ import (
 	"encoding/gob"
 	"log/slog"
 
-	"github.com/jrottersman/lats/cmd"
+	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 )
 
-func EncodeSecurityGroups(sg cmd.SecurityGroupOutput) bytes.Buffer {
+type SecurityGroupOutput struct {
+	SecurityGroups []types.SecurityGroup
+}
+
+func EncodeSecurityGroups(sg SecurityGroupOutput) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
 
