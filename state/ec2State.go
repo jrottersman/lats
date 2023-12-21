@@ -22,3 +22,13 @@ func EncodeSecurityGroups(sg SecurityGroupOutput) bytes.Buffer {
 	}
 	return encoder
 }
+
+func DecodeSecurityGroups(b bytes.Buffer) SecurityGroupOutput {
+	var securityGroups SecurityGroupOutput
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&securityGroups)
+	if err != nil {
+		slog.Error("Error decoding state for Security Groups", "error", err)
+	}
+	return securityGroups
+}
