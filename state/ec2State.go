@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 )
 
+//SecurityGroupOutput is the wrapper for our security groups not sure we need this but for now it's here
 type SecurityGroupOutput struct {
 	SecurityGroups []types.SecurityGroup
 }
@@ -24,6 +25,7 @@ func EncodeSecurityGroups(sg SecurityGroupOutput) bytes.Buffer {
 	return encoder
 }
 
+//DecodeSecurityGroups takes bytes and gives us a securitygroupoutput for resotration
 func DecodeSecurityGroups(b bytes.Buffer) SecurityGroupOutput {
 	var securityGroups SecurityGroupOutput
 	dec := gob.NewDecoder(&b)
