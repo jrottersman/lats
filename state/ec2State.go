@@ -12,6 +12,7 @@ type SecurityGroupOutput struct {
 	SecurityGroups []types.SecurityGroup
 }
 
+//EncodeSecurityGroups encodes a security group to bytes
 func EncodeSecurityGroups(sg SecurityGroupOutput) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
