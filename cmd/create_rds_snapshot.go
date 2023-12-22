@@ -81,7 +81,7 @@ func createSnapshotForCluster(c CreateClusterSnapshotInput) {
 	sgs := c.cluster.VpcSecurityGroups
 	if len(sgs) != 0 {
 		for _, v := range sgs {
-			fmt.Printf("%i", v)
+			c.ec2.DescribeSG(*v.VpcSecurityGroupId)
 		}
 	}
 	input := rdsstate.ClusterStackInput{
