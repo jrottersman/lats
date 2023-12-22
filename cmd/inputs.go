@@ -13,7 +13,7 @@ type CreateClusterSnapshotInput struct {
 	sm      state.StateManager
 	cluster *types.DBCluster
 	sfn     string
-	sgs     state.SecurityGroupOutput
+	sgs     *state.SecurityGroupOutput
 }
 
 //CreateInstanceSnapshotInput input for create snapshot for instance
@@ -22,5 +22,5 @@ type CreateInstanceSnapshotInput struct {
 	ec2 aws.EC2Instances
 	sm  state.StateManager
 	sfn string
-	sgs state.SecurityGroupOutput
+	sgs *state.SecurityGroupOutput
 }
