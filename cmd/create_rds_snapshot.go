@@ -60,7 +60,6 @@ func CreateSnapshot() {
 			sm:      sm,
 			cluster: cluster,
 			sfn:     config.StateFileName,
-			sgs:     cluster.VpcSecurityGroups,
 		}
 		createSnapshotForCluster(c)
 	}
