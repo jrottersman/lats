@@ -80,7 +80,9 @@ func createSnapshotForCluster(c CreateClusterSnapshotInput) {
 	// Get Security groups to add to the stack
 	sgs := c.cluster.VpcSecurityGroups
 	if len(sgs) != 0 {
-		fmt.Printf("implement me")
+		for _, v := range sgs {
+			fmt.Printf("%i", v)
+		}
 	}
 	input := rdsstate.ClusterStackInput{
 		R:         store,
