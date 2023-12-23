@@ -84,6 +84,9 @@ func createSnapshotForCluster(c CreateClusterSnapshotInput) {
 		if err != nil {
 			slog.Error("can not get security groups", "error", err)
 		}
+		for _, v := range out {
+			fmt.Printf("Implement this loop %v", v)
+		}
 		fmt.Printf("write sgs to state save file %v", out)
 	}
 	input := rdsstate.ClusterStackInput{
