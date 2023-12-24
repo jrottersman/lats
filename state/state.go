@@ -15,6 +15,7 @@ const RdsInstanceType = "RDSInstance"
 const KMSKeyType = "KMSKey"
 const RdsClusterType = "RDSCluster"
 const ClusterSnapshotType = "RDSClusterSnapshot"
+const SecurityGroupType = "SecurityGroup"
 
 // StateKV manages our state file and object location
 type StateKV struct {
