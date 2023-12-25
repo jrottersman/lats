@@ -62,6 +62,16 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 		paramObjects = append(paramObjects, optionObj)
 	}
 
+	if c.SecurityGroups != nil {
+		b := state.EncodeSecurityGroups(*c.SecurityGroups)
+		_, err := state.WriteOutput(c.SecurityGroupFileName, b)
+		if err != nil {
+			return nil, fmt.Errorf("Error saving security groups %s", err)
+		}
+		sgObj := stack.NewObject(c.SecurityGroupFileName, 1, stack.SecurityGroup)
+		paramObjects = append(paramObjects, sgObj)
+	}
+
 	objMap[1] = paramObjects
 
 	ClusterInput := state.GenerateRestoreDBClusterFromSnapshotInput(c.R)
