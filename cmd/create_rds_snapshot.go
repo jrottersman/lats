@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	ec2types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/helpers"
@@ -84,8 +85,9 @@ func createSnapshotForCluster(c CreateClusterSnapshotInput) {
 		if err != nil {
 			slog.Error("can not get security groups", "error", err)
 		}
+		var groups []ec2types.SecurityGroup
 		for _, v := range out {
-			fmt.Printf("Implement this loop %v", v)
+			groups = append(groups, v.SecurityGroups...)
 		}
 		fmt.Printf("write sgs to state save file %v", out)
 	}
