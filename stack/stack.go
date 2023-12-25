@@ -18,6 +18,7 @@ const Instance = "RDSInstance"
 const DBParameterGroup = "DBParameterGroup"
 const DBClusterParameterGroup = "DBClusterParameterGroup"
 const OptionGroup = "OptionGroup"
+const SecurityGroup = "SecurityGroup"
 
 type Object struct {
 	FileName string
