@@ -14,16 +14,17 @@ import (
 
 //ClusterStackInput is the input for a ClusterStack
 type ClusterStackInput struct {
-	R                   state.RDSRestorationStore
-	StackName           string
-	Filename            string
-	Client              aws.DbInstances
-	Folder              string
-	ParameterFileName   string
-	ParameterGroups     []pgstate.ParameterGroup
-	OptionGroupFileName string
-	OptionGroup         *types.OptionGroup
-	SecurityGroups      state.SecurityGroupOutput
+	R                     state.RDSRestorationStore
+	StackName             string
+	Filename              string
+	Client                aws.DbInstances
+	Folder                string
+	ParameterFileName     string
+	ParameterGroups       []pgstate.ParameterGroup
+	OptionGroupFileName   string
+	OptionGroup           *types.OptionGroup
+	SecurityGroups        state.SecurityGroupOutput
+	SecurityGroupFileName string
 }
 
 //GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.
@@ -37,6 +38,10 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 	if c.OptionGroupFileName == "" {
 		c.OptionGroupFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	}
+	if c.SecurityGroupFileName == "" {
+		c.SecurityGroupFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
+	}
+
 	objMap := make(map[int][]stack.Object)
 	bp := pgstate.EncodeParameterGroups(c.ParameterGroups)
 	_, err := state.WriteOutput(c.ParameterFileName, bp)
