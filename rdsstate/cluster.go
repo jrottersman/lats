@@ -23,7 +23,7 @@ type ClusterStackInput struct {
 	ParameterGroups     []pgstate.ParameterGroup
 	OptionGroupFileName string
 	OptionGroup         *types.OptionGroup
-	SecurityGroups      []types.VpcSecurityGroupMembership
+	SecurityGroups      state.SecurityGroupOutput
 }
 
 //GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.
