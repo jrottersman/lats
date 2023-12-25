@@ -96,7 +96,7 @@ func createSnapshotForCluster(c CreateClusterSnapshotInput) {
 		R:              store,
 		StackName:      snapshotName,
 		Client:         c.dbi,
-		SecurityGroups: sgOutput,
+		SecurityGroups: &sgOutput,
 		Folder:         ".state",
 	}
 	slog.Info("generating the stack")

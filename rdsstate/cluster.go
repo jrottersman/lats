@@ -23,7 +23,7 @@ type ClusterStackInput struct {
 	ParameterGroups       []pgstate.ParameterGroup
 	OptionGroupFileName   string
 	OptionGroup           *types.OptionGroup
-	SecurityGroups        state.SecurityGroupOutput
+	SecurityGroups        *state.SecurityGroupOutput
 	SecurityGroupFileName string
 }
 
