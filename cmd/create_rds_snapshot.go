@@ -79,6 +79,7 @@ func createSnapshotForCluster(c CreateClusterSnapshotInput) {
 		ClusterSnapshot: snapshot,
 	}
 	// Get Security groups to add to the stack
+	var sgOutput state.SecurityGroupOutput
 	sgs := c.cluster.VpcSecurityGroups
 	if len(sgs) != 0 {
 		out, err := getSGs(c.ec2, sgs)
@@ -89,14 +90,14 @@ func createSnapshotForCluster(c CreateClusterSnapshotInput) {
 		for _, v := range out {
 			groups = append(groups, v.SecurityGroups...)
 		}
-		sgOutput := state.SecurityGroupOutput{SecurityGroups: groups}
-		fmt.Printf("write sgs to state save file %v", out)
+		sgOutput = state.SecurityGroupOutput{SecurityGroups: groups}
 	}
 	input := rdsstate.ClusterStackInput{
-		R:         store,
-		StackName: snapshotName,
-		Client:    c.dbi,
-		Folder:    ".state",
+		R:              store,
+		StackName:      snapshotName,
+		Client:         c.dbi,
+		SecurityGroups: sgOutput,
+		Folder:         ".state",
 	}
 	slog.Info("generating the stack")
 	stack, err := rdsstate.GenerateRDSClusterStack(input)
