@@ -89,6 +89,7 @@ func createSnapshotForCluster(c CreateClusterSnapshotInput) {
 		for _, v := range out {
 			groups = append(groups, v.SecurityGroups...)
 		}
+		sgOutput := state.SecurityGroupOutput{SecurityGroups: groups}
 		fmt.Printf("write sgs to state save file %v", out)
 	}
 	input := rdsstate.ClusterStackInput{
