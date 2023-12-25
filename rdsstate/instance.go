@@ -13,14 +13,15 @@ import (
 
 //InstanceStackInputs struct to generate stack for an instance
 type InstanceStackInputs struct {
-	R                   state.RDSRestorationStore
-	StackName           string
-	InstanceFileName    string
-	ParameterFileName   string
-	OptionGroupFileName string
-	ParameterGroups     []pgstate.ParameterGroup
-	OptionGroup         *types.OptionGroup
-	SecurityGroups      []types.VpcSecurityGroupMembership
+	R                      state.RDSRestorationStore
+	StackName              string
+	InstanceFileName       string
+	ParameterFileName      string
+	OptionGroupFileName    string
+	ParameterGroups        []pgstate.ParameterGroup
+	OptionGroup            *types.OptionGroup
+	SecurityGroups         *state.SecurityGroupOutput
+	SecurityGroupsFileName string
 }
 
 //GenerateRDSInstanceStack creates a stack for restoration for an RDS instance
