@@ -21,11 +21,12 @@ func TestGenerateRDSInstanceStack(t *testing.T) {
 		Instance: &types.DBInstance{},
 	}
 	inputs := InstanceStackInputs{
-		R:                 r,
-		StackName:         "bar",
-		InstanceFileName:  "/tmp/foo.gob",
-		ParameterFileName: "/tmp/bar.gob",
-		ParameterGroups:   []pgstate.ParameterGroup{},
+		R:                      r,
+		StackName:              "bar",
+		InstanceFileName:       "/tmp/foo.gob",
+		ParameterFileName:      "/tmp/bar.gob",
+		SecurityGroupsFileName: "/tmp/bat.gob",
+		ParameterGroups:        []pgstate.ParameterGroup{},
 	}
 	arg := args{
 		i: inputs,
