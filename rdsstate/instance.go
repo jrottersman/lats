@@ -37,6 +37,11 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 	if i.OptionGroupFileName == "" {
 		i.OptionGroupFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	}
+
+	if i.SecurityGroupsFileName == "" {
+		i.SecurityGroupsFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
+	}
+
 	b := pgstate.EncodeParameterGroups(i.ParameterGroups)
 	_, err := state.WriteOutput(i.ParameterFileName, b)
 	if err != nil {
