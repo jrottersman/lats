@@ -68,8 +68,8 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 		return nil, err
 	}
 
-	if len(i.SecurityGroups) > 0 {
-		fmt.Printf("do stuff with security groups") // does this actually go here?
+	if i.SecurityGroups != nil {
+		fmt.Printf("do stuff")
 	}
 
 	instanceObj := stack.NewObject(i.InstanceFileName, 2, stack.LoneInstance)
