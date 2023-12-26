@@ -61,15 +61,21 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 		paramObjects = append(paramObjects, optionObj)
 	}
 
+	if i.SecurityGroups != nil {
+		b := state.EncodeSecurityGroups(*i.SecurityGroups)
+		_, err := state.WriteOutput(i.SecurityGroupsFileName, b)
+		if err != nil {
+			return nil, fmt.Errorf("Error saving security groups %s", err)
+		}
+		sgObj := stack.NewObject(i.SecurityGroupsFileName, 1, stack.SecurityGroup)
+		paramObjects = append(paramObjects, sgObj)
+	}
+
 	DBInput := state.GenerateRestoreDBInstanceFromDBSnapshotInput(i.R)
 	b = state.EncodeRestoreDBInstanceFromDBSnapshotInput(DBInput)
 	_, err = state.WriteOutput(i.InstanceFileName, b)
 	if err != nil {
 		return nil, err
-	}
-
-	if i.SecurityGroups != nil {
-		fmt.Printf("do stuff")
 	}
 
 	instanceObj := stack.NewObject(i.InstanceFileName, 2, stack.LoneInstance)
