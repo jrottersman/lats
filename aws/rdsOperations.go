@@ -154,6 +154,8 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 		for _, p := range first {
 			pb := p.ReadObject()
 			switch pb.(type) {
+			case *state.SecurityGroupOutput:
+				slog.Info("TODO handle security groups")
 			case *pgstate.ParameterGroup:
 				pg, ok := pb.(*pgstate.ParameterGroup)
 				if !ok {
