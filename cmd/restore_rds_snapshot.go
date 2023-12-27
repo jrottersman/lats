@@ -36,7 +36,7 @@ func init() {
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&restoreDbName, "database-name", "d", "", "name of the database we want to restore the snapshot for")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&region, "region", "r", "", "AWS region we are restoring in")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&dbSubnetGroupName, "subnet-group", "g", "", "DB subnet group we are restoring the snapshot to")
-	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&subnets, "subnets", []string{}, "Subnets that we wnant to create a subnet group in")
+	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&subnets, "subnets", []string{}, "Subnets that we want to create a subnet group in")
 }
 
 //RestoreSnapshot is the function that restores a snapshot
