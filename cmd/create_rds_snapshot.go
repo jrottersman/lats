@@ -140,6 +140,19 @@ func createSnapshotForInstance(c CreateInstanceSnapshotInput) {
 		slog.Warn("didn't get instance", "problem", err)
 	}
 	sgs := db.VpcSecurityGroups
+	var sgOutput state.SecurityGroupOutput
+	if len(sgs) != 0 {
+		out, err := getSGs(c.ec2, sgs)
+		if err != nil {
+			slog.Error("can not get security groups", "error", err)
+		}
+		var groups []ec2types.SecurityGroup
+		for _, v := range out {
+			groups = append(groups, v.SecurityGroups...)
+		}
+		sgOutput = state.SecurityGroupOutput{SecurityGroups: groups}
+	}
+
 	slog.Debug("creating snapshot")
 	snapshot, err := c.dbi.CreateSnapshot(dbName, snapshotName)
 	if err != nil {
@@ -155,11 +168,12 @@ func createSnapshotForInstance(c CreateInstanceSnapshotInput) {
 	if err != nil {
 		slog.Warn("error getting parameter groups", "error", err)
 	}
+
 	stackInput := rdsstate.InstanceStackInputs{
 		R:               store,
 		StackName:       snapshotName,
 		ParameterGroups: pgs,
-		SecurityGroups:  sgs,
+		SecurityGroups:  &sgOutput,
 	}
 	slog.Debug("generating stack")
 	stack, err := rdsstate.GenerateRDSInstanceStack(stackInput)
