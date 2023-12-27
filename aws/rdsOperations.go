@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/pgstate"
 	"github.com/jrottersman/lats/stack"
+	"github.com/jrottersman/lats/state"
 )
 
 // MaxConcurrentJobs max number of operations to hit AWS with at the same time
@@ -308,6 +309,8 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 		for _, p := range pgs {
 			pb := p.ReadObject()
 			switch pb.(type) {
+			case *state.SecurityGroupOutput:
+				slog.Info("TODO handle security groups")
 			case *pgstate.ParameterGroup:
 				pg, ok := pb.(*pgstate.ParameterGroup)
 				if !ok {
