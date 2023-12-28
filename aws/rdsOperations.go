@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	ec2types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/jrottersman/lats/pgstate"
@@ -134,6 +135,10 @@ func (instances *DbInstances) CreateDBSubnetGroup(name string, description strin
 		SubnetIds:                subnets,
 	})
 	return group, err
+}
+
+func createSecurityGroup(sg ec2types.SecurityGroup) {
+	fmt.Printf("implement me")
 }
 
 //CreateClusterFromStackInput creates a stack all inputs required
