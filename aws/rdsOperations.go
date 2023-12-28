@@ -160,7 +160,14 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			pb := p.ReadObject()
 			switch pb.(type) {
 			case *state.SecurityGroupOutput:
-				slog.Info("TODO handle security groups")
+				sgs, ok := pb.(*state.SecurityGroupOutput)
+				if !ok {
+					slog.Error("error casting security group")
+					return fmt.Errorf("Type error security group")
+				}
+				for _, v := range sgs.SecurityGroups {
+					createSecurityGroup(v)
+				}
 			case *pgstate.ParameterGroup:
 				pg, ok := pb.(*pgstate.ParameterGroup)
 				if !ok {
