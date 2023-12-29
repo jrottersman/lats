@@ -45,6 +45,8 @@ func (o Object) ReadObject() interface{} {
 		pgstate.DecodeParameterGroups(*buf)
 	case DBClusterParameterGroup:
 		pgstate.DecodeParameterGroups(*buf)
+	case SecurityGroup:
+		state.DecodeSecurityGroups(*buf)
 	}
 	return nil
 }
