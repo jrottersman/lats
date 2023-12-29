@@ -146,6 +146,7 @@ type CreateClusterFromStackInput struct {
 	S             *stack.Stack
 	ClusterName   *string
 	DBSubnetGroup *string
+	ec2Client     *EC2Instances
 }
 
 //CreateClusterFromStack creates an RDS cluster from a stack
