@@ -44,7 +44,7 @@ func TestEC2Instances_CreateSG(t *testing.T) {
 			c := &EC2Instances{
 				Client: tt.fields.Client,
 			}
-			got, err := c.CreateSG(tt.args.description, tt.args.groupName, tt.args.vpcID)
+			got, err := c.CreateSG(tt.args.description, tt.args.groupName, tt.args.vpcID, nil)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("EC2Instances.CreateSG() error = %v, wantErr %v", err, tt.wantErr)
 				return

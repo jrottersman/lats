@@ -2,6 +2,7 @@ package aws
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -24,7 +25,7 @@ type EC2Instances struct {
 	Client Ec2Client
 }
 
-func (c *EC2Instances) CreateSG(description *string, groupName *string, vpcID *string) (*ec2.CreateSecurityGroupOutput, error) {
+func (c *EC2Instances) CreateSG(description *string, groupName *string, vpcID *string, groupId *string) (*ec2.CreateSecurityGroupOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
@@ -32,6 +33,19 @@ func (c *EC2Instances) CreateSG(description *string, groupName *string, vpcID *s
 		Description: description,
 		GroupName:   groupName,
 		VpcId:       vpcID,
+	}
+
+	describe := *&ec2.DescribeSecurityGroupsInput{
+		GroupIds: []string{*groupId},
+	}
+
+	groups, err := c.Client.DescribeSecurityGroups(ctx, &describe)
+	if err != nil {
+		return nil, err
+	}
+	if len(groups.SecurityGroups) > 0 {
+		slog.Info("Security group alread exists skipping creation")
+		return nil, nil
 	}
 
 	output, err := c.Client.CreateSecurityGroup(ctx, &params)
