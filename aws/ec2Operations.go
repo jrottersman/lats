@@ -35,17 +35,19 @@ func (c *EC2Instances) CreateSG(description *string, groupName *string, vpcID *s
 		VpcId:       vpcID,
 	}
 
-	describe := *&ec2.DescribeSecurityGroupsInput{
-		GroupIds: []string{*groupId},
-	}
+	if groupId != nil {
+		describe := *&ec2.DescribeSecurityGroupsInput{
+			GroupIds: []string{*groupId},
+		}
 
-	groups, err := c.Client.DescribeSecurityGroups(ctx, &describe)
-	if err != nil {
-		return nil, err
-	}
-	if len(groups.SecurityGroups) > 0 {
-		slog.Info("Security group alread exists skipping creation")
-		return nil, nil
+		groups, err := c.Client.DescribeSecurityGroups(ctx, &describe)
+		if err != nil {
+			return nil, err
+		}
+		if len(groups.SecurityGroups) > 0 {
+			slog.Info("Security group alread exists skipping creation")
+			return nil, nil
+		}
 	}
 
 	output, err := c.Client.CreateSecurityGroup(ctx, &params)
