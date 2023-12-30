@@ -167,7 +167,11 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 					return fmt.Errorf("Type error security group")
 				}
 				for _, v := range sgs.SecurityGroups {
-					createSecurityGroup(v)
+					desc := v.Description
+					name := v.GroupName
+					vpcID := v.VpcId // this needs to change and become dynamic
+					sgID := v.GroupId
+					c.ec2Client.CreateSG(desc, name, vpcID, sgID)
 				}
 			case *pgstate.ParameterGroup:
 				pg, ok := pb.(*pgstate.ParameterGroup)
