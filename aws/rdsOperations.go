@@ -335,7 +335,7 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 				for _, v := range sgs.SecurityGroups {
 					desc := v.Description
 					name := v.GroupName
-					vpcID := v.VpcId // this needs to change and become dynamic
+					vpcID := c.VpcID
 					sgID := v.GroupId
 					c.ec2Client.CreateSG(desc, name, vpcID, sgID)
 				}
