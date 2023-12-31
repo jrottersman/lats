@@ -16,6 +16,7 @@ var (
 	restoreDbName       string
 	region              string
 	dbSubnetGroupName   string
+	VpcID               string
 	subnets             []string
 
 	//RestoreRDSSnapshotCmd restores an RDS snapshot
@@ -36,6 +37,7 @@ func init() {
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&restoreDbName, "database-name", "d", "", "name of the database we want to restore the snapshot for")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&region, "region", "r", "", "AWS region we are restoring in")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&dbSubnetGroupName, "subnet-group", "g", "", "DB subnet group we are restoring the snapshot to")
+	RestoreRDSSnapshotCmd.Flags().StringVarP(&dbSubnetGroupName, "vpc-id", "v", "", "VPC Id we are restoring the db to")
 	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&subnets, "subnets", []string{}, "Subnets that we want to create a subnet group in")
 }
 
@@ -68,6 +70,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 			S:             SnapshotStack,
 			ClusterName:   &restoreDbName,
 			DBSubnetGroup: &dbSubnetGroupName,
+			VpcID:         &VpcID,
 		}
 		return dbi.CreateClusterFromStack(c)
 	} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
@@ -76,6 +79,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 			Stack:         SnapshotStack,
 			DBName:        &restoreDbName,
 			DBSubnetGroup: &dbSubnetGroupName,
+			VpcID:         &VpcID,
 		}
 		return dbi.CreateInstanceFromStack(c)
 	}
