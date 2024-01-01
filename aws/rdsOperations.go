@@ -333,11 +333,13 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 					return fmt.Errorf("Type error security group")
 				}
 				for _, v := range sgs.SecurityGroups {
-					desc := v.Description
-					name := v.GroupName
-					vpcID := c.VpcID
-					sgID := v.GroupId
-					c.ec2Client.CreateSG(desc, name, vpcID, sgID)
+					input := CreateSGInput{
+						description: v.Description,
+						groupName:   v.GroupName,
+						vpcID:       c.VpcID,
+						groupID:     v.GroupId,
+					}
+					c.ec2Client.CreateSG(input)
 				}
 			case *pgstate.ParameterGroup:
 				pg, ok := pb.(*pgstate.ParameterGroup)
