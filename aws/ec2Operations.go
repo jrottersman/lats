@@ -16,6 +16,13 @@ type Ec2Client interface {
 	AuthorizeSecurityGroupIngress(ctx context.Context, params *ec2.AuthorizeSecurityGroupIngressInput, optFns ...func(*ec2.Options)) (*ec2.AuthorizeSecurityGroupIngressOutput, error)
 }
 
+type CreateSGInput struct {
+	description *string
+	groupName   *string
+	vpcID       *string
+	groupID     *string
+}
+
 type SGInput struct {
 	SGId          *string
 	IpPermissions []types.IpPermission
@@ -25,7 +32,7 @@ type EC2Instances struct {
 	Client Ec2Client
 }
 
-func (c *EC2Instances) CreateSG(description *string, groupName *string, vpcID *string, groupId *string) (*ec2.CreateSecurityGroupOutput, error) {
+func (c *EC2Instances) CreateSG(description *string, groupName *string, vpcID *string, groupID *string) (*ec2.CreateSecurityGroupOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
@@ -35,9 +42,9 @@ func (c *EC2Instances) CreateSG(description *string, groupName *string, vpcID *s
 		VpcId:       vpcID,
 	}
 
-	if groupId != nil {
+	if groupID != nil {
 		describe := *&ec2.DescribeSecurityGroupsInput{
-			GroupIds: []string{*groupId},
+			GroupIds: []string{*groupID},
 		}
 
 		groups, err := c.Client.DescribeSecurityGroups(ctx, &describe)
