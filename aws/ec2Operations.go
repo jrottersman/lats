@@ -32,19 +32,19 @@ type EC2Instances struct {
 	Client Ec2Client
 }
 
-func (c *EC2Instances) CreateSG(description *string, groupName *string, vpcID *string, groupID *string) (*ec2.CreateSecurityGroupOutput, error) {
+func (c *EC2Instances) CreateSG(i CreateSGInput) (*ec2.CreateSecurityGroupOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
 	params := ec2.CreateSecurityGroupInput{
-		Description: description,
-		GroupName:   groupName,
-		VpcId:       vpcID,
+		Description: i.description,
+		GroupName:   i.groupName,
+		VpcId:       i.vpcID,
 	}
 
-	if groupID != nil {
+	if i.groupID != nil {
 		describe := *&ec2.DescribeSecurityGroupsInput{
-			GroupIds: []string{*groupID},
+			GroupIds: []string{*i.groupID},
 		}
 
 		groups, err := c.Client.DescribeSecurityGroups(ctx, &describe)
