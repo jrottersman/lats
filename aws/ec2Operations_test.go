@@ -14,9 +14,7 @@ func TestEC2Instances_CreateSG(t *testing.T) {
 		Client Ec2Client
 	}
 	type args struct {
-		description *string
-		groupName   *string
-		vpcID       *string
+		i CreateSGInput
 	}
 	tests := []struct {
 		name    string
@@ -29,9 +27,12 @@ func TestEC2Instances_CreateSG(t *testing.T) {
 			name:   "pass",
 			fields: fields{Client: mock.MockEC2Client{}},
 			args: args{
-				description: aws.String("foo"),
-				groupName:   aws.String("bar"),
-				vpcID:       aws.String("baz"),
+				CreateSGInput{
+					description: aws.String("foo"),
+					groupName:   aws.String("bar"),
+					vpcID:       aws.String("baz"),
+					groupID:     nil,
+				},
 			},
 			want: &ec2.CreateSecurityGroupOutput{
 				GroupId: aws.String("foobar"),
@@ -44,7 +45,7 @@ func TestEC2Instances_CreateSG(t *testing.T) {
 			c := &EC2Instances{
 				Client: tt.fields.Client,
 			}
-			got, err := c.CreateSG(tt.args.description, tt.args.groupName, tt.args.vpcID, nil)
+			got, err := c.CreateSG(tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("EC2Instances.CreateSG() error = %v, wantErr %v", err, tt.wantErr)
 				return
