@@ -846,6 +846,7 @@ func (instances *DbInstances) GetInstanceSnapshotStatus(name string) (*string, e
 	return nil, fmt.Errorf("snapshot not found")
 }
 
+// GetClusterSnapshotStatus get the status for a cluster snapshot the way AWS divides snapshots is annoying
 func (instances *DbInstances) GetClusterSnapshotStatus(name string) (*string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer cancel()

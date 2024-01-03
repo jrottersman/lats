@@ -86,6 +86,7 @@ func (c *EC2Instances) SGEgress(s SGInput) (*ec2.AuthorizeSecurityGroupEgressOut
 	return output, nil
 }
 
+// SGIngress updates a security group with ingress ips
 func (c *EC2Instances) SGIngress(s SGInput) (*ec2.AuthorizeSecurityGroupIngressOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
@@ -102,6 +103,7 @@ func (c *EC2Instances) SGIngress(s SGInput) (*ec2.AuthorizeSecurityGroupIngressO
 	return output, nil
 }
 
+// DescribeSG describes a security group
 func (c *EC2Instances) DescribeSG(sgIds string) (*ec2.DescribeSecurityGroupsOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
