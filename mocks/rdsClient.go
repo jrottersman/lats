@@ -11,6 +11,7 @@ import (
 // MockRDSClient is a struct to mock an RDS client testing is fun :)
 type MockRDSClient struct{}
 
+// DescribeDBClusters mock get a db cluster
 func (m MockRDSClient) DescribeDBClusters(ctx context.Context, params *rds.DescribeDBClustersInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClustersOutput, error) {
 	f := "foo"
 	r := &rds.DescribeDBClustersOutput{
