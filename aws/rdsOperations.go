@@ -169,7 +169,11 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 						vpcID:       c.VpcID,
 						groupID:     v.GroupId,
 					}
-					c.ec2Client.CreateSG(input)
+					_, err := c.ec2Client.CreateSG(input)
+					if err != nil {
+						slog.Error("creating SG", "error", err)
+						return fmt.Errorf("Creating security group error")
+					}
 				}
 			case *pgstate.ParameterGroup:
 				pg, ok := pb.(*pgstate.ParameterGroup)
