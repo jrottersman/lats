@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
+// MockRDSClient is a struct to mock an RDS client testing is fun :)
 type MockRDSClient struct{}
 
 func (m MockRDSClient) DescribeDBClusters(ctx context.Context, params *rds.DescribeDBClustersInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClustersOutput, error) {
