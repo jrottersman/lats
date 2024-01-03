@@ -25,16 +25,18 @@ type CreateSGInput struct {
 	groupID     *string
 }
 
-// SgInput input for updating security group
+// SGInput input for updating security group
 type SGInput struct {
 	SGId          *string
-	IpPermissions []types.IpPermission
+	IPPermissions []types.IpPermission
 }
 
+// EC2Instances is the struct to hold our ec2 client
 type EC2Instances struct {
 	Client Ec2Client
 }
 
+// CreateSG creates a new security group
 func (c *EC2Instances) CreateSG(i CreateSGInput) (*ec2.CreateSecurityGroupOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
@@ -67,13 +69,14 @@ func (c *EC2Instances) CreateSG(i CreateSGInput) (*ec2.CreateSecurityGroupOutput
 	return output, nil
 }
 
+// SGEgress updates a security group with egress info
 func (c *EC2Instances) SGEgress(s SGInput) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
 	params := ec2.AuthorizeSecurityGroupEgressInput{
 		GroupId:       s.SGId,
-		IpPermissions: s.IpPermissions,
+		IpPermissions: s.IPPermissions,
 	}
 
 	output, err := c.Client.AuthorizeSecurityGroupEgress(ctx, &params)
@@ -89,7 +92,7 @@ func (c *EC2Instances) SGIngress(s SGInput) (*ec2.AuthorizeSecurityGroupIngressO
 
 	params := ec2.AuthorizeSecurityGroupIngressInput{
 		GroupId:       s.SGId,
-		IpPermissions: s.IpPermissions,
+		IpPermissions: s.IPPermissions,
 	}
 
 	output, err := c.Client.AuthorizeSecurityGroupIngress(ctx, &params)
