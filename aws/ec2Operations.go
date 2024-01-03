@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 )
 
+// Ec2Client allows mocking of the ec2 client
 type Ec2Client interface {
 	CreateSecurityGroup(ctx context.Context, params *ec2.CreateSecurityGroupInput, optFns ...func(*ec2.Options)) (*ec2.CreateSecurityGroupOutput, error)
 	AuthorizeSecurityGroupEgress(ctx context.Context, params *ec2.AuthorizeSecurityGroupEgressInput, optFns ...func(*ec2.Options)) (*ec2.AuthorizeSecurityGroupEgressOutput, error)
@@ -16,6 +17,7 @@ type Ec2Client interface {
 	AuthorizeSecurityGroupIngress(ctx context.Context, params *ec2.AuthorizeSecurityGroupIngressInput, optFns ...func(*ec2.Options)) (*ec2.AuthorizeSecurityGroupIngressOutput, error)
 }
 
+// CreateSGInput input for the create SG function
 type CreateSGInput struct {
 	description *string
 	groupName   *string
@@ -23,6 +25,7 @@ type CreateSGInput struct {
 	groupID     *string
 }
 
+// SgInput input for updating security group
 type SGInput struct {
 	SGId          *string
 	IpPermissions []types.IpPermission
