@@ -9,7 +9,7 @@ import (
 
 func TestGetClusterId(t *testing.T) {
 	ni := types.DBInstance{}
-	nr := GetClusterId(&ni)
+	nr := GetClusterID(&ni)
 	if nr != nil {
 		t.Errorf("this should be nil")
 	}
@@ -17,7 +17,7 @@ func TestGetClusterId(t *testing.T) {
 	i := types.DBInstance{
 		DBClusterIdentifier: aws.String("foobar"),
 	}
-	r := GetClusterId(&i)
+	r := GetClusterID(&i)
 	if *r != "foobar" {
 		t.Errorf("got %s expected foobar", *r)
 	}

@@ -198,7 +198,7 @@ func RDSRestorationStoreBuilder(sm StateManager, snapshotName string) (*RDSResto
 		slog.Error("error getting database", "error", err)
 	}
 
-	cID := helpers.GetClusterId(db)
+	cID := helpers.GetClusterID(db)
 	if cID == nil {
 		return &RDSRestorationStore{
 			Snapshot: snap,
