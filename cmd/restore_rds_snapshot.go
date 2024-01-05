@@ -16,7 +16,7 @@ var (
 	restoreDbName       string
 	region              string
 	dbSubnetGroupName   string
-	VpcID               string
+	vpcID               string
 	subnets             []string
 
 	//RestoreRDSSnapshotCmd restores an RDS snapshot
@@ -70,7 +70,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 			S:             SnapshotStack,
 			ClusterName:   &restoreDbName,
 			DBSubnetGroup: &dbSubnetGroupName,
-			VpcID:         &VpcID,
+			VpcID:         &vpcID,
 		}
 		return dbi.CreateClusterFromStack(c)
 	} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
@@ -79,7 +79,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 			Stack:         SnapshotStack,
 			DBName:        &restoreDbName,
 			DBSubnetGroup: &dbSubnetGroupName,
-			VpcID:         &VpcID,
+			VpcID:         &vpcID,
 		}
 		return dbi.CreateInstanceFromStack(c)
 	}
