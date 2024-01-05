@@ -192,6 +192,7 @@ func DecodeRestoreDBInstanceFromDBSnapshotInput(b bytes.Buffer) *rds.RestoreDBIn
 	return &Restore
 }
 
+// GenerateRestoreDBClusterFromSnapshotInput create a snapshot input
 func GenerateRestoreDBClusterFromSnapshotInput(r RDSRestorationStore) *rds.RestoreDBClusterFromSnapshotInput {
 	return &rds.RestoreDBClusterFromSnapshotInput{
 		DBClusterIdentifier: r.GetDBClusterIdentifier(),
