@@ -201,6 +201,7 @@ func GenerateRestoreDBClusterFromSnapshotInput(r RDSRestorationStore) *rds.Resto
 	}
 }
 
+//  EncodeRestoreDBClusterFromSnapshotInput takes a cluster snapshot and turns it into bytes
 func EncodeRestoreDBClusterFromSnapshotInput(r *rds.RestoreDBClusterFromSnapshotInput) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
