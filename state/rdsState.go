@@ -181,7 +181,7 @@ func EncodeRestoreDBInstanceFromDBSnapshotInput(r *rds.RestoreDBInstanceFromDBSn
 	return encoder
 }
 
-//DecodeRestoreDBInstanceFromDBSnapshot decodes snapshot from bytes
+// DecodeRestoreDBInstanceFromDBSnapshotInput  decodes snapshot from bytes
 func DecodeRestoreDBInstanceFromDBSnapshotInput(b bytes.Buffer) *rds.RestoreDBInstanceFromDBSnapshotInput {
 	var Restore rds.RestoreDBInstanceFromDBSnapshotInput
 	dec := gob.NewDecoder(&b)
@@ -201,7 +201,7 @@ func GenerateRestoreDBClusterFromSnapshotInput(r RDSRestorationStore) *rds.Resto
 	}
 }
 
-//  EncodeRestoreDBClusterFromSnapshotInput takes a cluster snapshot and turns it into bytes
+// EncodeRestoreDBClusterFromSnapshotInput takes a cluster snapshot and turns it into bytes
 func EncodeRestoreDBClusterFromSnapshotInput(r *rds.RestoreDBClusterFromSnapshotInput) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
