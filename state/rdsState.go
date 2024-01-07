@@ -213,6 +213,7 @@ func EncodeRestoreDBClusterFromSnapshotInput(r *rds.RestoreDBClusterFromSnapshot
 	return encoder
 }
 
+// DecodeRestoreDBClusterFromSnapshotInput takes bytes and retruns a db cluster from snapshot input which is needed for restoring a db cluster
 func DecodeRestoreDBClusterFromSnapshotInput(b bytes.Buffer) *rds.RestoreDBClusterFromSnapshotInput {
 	var Restore rds.RestoreDBClusterFromSnapshotInput
 	dec := gob.NewDecoder(&b)
