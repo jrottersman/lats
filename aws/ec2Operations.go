@@ -31,6 +31,13 @@ type SGInput struct {
 	IPPermissions []types.IpPermission
 }
 
+// PassedIPs allows us to update our sg we need to transform this to an SGInput
+type PassedIPs struct {
+	Port        int
+	Permissions string
+	Description string
+}
+
 // EC2Instances is the struct to hold our ec2 client
 type EC2Instances struct {
 	Client Ec2Client
