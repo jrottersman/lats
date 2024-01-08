@@ -18,6 +18,8 @@ var (
 	dbSubnetGroupName   string
 	vpcID               string
 	subnets             []string
+	ingress             []string
+	egress              []string
 
 	//RestoreRDSSnapshotCmd restores an RDS snapshot
 	RestoreRDSSnapshotCmd = &cobra.Command{
