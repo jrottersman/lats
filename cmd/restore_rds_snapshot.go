@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 	"log/slog"
+	"strconv"
+	"strings"
 
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/stack"
@@ -93,5 +95,20 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 }
 
 func sgRuleConvert(rules []string) []aws.PassedIPs {
-	return []aws.PassedIPs{}
+	l := []aws.PassedIPs{}
+	for _, v := range rules {
+		res := strings.Split(v, ":")
+		perms := res[0]
+		port, err := strconv.Atoi(res[1])
+		if err != nil {
+			slog.Error("couldn't convert sting to int", "error", err)
+		}
+		s := aws.PassedIPs{
+			Permissions: perms,
+			Port:        port,
+		}
+		l = append(l, s)
+
+	}
+	return l
 }
