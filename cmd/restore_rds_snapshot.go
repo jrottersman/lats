@@ -41,6 +41,8 @@ func init() {
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&dbSubnetGroupName, "subnet-group", "g", "", "DB subnet group we are restoring the snapshot to")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&dbSubnetGroupName, "vpc-id", "v", "", "VPC Id we are restoring the db to")
 	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&subnets, "subnets", []string{}, "Subnets that we want to create a subnet group in")
+	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&ingress, "ingress", []string{}, "Ingress rules that we want to update our security group with")
+	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&egress, "egress", []string{}, "Egress rules that we want to update our security group with")
 }
 
 //RestoreSnapshot is the function that restores a snapshot
