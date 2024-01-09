@@ -91,3 +91,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 	slog.Error("Invalid type of stack for restoring an object", "StackType", SnapshotStack.RestorationObjectName)
 	return fmt.Errorf("Error invalid type of stack to restore a snapshot")
 }
+
+func sgRuleConvert(rules []string) []aws.PassedIPs {
+	return []aws.PassedIPs{}
+}
