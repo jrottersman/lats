@@ -319,6 +319,8 @@ type CreateInstanceFromStackInput struct {
 	DBSubnetGroup *string
 	ec2Client     *EC2Instances
 	VpcID         *string
+	Ingress       []PassedIPs
+	Egress        []PassedIPs
 }
 
 //CreateInstanceFromStack creates an RDS instance from a stack object
