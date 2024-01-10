@@ -98,6 +98,10 @@ func sgRuleConvert(rules []string) []aws.PassedIPs {
 	l := []aws.PassedIPs{}
 	for _, v := range rules {
 		res := strings.Split(v, ":")
+		if len(res) != 2 {
+			slog.Error("length of our split should be 2", "is", len(res))
+			return nil
+		}
 		perms := res[0]
 		port, err := strconv.Atoi(res[1])
 		if err != nil {
