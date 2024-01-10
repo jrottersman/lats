@@ -69,6 +69,16 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		}
 		dbSubnetGroupName = *sg.DBSubnetGroup.DBSubnetGroupName
 	}
+
+	//Security Groups
+	var ingressRules []aws.PassedIPs
+	if len(ingress) != 0 {
+		ingressRules = sgRuleConvert(ingress)
+	}
+	var egressRules []aws.PassedIPs
+	if len(egress) != 0 {
+		egressRules = sgRuleConvert(egress)
+	}
 	slog.Info("starting restore", "type", SnapshotStack.RestorationObjectName)
 	if SnapshotStack.RestorationObjectName == stack.Cluster {
 		slog.Info("Restoring a cluster")
@@ -77,6 +87,8 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 			ClusterName:   &restoreDbName,
 			DBSubnetGroup: &dbSubnetGroupName,
 			VpcID:         &vpcID,
+			Ingress:       ingressRules,
+			Egress:        egressRules,
 		}
 		return dbi.CreateClusterFromStack(c)
 	} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
@@ -86,6 +98,8 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 			DBName:        &restoreDbName,
 			DBSubnetGroup: &dbSubnetGroupName,
 			VpcID:         &vpcID,
+			Ingress:       ingressRules,
+			Egress:        egressRules,
 		}
 		return dbi.CreateInstanceFromStack(c)
 	}
