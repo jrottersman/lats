@@ -105,7 +105,8 @@ func sgRuleConvert(rules []string) []aws.PassedIPs {
 		perms := res[0]
 		port, err := strconv.Atoi(res[1])
 		if err != nil {
-			slog.Error("couldn't convert sting to int", "error", err)
+			slog.Error("couldn't convert string to int", "error", err)
+			return nil
 		}
 		s := aws.PassedIPs{
 			Permissions: perms,
