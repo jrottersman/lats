@@ -354,6 +354,9 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 						slog.Error("error creating security group", "error", err)
 						return fmt.Errorf("Error creating security group")
 					}
+					if len(c.Ingress) > 0 {
+						slog.Info("Implement me")
+					}
 				}
 			case *pgstate.ParameterGroup:
 				pg, ok := pb.(*pgstate.ParameterGroup)
