@@ -349,13 +349,16 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 						vpcID:       c.VpcID,
 						groupID:     v.GroupId,
 					}
-					_, err := c.ec2Client.CreateSG(input)
+					sg, err := c.ec2Client.CreateSG(input)
 					if err != nil {
 						slog.Error("error creating security group", "error", err)
 						return fmt.Errorf("Error creating security group")
 					}
 					if len(c.Ingress) > 0 {
 						slog.Info("Implement me")
+						slog.Info("sg is ", "sg", sg)
+						//create SGINPUT here
+
 					}
 				}
 			case *pgstate.ParameterGroup:
