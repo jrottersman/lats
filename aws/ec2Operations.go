@@ -38,6 +38,13 @@ type PassedIPs struct {
 	Description string
 }
 
+func (p PassedIPs) CreateSgInput(SGID *string) SGInput {
+	// Really implement me latter
+	return SGInput{
+		SGId: SGID,
+	}
+}
+
 // EC2Instances is the struct to hold our ec2 client
 type EC2Instances struct {
 	Client Ec2Client

@@ -358,7 +358,6 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 						slog.Info("Implement me")
 						slog.Info("sg is ", "sg", sg)
 						//create SGINPUT here
-
 					}
 				}
 			case *pgstate.ParameterGroup:
