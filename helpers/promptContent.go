@@ -8,6 +8,7 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
+// PromptContent is the struct that let's us have interactive prompts
 type PromptContent struct {
 	ErrorMsg string
 	Label    string
@@ -20,6 +21,7 @@ func validate(input string) error {
 	return nil
 }
 
+// GeneratePrompt generates our prompt UI template
 func GeneratePrompt(pc PromptContent, v func(string) error) promptui.Prompt {
 	validate := v
 
