@@ -38,6 +38,7 @@ type PassedIPs struct {
 	Description string
 }
 
+// CreateSgInput needs to be implemented
 func (p PassedIPs) CreateSgInput(SGID *string) SGInput {
 	// Really implement me latter
 	return SGInput{
