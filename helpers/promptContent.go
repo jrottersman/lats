@@ -39,6 +39,7 @@ func GeneratePrompt(pc PromptContent, v func(string) error) promptui.Prompt {
 	}
 }
 
+// PromptInput runs the prompt for our command line
 func PromptInput(p promptui.Prompt) string {
 	result, err := p.Run()
 	if err != nil {
@@ -49,6 +50,7 @@ func PromptInput(p promptui.Prompt) string {
 	return result
 }
 
+// PromptGetInput get's the input and then returns it to the prompt
 func PromptGetInput(pc PromptContent) string {
 	p := GeneratePrompt(pc, validate)
 	return PromptInput(p)
