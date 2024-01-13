@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// WriteOutput turns bytes into a file
 func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 	f, err := os.Create(filename)
 	if err != nil {
