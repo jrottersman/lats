@@ -42,16 +42,23 @@ type PassedIPs struct {
 func (p PassedIPs) CreateSgInput(SGID *string) SGInput {
 	port := int32(p.Port)
 	protocol := "tcp" // This is hard coded for now it should change
+	cidr := types.IpRange{
+		CidrIp: &p.Permissions,
+	}
+	cidrs := []types.IpRange{}
+	cidrs = append(cidrs, cidr)
 	ipPerms := []types.IpPermission{}
 	ipPerm := types.IpPermission{
 		FromPort:   &port,
 		ToPort:     &port,
 		IpProtocol: &protocol,
+		IpRanges:   cidrs,
 	}
 	ipPerms = append(ipPerms, ipPerm)
 	// Really implement me latter
 	return SGInput{
-		SGId: SGID,
+		SGId:          SGID,
+		IPPermissions: ipPerms,
 	}
 }
 
