@@ -25,7 +25,7 @@ func TestEC2Instances_CreateSG(t *testing.T) {
 	}{
 		{
 			name:   "pass",
-			fields: fields{Client: mock.MockEC2Client{}},
+			fields: fields{Client: mock.EC2Client{}},
 			args: args{
 				CreateSGInput{
 					description: aws.String("foo"),
@@ -73,7 +73,7 @@ func TestEC2Instances_SGEgress(t *testing.T) {
 		wantErr bool
 	}{
 		{name: "test",
-			fields: fields{Client: mock.MockEC2Client{}},
+			fields: fields{Client: mock.EC2Client{}},
 			args:   args{s: SGInput{}},
 			want: &ec2.AuthorizeSecurityGroupEgressOutput{
 				Return: &tr,
@@ -115,7 +115,7 @@ func TestEC2Instances_DescribeSG(t *testing.T) {
 		{
 			name: "pass",
 			fields: fields{
-				Client: mock.MockEC2Client{},
+				Client: mock.EC2Client{},
 			},
 			args:    args{sgName: "foo"},
 			want:    &ec2.DescribeSecurityGroupsOutput{},
@@ -155,7 +155,7 @@ func TestEC2Instances_SGIngress(t *testing.T) {
 		wantErr bool
 	}{
 		{name: "test",
-			fields: fields{Client: mock.MockEC2Client{}},
+			fields: fields{Client: mock.EC2Client{}},
 			args:   args{s: SGInput{}},
 			want: &ec2.AuthorizeSecurityGroupIngressOutput{
 				Return: &tr,
