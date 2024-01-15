@@ -189,13 +189,23 @@ func TestPassedIPs_CreateSgInput(t *testing.T) {
 	type args struct {
 		SGID *string
 	}
+	sgid := "sg-1234"
 	tests := []struct {
 		name   string
 		fields fields
 		args   args
 		want   SGInput
 	}{
-		// TODO: Add test cases.
+		{
+			name: "pass",
+			fields: fields{
+				Port: 80,
+				Permissions: "10.0.0.4/22",
+				Description: "foo",
+			},
+			args:  args{SGID: &sgid},
+			want:  SGInput{},
+		}
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
