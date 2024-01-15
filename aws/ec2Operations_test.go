@@ -199,13 +199,15 @@ func TestPassedIPs_CreateSgInput(t *testing.T) {
 		{
 			name: "pass",
 			fields: fields{
-				Port: 80,
+				Port:        80,
 				Permissions: "10.0.0.4/22",
 				Description: "foo",
 			},
-			args:  args{SGID: &sgid},
-			want:  SGInput{},
-		}
+			args: args{SGID: &sgid},
+			want: SGInput{
+				SGId: &sgid,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -215,7 +217,7 @@ func TestPassedIPs_CreateSgInput(t *testing.T) {
 				Description: tt.fields.Description,
 			}
 			if got := p.CreateSgInput(tt.args.SGID); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("PassedIPs.CreateSgInput() = %v, want %v", got, tt.want)
+				t.Errorf("PassedIPs.CreateSgInput() = %v, want %v", got.IPPermissions, tt.want.IPPermissions)
 			}
 		})
 	}
