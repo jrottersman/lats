@@ -179,3 +179,34 @@ func TestEC2Instances_SGIngress(t *testing.T) {
 		})
 	}
 }
+
+func TestPassedIPs_CreateSgInput(t *testing.T) {
+	type fields struct {
+		Port        int
+		Permissions string
+		Description string
+	}
+	type args struct {
+		SGID *string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   SGInput
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := PassedIPs{
+				Port:        tt.fields.Port,
+				Permissions: tt.fields.Permissions,
+				Description: tt.fields.Description,
+			}
+			if got := p.CreateSgInput(tt.args.SGID); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("PassedIPs.CreateSgInput() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
