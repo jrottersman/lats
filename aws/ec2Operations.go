@@ -36,6 +36,7 @@ type PassedIPs struct {
 	Port        int
 	Permissions string
 	Description string
+	Type        string
 }
 
 // CreateSgInput this only hanldes TCP and IPv4 right now this is a stub while I think of how to do it better
