@@ -186,6 +186,7 @@ func TestPassedIPs_CreateSgInput(t *testing.T) {
 		Port        int
 		Permissions string
 		Description string
+		Type        string
 	}
 	type args struct {
 		SGID *string
@@ -209,6 +210,7 @@ func TestPassedIPs_CreateSgInput(t *testing.T) {
 				Port:        80,
 				Permissions: "10.0.0.4/22",
 				Description: "foo",
+				Type:        "tcp",
 			},
 			args: args{SGID: &sgid},
 			want: SGInput{
@@ -225,6 +227,7 @@ func TestPassedIPs_CreateSgInput(t *testing.T) {
 				Port:        tt.fields.Port,
 				Permissions: tt.fields.Permissions,
 				Description: tt.fields.Description,
+				Type:        tt.fields.Type,
 			}
 			if got := p.CreateSgInput(tt.args.SGID); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("PassedIPs.CreateSgInput() = %v, want %v", got.IPPermissions, tt.want.IPPermissions)
