@@ -6,6 +6,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
+	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	mock "github.com/jrottersman/lats/mocks"
 )
 
@@ -190,6 +191,12 @@ func TestPassedIPs_CreateSgInput(t *testing.T) {
 		SGID *string
 	}
 	sgid := "sg-1234"
+	ipp := types.IpPermission{
+		FromPort:   aws.Int32(80),
+		ToPort:     aws.Int32(80),
+		IpProtocol: aws.String("tcp"),
+		IpRanges:   []types.IpRange{{CidrIp: aws.String("10.0.0.4/22")}},
+	}
 	tests := []struct {
 		name   string
 		fields fields
@@ -206,6 +213,9 @@ func TestPassedIPs_CreateSgInput(t *testing.T) {
 			args: args{SGID: &sgid},
 			want: SGInput{
 				SGId: &sgid,
+				IPPermissions: []types.IpPermission{
+					ipp,
+				},
 			},
 		},
 	}
