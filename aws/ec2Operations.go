@@ -71,12 +71,6 @@ func (c *EC2Instances) CreateSG(i CreateSGInput) (*ec2.CreateSecurityGroupOutput
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
-	params := ec2.CreateSecurityGroupInput{
-		Description: i.description,
-		GroupName:   i.groupName,
-		VpcId:       i.vpcID,
-	}
-
 	if i.groupID != nil {
 		describe := *&ec2.DescribeSecurityGroupsInput{
 			GroupIds: []string{*i.groupID},
@@ -90,6 +84,12 @@ func (c *EC2Instances) CreateSG(i CreateSGInput) (*ec2.CreateSecurityGroupOutput
 			slog.Info("Security group alread exists skipping creation")
 			return nil, nil
 		}
+	}
+
+	params := ec2.CreateSecurityGroupInput{
+		Description: i.description,
+		GroupName:   i.groupName,
+		VpcId:       i.vpcID,
 	}
 
 	output, err := c.Client.CreateSecurityGroup(ctx, &params)

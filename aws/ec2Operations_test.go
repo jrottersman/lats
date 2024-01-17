@@ -49,6 +49,18 @@ func TestEC2Instances_CreateSG(t *testing.T) {
 			want:    nil,
 			wantErr: true,
 		},
+		{
+			name:   "describe",
+			fields: fields{Client: mock.EC2Client{}},
+			args: args{
+				CreateSGInput{
+					description: aws.String("foo"),
+					groupID:     aws.String("foobar"),
+				},
+			},
+			want:    nil,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
