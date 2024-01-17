@@ -251,6 +251,14 @@ func TestEC2Instances_SGEngress(t *testing.T) {
 		wantErr bool
 	}{
 		// TODO: Add test cases.
+		{name: "test",
+			fields: fields{Client: mock.EC2Client{}},
+			args:   args{s: SGInput{}},
+			want: &ec2.AuthorizeSecurityGroupEgressOutput{
+				Return: aws.Bool(true),
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
