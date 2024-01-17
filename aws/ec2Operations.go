@@ -133,6 +133,22 @@ func (c *EC2Instances) SGIngress(s SGInput) (*ec2.AuthorizeSecurityGroupIngressO
 	return output, nil
 }
 
+func (c *EC2Instances) SGEngress(s SGInput) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+
+	params := ec2.AuthorizeSecurityGroupEgressInput{
+		GroupId:       s.SGId,
+		IpPermissions: s.IPPermissions,
+	}
+
+	output, err := c.Client.AuthorizeSecurityGroupEgress(ctx, &params)
+	if err != nil {
+		return nil, err
+	}
+	return output, nil
+}
+
 // DescribeSG describes a security group
 func (c *EC2Instances) DescribeSG(sgIds string) (*ec2.DescribeSecurityGroupsOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
