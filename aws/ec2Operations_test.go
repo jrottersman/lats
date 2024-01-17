@@ -235,3 +235,36 @@ func TestPassedIPs_CreateSgInput(t *testing.T) {
 		})
 	}
 }
+
+func TestEC2Instances_SGEngress(t *testing.T) {
+	type fields struct {
+		Client Ec2Client
+	}
+	type args struct {
+		s SGInput
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *ec2.AuthorizeSecurityGroupEgressOutput
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &EC2Instances{
+				Client: tt.fields.Client,
+			}
+			got, err := c.SGEngress(tt.args.s)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("EC2Instances.SGEngress() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("EC2Instances.SGEngress() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
