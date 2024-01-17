@@ -40,6 +40,15 @@ func TestEC2Instances_CreateSG(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name:   "fail",
+			fields: fields{Client: mock.EC2Client{}},
+			args: args{
+				CreateSGInput{},
+			},
+			want:    nil,
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
