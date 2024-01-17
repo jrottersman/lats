@@ -6,6 +6,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
+	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 )
 
 // EC2Client is a client for ec2 that's a mock
@@ -30,7 +31,9 @@ func (m EC2Client) AuthorizeSecurityGroupEgress(ctx context.Context, params *ec2
 
 // DescribeSecurityGroups mock descirbe security groups
 func (m EC2Client) DescribeSecurityGroups(ctx context.Context, params *ec2.DescribeSecurityGroupsInput, optFns ...func(*ec2.Options)) (*ec2.DescribeSecurityGroupsOutput, error) {
-	return &ec2.DescribeSecurityGroupsOutput{}, nil
+	return &ec2.DescribeSecurityGroupsOutput{
+		SecurityGroups: []types.SecurityGroup{{GroupId: aws.String("foobar")}},
+	}, nil
 }
 
 // AuthorizeSecurityGroupIngress another mock
