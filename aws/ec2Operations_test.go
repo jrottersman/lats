@@ -139,8 +139,10 @@ func TestEC2Instances_DescribeSG(t *testing.T) {
 			fields: fields{
 				Client: mock.EC2Client{},
 			},
-			args:    args{sgName: "foo"},
-			want:    &ec2.DescribeSecurityGroupsOutput{},
+			args: args{sgName: "foo"},
+			want: &ec2.DescribeSecurityGroupsOutput{
+				SecurityGroups: []types.SecurityGroup{{GroupId: aws.String("foobar")}},
+			},
 			wantErr: false,
 		},
 	}
