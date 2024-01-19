@@ -990,6 +990,7 @@ func Test_optionsToConfiguration(t *testing.T) {
 		want []types.OptionConfiguration
 	}{
 		{"empty", args{[]types.Option{}}, []types.OptionConfiguration{}},
+		{"options", args{[]types.Option{{OptionName: aws.String("Foo")}}}, []types.OptionConfiguration{{OptionName: aws.String("Foo")}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
