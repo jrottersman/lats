@@ -38,17 +38,19 @@ func TestCreateKMSKey(t *testing.T) {
 func TestHandleKmsConfig(t *testing.T) {
 	desc := "foobarbaz"
 	policy := "iampolicy"
+	mr := false
 	k := KmsConfig{
 		Description: &desc,
 		Policy:      &policy,
+		Multiregion: &mr,
 	}
 	keyInput := handleKmsConfig(k)
 
 	if *keyInput.Description != desc {
 		t.Errorf("expected %s got %s", desc, *keyInput.Description)
 	}
-	if keyInput.MultiRegion != nil {
-		t.Errorf("multiregion should be nil")
+	if *keyInput.MultiRegion != false {
+		t.Errorf("multiregion should be false")
 	}
 	if *keyInput.Policy != policy {
 		t.Errorf("policy should be %s got %s", policy, *keyInput.Policy)
