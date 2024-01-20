@@ -11,6 +11,7 @@ func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 	f, err := os.Create(filename)
 	if err != nil {
 		slog.Error("Error creating file:", "error", err)
+		return 0, err
 	}
 	defer f.Close()
 	n, err := b.WriteTo(f)
