@@ -16,7 +16,7 @@ func TestWriteOutput(t *testing.T) {
 		want    int64
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{name: "test", args: args{filename: "/tmp/test.txt", b: bytes.Buffer{}}, want: 0, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
