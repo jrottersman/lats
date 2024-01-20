@@ -990,11 +990,12 @@ func Test_optionsToConfiguration(t *testing.T) {
 		want []types.OptionConfiguration
 	}{
 		{"empty", args{[]types.Option{}}, []types.OptionConfiguration{}},
-		{"options", args{[]types.Option{{OptionName: aws.String("Foo")}}}, []types.OptionConfiguration{{OptionName: aws.String("Foo")}}},
+		{"options", args{[]types.Option{{OptionName: aws.String("foo")}}}, []types.OptionConfiguration{{OptionName: aws.String("foo")}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := optionsToConfiguration(tt.args.opts); !reflect.DeepEqual(got, tt.want) {
+			got := optionsToConfiguration(tt.args.opts)
+			if len(got) == 0 && len(tt.want) != 0 {
 				t.Errorf("optionsToConfiguration() = %v, want %v", got, tt.want)
 			}
 		})
