@@ -49,6 +49,7 @@ func (m MockRDSClient) DescribeDBSnapshots(ctx context.Context, params *rds.Desc
 		DBSnapshotIdentifier: aws.String("foo"),
 		DBSnapshotArn:        aws.String("foo"),
 		Status:               aws.String("Completed"),
+		PercentProgress:      aws.Int32(100),
 	}
 	snapshots = append(snapshots, snap)
 	return &rds.DescribeDBSnapshotsOutput{
