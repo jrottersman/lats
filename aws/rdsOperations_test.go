@@ -1036,3 +1036,36 @@ func TestDbInstances_CreateDBSubnetGroup(t *testing.T) {
 		})
 	}
 }
+
+func TestDbInstances_GetInstanceSnapshotPercentage(t *testing.T) {
+	type fields struct {
+		RdsClient Client
+	}
+	type args struct {
+		name string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *int32
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			instances := &DbInstances{
+				RdsClient: tt.fields.RdsClient,
+			}
+			got, err := instances.GetInstanceSnapshotPercentage(tt.args.name)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DbInstances.GetInstanceSnapshotPercentage() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("DbInstances.GetInstanceSnapshotPercentage() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
