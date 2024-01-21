@@ -1051,7 +1051,7 @@ func TestDbInstances_GetInstanceSnapshotPercentage(t *testing.T) {
 		want    *int32
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{name: "pass", fields: fields{RdsClient: mock.MockRDSClient{}}, args: args{name: "foo"}, want: aws.Int32(100), wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -1063,8 +1063,8 @@ func TestDbInstances_GetInstanceSnapshotPercentage(t *testing.T) {
 				t.Errorf("DbInstances.GetInstanceSnapshotPercentage() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if got != tt.want {
-				t.Errorf("DbInstances.GetInstanceSnapshotPercentage() = %v, want %v", got, tt.want)
+			if *got != *tt.want {
+				t.Errorf("DbInstances.GetInstanceSnapshotPercentage() = %v, want %v", *got, *tt.want)
 			}
 		})
 	}
