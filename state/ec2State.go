@@ -36,6 +36,15 @@ func DecodeSecurityGroups(b bytes.Buffer) SecurityGroupOutput {
 	return securityGroups
 }
 
+type SGRuleStorage struct {
+	GroupID    *string
+	GroupName  *string
+	FromPort   *int32
+	ToPort     *int32
+	IPProtocol *string
+	IPRanges   []types.IpRange
+}
+
 // SecurityGroupNeeds is a function that takes a security group and get's the parts we need out more for thought then anything
 func SecurityGroupNeeds(sg SecurityGroupOutput) {
 	for _, v := range sg.SecurityGroups {
