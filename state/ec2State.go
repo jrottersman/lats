@@ -8,12 +8,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 )
 
-//SecurityGroupOutput is the wrapper for our security groups not sure we need this but for now it's here
+// SecurityGroupOutput is the wrapper for our security groups not sure we need this but for now it's here
 type SecurityGroupOutput struct {
 	SecurityGroups []types.SecurityGroup
 }
 
-//EncodeSecurityGroups encodes a security group to bytes
+// EncodeSecurityGroups encodes a security group to bytes
 func EncodeSecurityGroups(sg SecurityGroupOutput) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
@@ -25,7 +25,7 @@ func EncodeSecurityGroups(sg SecurityGroupOutput) bytes.Buffer {
 	return encoder
 }
 
-//DecodeSecurityGroups takes bytes and gives us a securitygroupoutput for resotration
+// DecodeSecurityGroups takes bytes and gives us a securitygroupoutput for resotration
 func DecodeSecurityGroups(b bytes.Buffer) SecurityGroupOutput {
 	var securityGroups SecurityGroupOutput
 	dec := gob.NewDecoder(&b)
@@ -34,4 +34,19 @@ func DecodeSecurityGroups(b bytes.Buffer) SecurityGroupOutput {
 		slog.Error("Error decoding state for Security Groups", "error", err)
 	}
 	return securityGroups
+}
+
+// SecurityGroupNeeds is a function that takes a security group and get's the parts we need out more for thought then anything
+func SecurityGroupNeeds(sg SecurityGroupOutput) {
+	for _, v := range sg.SecurityGroups {
+		_ = v.GroupId
+		_ = v.GroupName
+		for _, z := range v.IpPermissions {
+			// What is needed for ipv4
+			_ = z.FromPort
+			_ = z.ToPort
+			_ = z.IpProtocol
+			_ = z.IpRanges
+		}
+	}
 }
