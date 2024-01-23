@@ -2,6 +2,7 @@ package state
 
 import (
 	"encoding/gob"
+	"reflect"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -40,5 +41,25 @@ func TestDecodeSecurityGroups(t *testing.T) {
 	result := DecodeSecurityGroups(r)
 	if len(result.SecurityGroups) != len(sg2.SecurityGroups) {
 		t.Errorf("got %d expected %d", len(result.SecurityGroups), len(sg2.SecurityGroups))
+	}
+}
+
+func TestSecurityGroupNeeds(t *testing.T) {
+	type args struct {
+		sg SecurityGroupOutput
+	}
+	tests := []struct {
+		name string
+		args args
+		want []SGRuleStorage
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := SecurityGroupNeeds(tt.args.sg); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SecurityGroupNeeds() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
