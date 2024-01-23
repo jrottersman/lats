@@ -46,16 +46,19 @@ type SGRuleStorage struct {
 }
 
 // SecurityGroupNeeds is a function that takes a security group and get's the parts we need out more for thought then anything
-func SecurityGroupNeeds(sg SecurityGroupOutput) {
+func SecurityGroupNeeds(sg SecurityGroupOutput) []SGRuleStorage {
+	var sgRules []SGRuleStorage
 	for _, v := range sg.SecurityGroups {
-		_ = v.GroupId
-		_ = v.GroupName
+		gid = v.GroupId
+		gname = v.GroupName
 		for _, z := range v.IpPermissions {
 			// What is needed for ipv4
-			_ = z.FromPort
-			_ = z.ToPort
-			_ = z.IpProtocol
-			_ = z.IpRanges
+			fromPort = z.FromPort
+			toPort = z.ToPort
+			IpProtocol = z.IpProtocol
+			IpRanges = z.IpRanges
+			sgRules = append(sgRules, SGRuleStorage{GroupID: gid, GroupName: gname, FromPort: fromPort, ToPort: toPort, IPProtocol: IpProtocol, IPRanges: IpRanges})
 		}
 	}
+	return sgRules
 }
