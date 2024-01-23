@@ -49,14 +49,14 @@ type SGRuleStorage struct {
 func SecurityGroupNeeds(sg SecurityGroupOutput) []SGRuleStorage {
 	var sgRules []SGRuleStorage
 	for _, v := range sg.SecurityGroups {
-		gid = v.GroupId
-		gname = v.GroupName
+		gid := v.GroupId
+		gname := v.GroupName
 		for _, z := range v.IpPermissions {
 			// What is needed for ipv4
-			fromPort = z.FromPort
-			toPort = z.ToPort
-			IpProtocol = z.IpProtocol
-			IpRanges = z.IpRanges
+			fromPort := z.FromPort
+			toPort := z.ToPort
+			IpProtocol := z.IpProtocol
+			IpRanges := z.IpRanges
 			sgRules = append(sgRules, SGRuleStorage{GroupID: gid, GroupName: gname, FromPort: fromPort, ToPort: toPort, IPProtocol: IpProtocol, IPRanges: IpRanges})
 		}
 	}
