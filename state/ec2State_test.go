@@ -63,3 +63,21 @@ func TestSecurityGroupNeeds(t *testing.T) {
 		})
 	}
 }
+
+func TestDecodeSGRuleStorage(t *testing.T) {
+	var sgs []SGRuleStorage
+	sgr := SGRuleStorage{
+		GroupID: aws.String("foobar"),
+	}
+	sgs = append(sgs, sgr)
+	r := EncodeSGRulesStorage(sgs)
+	var result []SGRuleStorage
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if len(result) != len(sgs) {
+		t.Errorf("got %d expected %d", len(result), len(sgs))
+	}
+}
