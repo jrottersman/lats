@@ -73,3 +73,13 @@ func EncodeSGRulesStorage(sg []SGRuleStorage) bytes.Buffer {
 	}
 	return encoder
 }
+
+func DecodeSGRulesStorage(b bytes.Buffer) []SGRuleStorage {
+	var sg []SGRuleStorage
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&sg)
+	if err != nil {
+		slog.Error("Error decoding state for Security Group rules", "error", err)
+	}
+	return sg
+}
