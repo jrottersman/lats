@@ -62,3 +62,14 @@ func SecurityGroupNeeds(sg SecurityGroupOutput) []SGRuleStorage {
 	}
 	return sgRules
 }
+
+func EncodeSGRulesStorage(sg []SGRuleStorage) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(sg)
+	if err != nil {
+		slog.Error("Error encoding our Security Group rules", "error", err)
+	}
+	return encoder
+}
