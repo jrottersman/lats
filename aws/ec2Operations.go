@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
+	"github.com/jrottersman/lats/state"
 )
 
 // Ec2Client allows mocking of the ec2 client
@@ -29,6 +30,7 @@ type CreateSGInput struct {
 type SGInput struct {
 	SGId          *string
 	IPPermissions []types.IpPermission
+	Rules         []state.SGRuleStorage
 }
 
 // PassedIPs allows us to update our sg we need to transform this to an SGInput
