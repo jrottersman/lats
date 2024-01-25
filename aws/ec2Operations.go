@@ -106,6 +106,10 @@ func (c *EC2Instances) SGEgress(s SGInput) (*ec2.AuthorizeSecurityGroupEgressOut
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
+	if len(s.Rules) > 0 {
+		slog.Error("Implement me")
+	}
+
 	params := ec2.AuthorizeSecurityGroupEgressInput{
 		GroupId:       s.SGId,
 		IpPermissions: s.IPPermissions,
