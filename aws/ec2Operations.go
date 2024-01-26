@@ -107,7 +107,15 @@ func (c *EC2Instances) SGEgress(s SGInput) (*ec2.AuthorizeSecurityGroupEgressOut
 	defer cancel()
 
 	if len(s.Rules) > 0 {
-		slog.Error("Implement me")
+		for _, v := range s.Rules {
+			perm := types.IpPermission{
+				FromPort:   v.FromPort,
+				ToPort:     v.ToPort,
+				IpProtocol: v.IPProtocol,
+				IpRanges:   v.IPRanges,
+			}
+			s.IPPermissions = append(s.IPPermissions, perm)
+		}
 	}
 
 	params := ec2.AuthorizeSecurityGroupEgressInput{
