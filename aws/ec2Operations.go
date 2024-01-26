@@ -127,6 +127,10 @@ func (c *EC2Instances) SGIngress(s SGInput) (*ec2.AuthorizeSecurityGroupIngressO
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
+	if len(s.Rules) > 0 {
+		slog.Error("Implement me")
+	}
+
 	params := ec2.AuthorizeSecurityGroupIngressInput{
 		GroupId:       s.SGId,
 		IpPermissions: s.IPPermissions,
