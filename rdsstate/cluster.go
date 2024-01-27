@@ -12,22 +12,23 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
-//ClusterStackInput is the input for a ClusterStack
+// ClusterStackInput is the input for a ClusterStack
 type ClusterStackInput struct {
-	R                     state.RDSRestorationStore
-	StackName             string
-	Filename              string
-	Client                aws.DbInstances
-	Folder                string
-	ParameterFileName     string
-	ParameterGroups       []pgstate.ParameterGroup
-	OptionGroupFileName   string
-	OptionGroup           *types.OptionGroup
-	SecurityGroups        *state.SecurityGroupOutput
-	SecurityGroupFileName string
+	R                           state.RDSRestorationStore
+	StackName                   string
+	Filename                    string
+	Client                      aws.DbInstances
+	Folder                      string
+	ParameterFileName           string
+	ParameterGroups             []pgstate.ParameterGroup
+	OptionGroupFileName         string
+	OptionGroup                 *types.OptionGroup
+	SecurityGroups              *state.SecurityGroupOutput
+	SecurityGroupFileName       string
+	SecurityGroupsRulesFileName string
 }
 
-//GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.
+// GenerateRDSClusterStack creates a stack to restore a cluster and it's instances.
 func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 	if c.Filename == "" {
 		c.Filename = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
@@ -40,6 +41,9 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 	}
 	if c.SecurityGroupFileName == "" {
 		c.SecurityGroupFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
+	}
+	if c.SecurityGroupsRulesFileName == "" {
+		c.SecurityGroupsRulesFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	}
 
 	objMap := make(map[int][]stack.Object)
@@ -70,6 +74,15 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 		}
 		sgObj := stack.NewObject(c.SecurityGroupFileName, 1, stack.SecurityGroup)
 		paramObjects = append(paramObjects, sgObj)
+
+		sgRules := state.SecurityGroupNeeds(*i.SecurityGroups)
+		b2 := state.EncodeSGRulesStorage(sgRules)
+		_, err = state.WriteOutput(i.SecurityGroupsRulesFileName, b2)
+		if err != nil {
+			return nil, fmt.Errorf("Error saving security group rules %s", err)
+		}
+		sgRulesObj := stack.NewObject(i.SecurityGroupsRulesFileName, 1, stack.SecurityGroupRules)
+		paramObjects = append(paramObjects, sgRulesObj)
 	}
 
 	objMap[1] = paramObjects
