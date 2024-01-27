@@ -11,20 +11,21 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
-//InstanceStackInputs struct to generate stack for an instance
+// InstanceStackInputs struct to generate stack for an instance
 type InstanceStackInputs struct {
-	R                      state.RDSRestorationStore
-	StackName              string
-	InstanceFileName       string
-	ParameterFileName      string
-	OptionGroupFileName    string
-	ParameterGroups        []pgstate.ParameterGroup
-	OptionGroup            *types.OptionGroup
-	SecurityGroups         *state.SecurityGroupOutput
-	SecurityGroupsFileName string
+	R                           state.RDSRestorationStore
+	StackName                   string
+	InstanceFileName            string
+	ParameterFileName           string
+	OptionGroupFileName         string
+	ParameterGroups             []pgstate.ParameterGroup
+	OptionGroup                 *types.OptionGroup
+	SecurityGroups              *state.SecurityGroupOutput
+	SecurityGroupsFileName      string
+	SecurityGroupsRulesFileName string
 }
 
-//GenerateRDSInstanceStack creates a stack for restoration for an RDS instance
+// GenerateRDSInstanceStack creates a stack for restoration for an RDS instance
 func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 	if i.InstanceFileName == "" {
 		i.InstanceFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
@@ -40,6 +41,10 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 
 	if i.SecurityGroupsFileName == "" {
 		i.SecurityGroupsFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
+	}
+
+	if i.SecurityGroupsRulesFileName == "" {
+		i.SecurityGroupsRulesFileName = fmt.Sprintf(".state/%s", *helpers.RandomStateFileName())
 	}
 
 	b := pgstate.EncodeParameterGroups(i.ParameterGroups)
@@ -69,6 +74,15 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 		}
 		sgObj := stack.NewObject(i.SecurityGroupsFileName, 1, stack.SecurityGroup)
 		paramObjects = append(paramObjects, sgObj)
+
+		sgRules := state.SecurityGroupNeeds(*i.SecurityGroups)
+		b2 := state.EncodeSGRulesStorage(sgRules)
+		_, err = state.WriteOutput(i.SecurityGroupsRulesFileName, b2)
+		if err != nil {
+			return nil, fmt.Errorf("Error saving security group rules %s", err)
+		}
+		sgRulesObj := stack.NewObject(i.SecurityGroupsRulesFileName, 1, stack.SecurityGroupRules)
+		paramObjects = append(paramObjects, sgRulesObj)
 	}
 
 	DBInput := state.GenerateRestoreDBInstanceFromDBSnapshotInput(i.R)

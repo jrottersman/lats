@@ -19,6 +19,7 @@ const DBParameterGroup = "DBParameterGroup"
 const DBClusterParameterGroup = "DBClusterParameterGroup"
 const OptionGroup = "OptionGroup"
 const SecurityGroup = "SecurityGroup"
+const SecurityGroupRules = "SecurityGroupRules"
 
 type Object struct {
 	FileName string
