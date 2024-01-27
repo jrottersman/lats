@@ -75,13 +75,13 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 		sgObj := stack.NewObject(c.SecurityGroupFileName, 1, stack.SecurityGroup)
 		paramObjects = append(paramObjects, sgObj)
 
-		sgRules := state.SecurityGroupNeeds(*i.SecurityGroups)
+		sgRules := state.SecurityGroupNeeds(*c.SecurityGroups)
 		b2 := state.EncodeSGRulesStorage(sgRules)
-		_, err = state.WriteOutput(i.SecurityGroupsRulesFileName, b2)
+		_, err = state.WriteOutput(c.SecurityGroupsRulesFileName, b2)
 		if err != nil {
 			return nil, fmt.Errorf("Error saving security group rules %s", err)
 		}
-		sgRulesObj := stack.NewObject(i.SecurityGroupsRulesFileName, 1, stack.SecurityGroupRules)
+		sgRulesObj := stack.NewObject(c.SecurityGroupsRulesFileName, 1, stack.SecurityGroupRules)
 		paramObjects = append(paramObjects, sgRulesObj)
 	}
 
