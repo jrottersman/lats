@@ -27,7 +27,7 @@ type Object struct {
 	ObjType  string
 }
 
-// ReadObject Read the file for the object
+// ReadObject Read the file for the object this uses a crazy case statement to figure out what to decode the value to and return it. This might be replaced with a generic decode function
 func (o Object) ReadObject() interface{} {
 	dat, err := os.ReadFile(o.FileName)
 	slog.Info("filename is", "Filename", o.FileName)
