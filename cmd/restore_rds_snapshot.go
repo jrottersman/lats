@@ -47,7 +47,7 @@ func init() {
 	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&egress, "egress", []string{}, "Egress rules that we want to update our security group with")
 }
 
-//RestoreSnapshot is the function that restores a snapshot
+// RestoreSnapshot is the function that restores a snapshot
 func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) error {
 	slog.Info("Starting restore snapshot procedure")
 	dbi := aws.Init(region)
@@ -111,7 +111,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 func sgRuleConvert(rules []string) []aws.PassedIPs {
 	l := []aws.PassedIPs{}
 	for _, v := range rules {
-		res := strings.Split(v, ":")
+		res := strings.Split(v, "-")
 		if len(res) != 2 {
 			slog.Error("length of our split should be 2", "is", len(res))
 			return nil
