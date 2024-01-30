@@ -25,7 +25,7 @@ func Test_sgRuleConvert(t *testing.T) {
 		{
 			name: "one",
 			args: args{
-				rules: []string{"127.0.0.1/32:8000"},
+				rules: []string{"127.0.0.1/32-8000"},
 			},
 			want: passedIps,
 		},
