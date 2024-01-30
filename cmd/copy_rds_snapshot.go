@@ -163,7 +163,7 @@ func createKMSKey(config Config, sm state.StateManager) string {
 
 }
 
-//FindStack get's a stack for creating our new stack when we copy the snapshot
+// FindStack get's a stack for creating our new stack when we copy the snapshot
 func FindStack(sm state.StateManager, snapshot string) (*stack.Stack, error) {
 	sm.Mu.Lock()
 	defer sm.Mu.Unlock()
@@ -214,6 +214,8 @@ func NewStack(oldStack stack.Stack, name string) *stack.Stack {
 			case stack.DBClusterParameterGroup:
 				objs[k] = append(objs[k], i)
 			case stack.DBParameterGroup:
+				objs[k] = append(objs[k], i)
+			case stack.SecurityGroup:
 				objs[k] = append(objs[k], i)
 			}
 		}
