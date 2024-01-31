@@ -20,6 +20,7 @@ func (m MockRDSClient) DescribeDBClusters(ctx context.Context, params *rds.Descr
 	return r, nil
 }
 
+// DescribeDBClusterSnapshots mock get a db cluster snapshot
 func (m MockRDSClient) DescribeDBClusterSnapshots(ctx context.Context, params *rds.DescribeDBClusterSnapshotsInput, optFns ...func(*rds.Options)) (*rds.DescribeDBClusterSnapshotsOutput, error) {
 	snapshots := []types.DBClusterSnapshot{}
 	snap := types.DBClusterSnapshot{
@@ -34,6 +35,7 @@ func (m MockRDSClient) DescribeDBClusterSnapshots(ctx context.Context, params *r
 	}, nil
 }
 
+// DescribeDBInstances mock get a db instance
 func (m MockRDSClient) DescribeDBInstances(ctx context.Context, input *rds.DescribeDBInstancesInput, optFns ...func(*rds.Options)) (*rds.DescribeDBInstancesOutput, error) {
 	f := "foo"
 	status := "availaible"
