@@ -217,7 +217,10 @@ func NewStack(oldStack stack.Stack, name string) *stack.Stack {
 				objs[k] = append(objs[k], i)
 			case stack.SecurityGroup:
 				objs[k] = append(objs[k], i)
+			case stack.SecurityGroupRules:
+				objs[k] = append(objs[k], i)
 			}
+
 		}
 	}
 	return &stack.Stack{
