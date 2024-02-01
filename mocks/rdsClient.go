@@ -65,6 +65,7 @@ func (m MockRDSClient) CreateDBInstance(ctx context.Context, params *rds.CreateD
 	return &rds.CreateDBInstanceOutput{}, nil
 }
 
+// CreateDBCluster mock create a db cluster
 func (m MockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateDBSnapshotInput, optFns ...func(*rds.Options)) (*rds.CreateDBSnapshotOutput, error) {
 	var store int32
 	store = 1000
