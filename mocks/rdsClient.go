@@ -76,6 +76,8 @@ func (m MockRDSClient) CreateDBSnapshot(ctx context.Context, params *rds.CreateD
 	}
 	return r, nil
 }
+
+// CreateDBSubnetGroup mock create a db subnet group
 func (m MockRDSClient) CreateDBSubnetGroup(ctx context.Context, params *rds.CreateDBSubnetGroupInput, optFns ...func(*rds.Options)) (*rds.CreateDBSubnetGroupOutput, error) {
 	return &rds.CreateDBSubnetGroupOutput{}, nil
 }
