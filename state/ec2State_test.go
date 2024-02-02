@@ -114,3 +114,23 @@ func TestSgRuleStorageToIpPermission(t *testing.T) {
 		})
 	}
 }
+
+func TestSgRuleStoragesToIpPermissions(t *testing.T) {
+	type args struct {
+		s []SGRuleStorage
+	}
+	tests := []struct {
+		name string
+		args args
+		want []types.IpPermission
+	}{
+		{name: "test", args: args{s: []SGRuleStorage{{GroupID: aws.String("foobar"), FromPort: aws.Int32(8000), ToPort: aws.Int32(8000), IPProtocol: aws.String("tcp")}}}, want: []types.IpPermission{{FromPort: aws.Int32(8000), ToPort: aws.Int32(8000), IpProtocol: aws.String("tcp"), IpRanges: nil}}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := SgRuleStoragesToIpPermissions(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SgRuleStoragesToIpPermissions() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
