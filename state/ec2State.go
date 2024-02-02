@@ -83,3 +83,12 @@ func DecodeSGRulesStorage(b bytes.Buffer) []SGRuleStorage {
 	}
 	return sg
 }
+
+func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
+	var ip types.IpPermission
+	ip.FromPort = sg.FromPort
+	ip.ToPort = sg.ToPort
+	ip.IpProtocol = sg.IPProtocol
+	ip.IpRanges = sg.IPRanges
+	return ip
+}
