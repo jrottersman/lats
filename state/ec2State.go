@@ -92,3 +92,11 @@ func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	ip.IpRanges = sg.IPRanges
 	return ip
 }
+
+func SgRuleStoragesToIpPermissions(s []SGRuleStorage) []types.IpPermission {
+	var ips []types.IpPermission
+	for _, v := range s {
+		ips = append(ips, SgRuleStorageToIpPermission(v))
+	}
+	return ips
+}
