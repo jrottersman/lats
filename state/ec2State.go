@@ -37,12 +37,13 @@ func DecodeSecurityGroups(b bytes.Buffer) SecurityGroupOutput {
 }
 
 type SGRuleStorage struct {
-	GroupID    *string
-	GroupName  *string
-	FromPort   *int32
-	ToPort     *int32
-	IPProtocol *string
-	IPRanges   []types.IpRange
+	GroupID       *string
+	GroupName     *string
+	FromPort      *int32
+	ToPort        *int32
+	IPProtocol    *string
+	PrefixIdsList []string
+	IPRanges      []types.IpRange
 }
 
 // SecurityGroupNeeds is a function that takes a security group and get's the parts we need out more for thought then anything
@@ -52,12 +53,16 @@ func SecurityGroupNeeds(sg SecurityGroupOutput) []SGRuleStorage {
 		gid := v.GroupId
 		gname := v.GroupName
 		for _, z := range v.IpPermissions {
-			// What is needed for ipv4
+			// What is needed for ipv4 and SG rules
 			fromPort := z.FromPort
 			toPort := z.ToPort
 			IpProtocol := z.IpProtocol
+			prefixes := []string{}
+			for _, prefix := range z.PrefixListIds {
+				prefixes = append(prefixes, *prefix.PrefixListId)
+			}
 			IpRanges := z.IpRanges
-			sgRules = append(sgRules, SGRuleStorage{GroupID: gid, GroupName: gname, FromPort: fromPort, ToPort: toPort, IPProtocol: IpProtocol, IPRanges: IpRanges})
+			sgRules = append(sgRules, SGRuleStorage{GroupID: gid, GroupName: gname, FromPort: fromPort, ToPort: toPort, IPProtocol: IpProtocol, IPRanges: IpRanges, PrefixIdsList: prefixes})
 		}
 	}
 	return sgRules
