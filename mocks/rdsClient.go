@@ -92,6 +92,7 @@ func (m MockRDSClient) CreateDBParameterGroup(ctx context.Context, params *rds.C
 	return &rds.CreateDBParameterGroupOutput{DBParameterGroup: &parameters}, nil
 }
 
+// CreateDBClusterParameterGroup mock create a db cluster parameter group
 func (m MockRDSClient) CreateDBClusterParameterGroup(ctx context.Context, params *rds.CreateDBClusterParameterGroupInput, optFns ...func(*rds.Options)) (*rds.CreateDBClusterParameterGroupOutput, error) {
 	parameters := types.DBClusterParameterGroup{
 		DBClusterParameterGroupArn:  aws.String("foo"),
