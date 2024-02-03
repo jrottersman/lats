@@ -53,7 +53,7 @@ func TestSecurityGroupNeeds(t *testing.T) {
 		args args
 		want []SGRuleStorage
 	}{
-		{name: "test", args: args{sg: SecurityGroupOutput{SecurityGroups: []types.SecurityGroup{{GroupId: aws.String("foobar"), IpPermissions: []types.IpPermission{{IpProtocol: aws.String("tcp")}}}}}}, want: []SGRuleStorage{{GroupID: aws.String("foobar"), GroupName: nil, FromPort: nil, ToPort: nil, IPProtocol: aws.String("tcp"), IPRanges: nil}}},
+		{name: "test", args: args{sg: SecurityGroupOutput{SecurityGroups: []types.SecurityGroup{{GroupId: aws.String("foobar"), IpPermissions: []types.IpPermission{{IpProtocol: aws.String("tcp")}}}}}}, want: []SGRuleStorage{{GroupID: aws.String("foobar"), GroupName: nil, FromPort: nil, ToPort: nil, IPProtocol: aws.String("tcp"), IPRanges: nil, PrefixIdsList: []string{}}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
