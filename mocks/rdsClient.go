@@ -102,6 +102,7 @@ func (m MockRDSClient) CreateDBClusterParameterGroup(ctx context.Context, params
 	return &rds.CreateDBClusterParameterGroupOutput{DBClusterParameterGroup: &parameters}, nil
 }
 
+// CreateOptionGroup mock create an option group
 func (m MockRDSClient) CreateOptionGroup(ctx context.Context, params *rds.CreateOptionGroupInput, optFns ...func(*rds.Options)) (*rds.CreateOptionGroupOutput, error) {
 	return &rds.CreateOptionGroupOutput{}, nil
 }
