@@ -98,6 +98,14 @@ func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	return ip
 }
 
+func prefixlistGenerator(pl []string) []types.PrefixListId {
+	var plid []types.PrefixListId
+	for _, v := range pl {
+		plid = append(plid, types.PrefixListId{PrefixListId: &v})
+	}
+	return plid
+}
+
 func SgRuleStoragesToIpPermissions(s []SGRuleStorage) []types.IpPermission {
 	var ips []types.IpPermission
 	for _, v := range s {
