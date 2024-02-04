@@ -95,6 +95,7 @@ func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	ip.ToPort = sg.ToPort
 	ip.IpProtocol = sg.IPProtocol
 	ip.IpRanges = sg.IPRanges
+	ip.PrefixListIds = prefixlistGenerator(sg.PrefixIdsList)
 	return ip
 }
 
