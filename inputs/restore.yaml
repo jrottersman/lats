@@ -1,3 +1,18 @@
 ---
 snapshot: "snapshot-1234abcd"
+database: "foobar"
 region: "us-west-2"
+DBSubnetGroupName: "my-subnet-group"
+VpcID: "vpc-1234abcd"
+SubnetIDs:
+  - "subnet-1234abcd"
+  - "subnet-5678efgh"
+SecurityGroups:
+  - type: "ingress"
+    protocol: "tcp"
+    port: 3306
+    source: "pg-1234abcd"
+  - type: "egress"
+    protocol: "tcp"
+    port: 3306
+    destination: "10.0.0.0/16"
