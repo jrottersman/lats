@@ -22,6 +22,7 @@ var (
 	subnets             []string
 	ingress             []string
 	egress              []string
+	restConfigFile      string
 
 	//RestoreRDSSnapshotCmd restores an RDS snapshot
 	RestoreRDSSnapshotCmd = &cobra.Command{
@@ -45,6 +46,7 @@ func init() {
 	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&subnets, "subnets", []string{}, "Subnets that we want to create a subnet group in")
 	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&ingress, "ingress", []string{}, "Ingress rules that we want to update our security group with")
 	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&egress, "egress", []string{}, "Egress rules that we want to update our security group with")
+	RestoreRDSSnapshotCmd.Flags().StringVarP(&restConfigFile, "config-file", "f", "", "Config file for the snapshot that we want to parse")
 }
 
 // RestoreSnapshot is the function that restores a snapshot
