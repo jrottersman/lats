@@ -56,6 +56,11 @@ func init() {
 func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) error {
 	slog.Info("Starting restore snapshot procedure")
 	dbi := aws.Init(region)
+
+	slog.Info("Check if config file is passed in")
+	if restConfigFile != "" {
+		slog.Info("Config file was passed in", "configFile", restConfigFile)
+	}
 	slog.Info("finding the stack")
 	SnapshotStack, err := FindStack(stateKV, restoreSnapshotName)
 	if err != nil {
