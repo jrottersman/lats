@@ -10,6 +10,7 @@ import (
 	"github.com/jrottersman/lats/stack"
 	"github.com/jrottersman/lats/state"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -60,6 +61,12 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 	slog.Info("Check if config file is passed in")
 	if restConfigFile != "" {
 		slog.Info("Config file was passed in", "configFile", restConfigFile)
+		viper.SetConfigFile(restConfigFile)
+		viper.AddConfigPath(".")
+		err := viper.ReadInConfig() // Find and read the config file
+		if err != nil {             // Handle errors reading the config file
+			slog.Error("Viper Error reading config", "error", err)
+		}
 	}
 	slog.Info("finding the stack")
 	SnapshotStack, err := FindStack(stateKV, restoreSnapshotName)
