@@ -22,6 +22,9 @@ var (
 	subnets             []string
 	ingress             []string
 	egress              []string
+	addresses           []string
+	ports               []int
+	ruleTypes           []string
 	restConfigFile      string
 
 	//RestoreRDSSnapshotCmd restores an RDS snapshot
