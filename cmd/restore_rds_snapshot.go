@@ -68,6 +68,8 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 			slog.Error("Viper Error reading config", "error", err)
 		}
 		restoreSnapshotName = viper.Get("snapshot").(string)
+		restoreDbName = viper.Get("database").(string)
+		region = viper.Get("region").(string)
 	}
 	slog.Info("finding the stack")
 	SnapshotStack, err := FindStack(stateKV, restoreSnapshotName)
