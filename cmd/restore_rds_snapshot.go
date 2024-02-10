@@ -70,6 +70,14 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		restoreSnapshotName = viper.Get("snapshot").(string)
 		restoreDbName = viper.Get("database").(string)
 		region = viper.Get("region").(string)
+		dbSubnetGroupName = viper.Get("dbsubnetgroupname").(string)
+		vpcID = viper.Get("vpcid").(string)
+		subnets = viper.("subnets")
+		securityGroups := []sgRulesStruct{}
+		err = viper.UnmarshalKey("securitygroups", &securityGroups)
+		if err != nil {
+			slog.Error("Error unmarshalling security groups", "error", err)
+		}
 	}
 	slog.Info("finding the stack")
 	SnapshotStack, err := FindStack(stateKV, restoreSnapshotName)
