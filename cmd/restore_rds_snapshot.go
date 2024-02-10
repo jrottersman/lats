@@ -26,6 +26,7 @@ var (
 	addresses           []string
 	ports               []int
 	ruleTypes           []string
+	protocols           []string
 	restConfigFile      string
 
 	//RestoreRDSSnapshotCmd restores an RDS snapshot
@@ -80,6 +81,10 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		}
 		for _, v := range securityGroups {
 			slog.Info("Security Group", "sg", v)
+			ruleTypes = append(ruleTypes, v.ruleType)
+			addresses = append(addresses, v.source)
+			ports = append(ports, v.port)
+			protocols = append(protocols, v.protocol)
 		}
 	}
 	slog.Info("finding the stack")
