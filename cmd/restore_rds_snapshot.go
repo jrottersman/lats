@@ -78,6 +78,9 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		if err != nil {
 			slog.Error("Error unmarshalling security groups", "error", err)
 		}
+		for _, v := range securityGroups {
+			slog.Info("Security Group", "sg", v)
+		}
 	}
 	slog.Info("finding the stack")
 	SnapshotStack, err := FindStack(stateKV, restoreSnapshotName)
