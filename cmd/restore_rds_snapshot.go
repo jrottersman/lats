@@ -72,7 +72,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		region = viper.Get("region").(string)
 		dbSubnetGroupName = viper.Get("dbsubnetgroupname").(string)
 		vpcID = viper.Get("vpcid").(string)
-		subnets = viper.("subnets")
+		subnets = viper.GetStringSlice("subnets")
 		securityGroups := []sgRulesStruct{}
 		err = viper.UnmarshalKey("securitygroups", &securityGroups)
 		if err != nil {
