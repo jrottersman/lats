@@ -37,6 +37,7 @@ type SGInput struct {
 type PassedIPs struct {
 	Port        int
 	Permissions string
+	Protcol     string
 	Description string
 	Type        string
 }
