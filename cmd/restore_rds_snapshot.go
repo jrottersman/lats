@@ -85,6 +85,13 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		}
 		for _, v := range securityGroups {
 			slog.Info("Security Group", "sg", v)
+			pi := aws.PassedIPs{
+				Port:        v.port,
+				Type:        v.ruleType,
+				Protocol:    v.protocol,
+				Permissions: v.source,
+			}
+			slog.Info("PassedIPs", "pi", pi)
 			ruleTypes = append(ruleTypes, v.ruleType)
 			addresses = append(addresses, v.source)
 			ports = append(ports, v.port)

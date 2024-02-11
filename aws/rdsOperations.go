@@ -73,7 +73,7 @@ func (instances *DbInstances) GetInstance(instanceName string) (
 	return &output.DBInstances[0], nil
 }
 
-//GetCluster describes an RDS cluster
+// GetCluster describes an RDS cluster
 func (instances *DbInstances) GetCluster(clusterName string) (*types.DBCluster, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
@@ -94,7 +94,7 @@ func (instances *DbInstances) GetCluster(clusterName string) (*types.DBCluster, 
 	return &output.DBClusters[0], err
 }
 
-//GetInstancesFromCluster get's the instaces associated with a database cluster
+// GetInstancesFromCluster get's the instaces associated with a database cluster
 func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]types.DBInstance, error) {
 	if c.DBClusterMembers == nil {
 		return nil, nil
@@ -110,7 +110,7 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 	return dbs, nil
 }
 
-//GetOptionGroup get option group by name
+// GetOptionGroup get option group by name
 func (instances *DbInstances) GetOptionGroup(OptionGroupName string) (*types.OptionGroup, error) {
 	input := rds.DescribeOptionGroupsInput{
 		OptionGroupName: &OptionGroupName,
@@ -124,7 +124,7 @@ func (instances *DbInstances) GetOptionGroup(OptionGroupName string) (*types.Opt
 	return &output.OptionGroupsList[0], nil
 }
 
-//CreateDBSubnetGroup creates a subnet group to allow for the creation of databases
+// CreateDBSubnetGroup creates a subnet group to allow for the creation of databases
 func (instances *DbInstances) CreateDBSubnetGroup(name string, description string, subnets []string) (*rds.CreateDBSubnetGroupOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
@@ -136,7 +136,7 @@ func (instances *DbInstances) CreateDBSubnetGroup(name string, description strin
 	return group, err
 }
 
-//CreateClusterFromStackInput creates a stack all inputs required
+// CreateClusterFromStackInput creates a stack all inputs required
 type CreateClusterFromStackInput struct {
 	S             *stack.Stack
 	ClusterName   *string
@@ -147,7 +147,7 @@ type CreateClusterFromStackInput struct {
 	Egress        []PassedIPs
 }
 
-//CreateClusterFromStack creates an RDS cluster from a stack
+// CreateClusterFromStack creates an RDS cluster from a stack
 func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInput) error {
 	first := c.S.Objects[1]
 	var pgName *string
@@ -314,7 +314,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 	return nil
 }
 
-//CreateInstanceFromStackInput input for creating a stack
+// CreateInstanceFromStackInput input for creating a stack
 type CreateInstanceFromStackInput struct {
 	Stack         *stack.Stack
 	DBName        *string
@@ -325,7 +325,7 @@ type CreateInstanceFromStackInput struct {
 	Egress        []PassedIPs
 }
 
-//CreateInstanceFromStack creates an RDS instance from a stack object
+// CreateInstanceFromStack creates an RDS instance from a stack object
 func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackInput) error {
 	pgs := c.Stack.Objects[1]
 	var pgName *string
@@ -357,7 +357,7 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 					if len(c.Ingress) > 0 {
 						slog.Info("Implement me")
 						slog.Info("sg is ", "sg", sg)
-						//create SGINPUT here
+
 					}
 				}
 			case *pgstate.ParameterGroup:
@@ -513,7 +513,7 @@ func (instances *DbInstances) CreateSnapshot(instanceName string, snapshotName s
 	return output.DBSnapshot, nil
 }
 
-//CreateClusterSnapshot so it turns out AWS is annoying and makes us create snapshots seperatly for clusters and instaces how fun!
+// CreateClusterSnapshot so it turns out AWS is annoying and makes us create snapshots seperatly for clusters and instaces how fun!
 func (instances *DbInstances) CreateClusterSnapshot(clusterName string, snapshotName string) (*types.DBClusterSnapshot, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer cancel()
@@ -546,7 +546,7 @@ func (instances *DbInstances) CopySnapshot(originalSnapshotName string, newSnaps
 	return output.DBSnapshot, nil
 }
 
-//CopyClusterSnaphot see CopySnapshot now for a Cluster
+// CopyClusterSnaphot see CopySnapshot now for a Cluster
 func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, newSnapshotName string, sourceRegion string, kmsKey string) (
 	*types.DBClusterSnapshot, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
@@ -564,7 +564,7 @@ func (instances *DbInstances) CopyClusterSnaphot(originalSnapshotName string, ne
 	return output.DBClusterSnapshot, nil
 }
 
-//RestoreOptionGroup creates the option group for our database this is very optional
+// RestoreOptionGroup creates the option group for our database this is very optional
 func (instances *DbInstances) RestoreOptionGroup(EngineName string, MajorEngineVersion string, OptionGroupName string, Description string) (
 	*rds.CreateOptionGroupOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
@@ -582,7 +582,7 @@ func (instances *DbInstances) RestoreOptionGroup(EngineName string, MajorEngineV
 	return out, nil
 }
 
-//GetClusterParameterGroup get the cluster parameter group so we can make a new one in a new region or you know store it for restoration (actually we won't need to do that cause the data is stored on the snapshot :P)
+// GetClusterParameterGroup get the cluster parameter group so we can make a new one in a new region or you know store it for restoration (actually we won't need to do that cause the data is stored on the snapshot :P)
 func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string) (
 	*types.DBClusterParameterGroup, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
@@ -603,7 +603,7 @@ func (instances *DbInstances) GetClusterParameterGroup(ParameterGroupName string
 	return &output.DBClusterParameterGroups[0], nil
 }
 
-//GetParametersForClusterParameterGroup returns parameters for a cluster group
+// GetParametersForClusterParameterGroup returns parameters for a cluster group
 func (instances *DbInstances) GetParametersForClusterParameterGroup(ParameterGroupName string) (*[]types.Parameter, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
@@ -655,7 +655,7 @@ func (instances *DbInstances) GetParameterGroup(parameterGroupName string) (
 
 }
 
-//GetParametersForGroup returns the parameters for a parameter group
+// GetParametersForGroup returns the parameters for a parameter group
 func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (*[]types.Parameter, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
@@ -685,7 +685,7 @@ func (instances *DbInstances) GetParametersForGroup(ParameterGroupName string) (
 	return &parameters, nil
 }
 
-//CreateParameterGroup creates a pararmeter group for a DB instance
+// CreateParameterGroup creates a pararmeter group for a DB instance
 func (instances *DbInstances) CreateParameterGroup(p *types.DBParameterGroup) (*rds.CreateDBParameterGroupOutput, error) {
 	input := rds.CreateDBParameterGroupInput{
 		DBParameterGroupFamily: p.DBParameterGroupFamily,
@@ -702,7 +702,7 @@ func (instances *DbInstances) CreateParameterGroup(p *types.DBParameterGroup) (*
 	return output, err
 }
 
-//CreateClusterParameterGroup creates a pararmeter group for a DB instance
+// CreateClusterParameterGroup creates a pararmeter group for a DB instance
 func (instances *DbInstances) CreateClusterParameterGroup(p *types.DBClusterParameterGroup) (*rds.CreateDBClusterParameterGroupOutput, error) {
 	input := rds.CreateDBClusterParameterGroupInput{
 		DBParameterGroupFamily:      p.DBParameterGroupFamily,
@@ -719,7 +719,7 @@ func (instances *DbInstances) CreateClusterParameterGroup(p *types.DBClusterPara
 	return output, nil
 }
 
-//ModifyOptionGroup modifies the option group
+// ModifyOptionGroup modifies the option group
 func (instances *DbInstances) ModifyOptionGroup(OptionGroupName string, Include []types.OptionConfiguration) error {
 	t := true
 	input := rds.ModifyOptionGroupInput{
@@ -733,7 +733,7 @@ func (instances *DbInstances) ModifyOptionGroup(OptionGroupName string, Include 
 	return err
 }
 
-//ModifyParameterGroup adds all the parameters to a db parameter group
+// ModifyParameterGroup adds all the parameters to a db parameter group
 func (instances *DbInstances) ModifyParameterGroup(pg string, parameters []types.Parameter) error {
 	//batch this thing
 	batchSize := 20
@@ -758,7 +758,7 @@ func (instances *DbInstances) ModifyParameterGroup(pg string, parameters []types
 	return nil
 }
 
-//ModifyClusterParameterGroup adds all the parameters to a db cluster parameter group
+// ModifyClusterParameterGroup adds all the parameters to a db cluster parameter group
 func (instances *DbInstances) ModifyClusterParameterGroup(pg string, parameters []types.Parameter) error {
 	//batch this thing
 	batchSize := 20
@@ -783,7 +783,7 @@ func (instances *DbInstances) ModifyClusterParameterGroup(pg string, parameters 
 	return nil
 }
 
-//RestoreSnapshotCluster takes a snapshot turns it into a DB Cluster fun fact the cluster won't be ready from just this there will be no instances
+// RestoreSnapshotCluster takes a snapshot turns it into a DB Cluster fun fact the cluster won't be ready from just this there will be no instances
 func (instances *DbInstances) RestoreSnapshotCluster(input rds.RestoreDBClusterFromSnapshotInput) (*rds.RestoreDBClusterFromSnapshotOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer cancel()
@@ -807,7 +807,7 @@ func (instances *DbInstances) RestoreSnapshotInstance(input rds.RestoreDBInstanc
 	return output, nil
 }
 
-//RestoreInstanceForCluster our cluster has no instances by default it need's instances to be usable this makes them exist
+// RestoreInstanceForCluster our cluster has no instances by default it need's instances to be usable this makes them exist
 func (instances *DbInstances) RestoreInstanceForCluster(input rds.CreateDBInstanceInput) (*rds.CreateDBInstanceOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer cancel()
@@ -820,7 +820,7 @@ func (instances *DbInstances) RestoreInstanceForCluster(input rds.CreateDBInstan
 	return output, nil
 }
 
-//GetInstanceSnapshotARN get the arn for an instance snapshot
+// GetInstanceSnapshotARN get the arn for an instance snapshot
 func (instances *DbInstances) GetInstanceSnapshotARN(name string, marker *string) (*string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer cancel()
@@ -844,7 +844,7 @@ func (instances *DbInstances) GetInstanceSnapshotARN(name string, marker *string
 	return nil, fmt.Errorf("snapshot not found")
 }
 
-//GetInstanceSnapshotStatus get the status for an instance snapshot
+// GetInstanceSnapshotStatus get the status for an instance snapshot
 func (instances *DbInstances) GetInstanceSnapshotStatus(name string) (*string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer cancel()
@@ -881,7 +881,7 @@ func (instances *DbInstances) GetClusterSnapshotStatus(name string) (*string, er
 	return nil, fmt.Errorf("snapshot not found")
 }
 
-//GetInstanceSnapshotPercentage get the status for an instance snapshot
+// GetInstanceSnapshotPercentage get the status for an instance snapshot
 func (instances *DbInstances) GetInstanceSnapshotPercentage(name string) (*int32, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer cancel()
@@ -900,7 +900,7 @@ func (instances *DbInstances) GetInstanceSnapshotPercentage(name string) (*int32
 	return nil, fmt.Errorf("snapshot not found")
 }
 
-//GetClusterSnapshotARN get's the cluster snapshot arn from snapshot name
+// GetClusterSnapshotARN get's the cluster snapshot arn from snapshot name
 func (instances *DbInstances) GetClusterSnapshotARN(name string, marker *string) (*string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer cancel()
@@ -921,7 +921,7 @@ func (instances *DbInstances) GetClusterSnapshotARN(name string, marker *string)
 	return nil, fmt.Errorf("cluster snapshot not found")
 }
 
-//GetSnapshotARN get's the snapshot ARN from the snapshot name
+// GetSnapshotARN get's the snapshot ARN from the snapshot name
 func (instances *DbInstances) GetSnapshotARN(name string, cluster bool) (*string, error) {
 	if cluster {
 		snap, err := instances.GetClusterSnapshotARN(name, nil)
