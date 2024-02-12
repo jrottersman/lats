@@ -97,11 +97,9 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 			slog.Info("PassedIPs", "pi", pi)
 			if v.ruleType == "ingress" {
 				ingressRules = append(ingressRules, pi)
+			} else if v.ruleType == "egress" {
+				egressRules = append(egressRules, pi)
 			}
-			ruleTypes = append(ruleTypes, v.ruleType)
-			addresses = append(addresses, v.source)
-			ports = append(ports, v.port)
-			protocols = append(protocols, v.protocol)
 		}
 	}
 	slog.Info("finding the stack")
