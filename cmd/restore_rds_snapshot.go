@@ -83,6 +83,9 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		if err != nil {
 			slog.Error("Error unmarshalling security groups", "error", err)
 		}
+
+		var ingressRules []aws.PassedIPs
+		var egressRules []aws.PassedIPs
 		for _, v := range securityGroups {
 			slog.Info("Security Group", "sg", v)
 			pi := aws.PassedIPs{
@@ -92,6 +95,9 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 				Permissions: v.source,
 			}
 			slog.Info("PassedIPs", "pi", pi)
+			if v.ruleType == "ingress" {
+				ingressRules = append(ingressRules, pi)
+			}
 			ruleTypes = append(ruleTypes, v.ruleType)
 			addresses = append(addresses, v.source)
 			ports = append(ports, v.port)
@@ -118,11 +124,10 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 	}
 
 	//Security Groups
-	var ingressRules []aws.PassedIPs
+
 	if len(ingress) != 0 {
 		ingressRules = sgRuleConvert(ingress)
 	}
-	var egressRules []aws.PassedIPs
 	if len(egress) != 0 {
 		egressRules = sgRuleConvert(egress)
 	}
