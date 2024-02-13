@@ -48,8 +48,6 @@ func init() {
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&region, "region", "r", "", "AWS region we are restoring in")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&dbSubnetGroupName, "subnet-group", "g", "", "DB subnet group we are restoring the snapshot to")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&dbSubnetGroupName, "vpc-id", "v", "", "VPC Id we are restoring the db to")
-	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&subnets, "subnets", []string{}, "Subnets that we want to create a subnet group in")
-	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&ingress, "ingress", []string{}, "Ingress rules that we want to update our security group with")
 	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&egress, "egress", []string{}, "Egress rules that we want to update our security group with")
 	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&addresses, "addresses", []string{}, "Addresses that we want to update our security group with")
 	RestoreRDSSnapshotCmd.Flags().IntSliceVar(&ports, "ports", []int{}, "Ports that we want to update our security group with")
@@ -122,13 +120,6 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 	}
 
 	//Security Groups
-
-	if len(ingress) != 0 {
-		ingressRules = sgRuleConvert(ingress)
-	}
-	if len(egress) != 0 {
-		egressRules = sgRuleConvert(egress)
-	}
 	slog.Info("starting restore", "type", SnapshotStack.RestorationObjectName)
 	if SnapshotStack.RestorationObjectName == stack.Cluster {
 		slog.Info("Restoring a cluster")
