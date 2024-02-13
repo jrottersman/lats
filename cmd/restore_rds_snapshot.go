@@ -64,6 +64,8 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 	dbi := aws.Init(region)
 
 	slog.Info("Check if config file is passed in")
+	var ingressRules []aws.PassedIPs
+	var egressRules []aws.PassedIPs
 	if restConfigFile != "" {
 		slog.Info("Config file was passed in", "configFile", restConfigFile)
 		viper.SetConfigFile(restConfigFile)
@@ -84,8 +86,6 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 			slog.Error("Error unmarshalling security groups", "error", err)
 		}
 
-		var ingressRules []aws.PassedIPs
-		var egressRules []aws.PassedIPs
 		for _, v := range securityGroups {
 			slog.Info("Security Group", "sg", v)
 			pi := aws.PassedIPs{
