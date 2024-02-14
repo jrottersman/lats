@@ -355,7 +355,9 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 						return fmt.Errorf("Error creating security group")
 					}
 					if len(c.Ingress) > 0 {
-						slog.Info("Implement me")
+						for _, i := range c.Ingress {
+							slog.Info("authorizing rules", "rules", i)
+						}
 						slog.Info("sg is ", "sg", sg)
 
 					}
