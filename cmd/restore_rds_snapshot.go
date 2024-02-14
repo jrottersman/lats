@@ -3,8 +3,6 @@ package cmd
 import (
 	"fmt"
 	"log/slog"
-	"strconv"
-	"strings"
 
 	"github.com/jrottersman/lats/aws"
 	"github.com/jrottersman/lats/stack"
@@ -145,28 +143,4 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 
 	slog.Error("Invalid type of stack for restoring an object", "StackType", SnapshotStack.RestorationObjectName)
 	return fmt.Errorf("Error invalid type of stack to restore a snapshot")
-}
-
-func sgRuleConvert(rules []string) []aws.PassedIPs {
-	l := []aws.PassedIPs{}
-	for _, v := range rules {
-		res := strings.Split(v, "-")
-		if len(res) != 2 {
-			slog.Error("length of our split should be 2", "is", len(res))
-			return nil
-		}
-		perms := res[0]
-		port, err := strconv.Atoi(res[1])
-		if err != nil {
-			slog.Error("couldn't convert string to int", "error", err)
-			return nil
-		}
-		s := aws.PassedIPs{
-			Permissions: perms,
-			Port:        port,
-		}
-		l = append(l, s)
-
-	}
-	return l
 }
