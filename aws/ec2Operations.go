@@ -132,25 +132,33 @@ func (c *EC2Instances) SGEgress(s SGInput) (*ec2.AuthorizeSecurityGroupEgressOut
 }
 
 // SGIngress updates a security group with ingress ips
-func (c *EC2Instances) SGIngress(s SGInput) (*ec2.AuthorizeSecurityGroupIngressOutput, error) {
+func (c *EC2Instances) SGIngress(sgname string, s []PassedIPs) (*ec2.AuthorizeSecurityGroupIngressOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
-	if len(s.Rules) > 0 {
-		for _, v := range s.Rules {
-			perm := types.IpPermission{
-				FromPort:   v.FromPort,
-				ToPort:     v.ToPort,
-				IpProtocol: v.IPProtocol,
-				IpRanges:   v.IPRanges,
+	IPPermissions := []types.IpPermission{}
+	if len(s) > 0 {
+
+		for _, v := range s {
+
+			port := int32(v.Port)
+			permissions := types.IpRange{
+				CidrIp: &v.Permissions,
 			}
-			s.IPPermissions = append(s.IPPermissions, perm)
+
+			perm := types.IpPermission{
+				FromPort:   &port,
+				ToPort:     &port,
+				IpProtocol: &v.Protocol,
+				IpRanges:   []types.IpRange{permissions},
+			}
+			IPPermissions = append(IPPermissions, perm)
 		}
 	}
 
 	params := ec2.AuthorizeSecurityGroupIngressInput{
-		GroupId:       s.SGId,
-		IpPermissions: s.IPPermissions,
+		GroupId:       &sgname,
+		IpPermissions: IPPermissions,
 	}
 
 	output, err := c.Client.AuthorizeSecurityGroupIngress(ctx, &params)
