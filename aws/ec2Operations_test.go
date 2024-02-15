@@ -169,7 +169,8 @@ func TestEC2Instances_SGIngress(t *testing.T) {
 		Client Ec2Client
 	}
 	type args struct {
-		s SGInput
+		n string
+		s []PassedIPs
 	}
 	tests := []struct {
 		name    string
@@ -180,7 +181,7 @@ func TestEC2Instances_SGIngress(t *testing.T) {
 	}{
 		{name: "test",
 			fields: fields{Client: mock.EC2Client{}},
-			args:   args{s: SGInput{}},
+			args:   args{n: "foo", s: []PassedIPs{}},
 			want: &ec2.AuthorizeSecurityGroupIngressOutput{
 				Return: &tr,
 			},
@@ -192,7 +193,7 @@ func TestEC2Instances_SGIngress(t *testing.T) {
 			c := &EC2Instances{
 				Client: tt.fields.Client,
 			}
-			got, err := c.SGIngress(tt.args.s)
+			got, err := c.SGIngress(tt.args.n, tt.args.s)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("EC2Instances.SGIngress() error = %v, wantErr %v", err, tt.wantErr)
 				return
