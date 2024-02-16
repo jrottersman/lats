@@ -355,12 +355,7 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 						return fmt.Errorf("Error creating security group")
 					}
 					if len(c.Ingress) > 0 {
-						for _, i := range c.Ingress {
-							slog.Info("authorizing rules", "rules", i)
-							// c.ec2Client.SGIngress(*sg.GroupId, i)
-						}
-						slog.Info("sg is ", "sg", sg)
-
+						c.ec2Client.SGIngress(v.GroupName, c.Ingress)
 					}
 				}
 			case *pgstate.ParameterGroup:
