@@ -357,6 +357,9 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 					if len(c.Ingress) > 0 {
 						c.ec2Client.SGIngress(v.GroupName, c.Ingress)
 					}
+					if len(c.Egress) > 0 {
+						c.ec2Client.SGEgress(v.GroupName, c.Egress)
+					}
 				}
 			case *pgstate.ParameterGroup:
 				pg, ok := pb.(*pgstate.ParameterGroup)
