@@ -168,7 +168,7 @@ func (c *EC2Instances) SGIngress(sgname string, s []PassedIPs) (*ec2.AuthorizeSe
 	return output, nil
 }
 
-func (c *EC2Instances) SGEgress(sgname string, s []PassedIps SGInput) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
+func (c *EC2Instances) SGEgress(sgname string, s []PassedIps) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
 	IPPermissions := []types.IpPermission{}
 	if len(s) > 0 {
 
