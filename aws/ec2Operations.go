@@ -102,35 +102,6 @@ func (c *EC2Instances) CreateSG(i CreateSGInput) (*ec2.CreateSecurityGroupOutput
 	return output, nil
 }
 
-// SGEgress updates a security group with egress info
-func (c *EC2Instances) SGEgress(s SGInput) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
-	defer cancel()
-
-	if len(s.Rules) > 0 {
-		for _, v := range s.Rules {
-			perm := types.IpPermission{
-				FromPort:   v.FromPort,
-				ToPort:     v.ToPort,
-				IpProtocol: v.IPProtocol,
-				IpRanges:   v.IPRanges,
-			}
-			s.IPPermissions = append(s.IPPermissions, perm)
-		}
-	}
-
-	params := ec2.AuthorizeSecurityGroupEgressInput{
-		GroupId:       s.SGId,
-		IpPermissions: s.IPPermissions,
-	}
-
-	output, err := c.Client.AuthorizeSecurityGroupEgress(ctx, &params)
-	if err != nil {
-		return nil, err
-	}
-	return output, nil
-}
-
 // SGIngress updates a security group with ingress ips
 func (c *EC2Instances) SGIngress(sgname string, s []PassedIPs) (*ec2.AuthorizeSecurityGroupIngressOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
@@ -168,7 +139,7 @@ func (c *EC2Instances) SGIngress(sgname string, s []PassedIPs) (*ec2.AuthorizeSe
 	return output, nil
 }
 
-func (c *EC2Instances) SGEgress(sgname string, s []PassedIps) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
+func (c *EC2Instances) SGEgress(sgname string, s []PassedIPs) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
 	IPPermissions := []types.IpPermission{}
 	if len(s) > 0 {
 
