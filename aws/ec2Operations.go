@@ -142,7 +142,7 @@ func (c *EC2Instances) SGIngress(sgname string, s []PassedIPs) (*ec2.AuthorizeSe
 func (c *EC2Instances) SGEgress(sgname string, s []PassedIPs) (*ec2.AuthorizeSecurityGroupEgressOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
-	
+
 	IPPermissions := []types.IpPermission{}
 	if len(s) > 0 {
 
@@ -163,7 +163,7 @@ func (c *EC2Instances) SGEgress(sgname string, s []PassedIPs) (*ec2.AuthorizeSec
 		}
 	}
 
-	params := ec2.AuthorizeSecurityGroupIngressInput{
+	params := ec2.AuthorizeSecurityGroupEgressInput{
 		GroupId:       &sgname,
 		IpPermissions: IPPermissions,
 	}
