@@ -260,12 +260,13 @@ func TestPassedIPs_CreateSgInput(t *testing.T) {
 	}
 }
 
-func TestEC2Instances_SGEngress(t *testing.T) {
+func TestEC2Instances_SGEgress(t *testing.T) {
 	type fields struct {
 		Client Ec2Client
 	}
 	type args struct {
-		s SGInput
+		n string
+		s []PassedIPs
 	}
 	tests := []struct {
 		name    string
@@ -277,7 +278,7 @@ func TestEC2Instances_SGEngress(t *testing.T) {
 		// TODO: Add test cases.
 		{name: "test",
 			fields: fields{Client: mock.EC2Client{}},
-			args:   args{s: SGInput{}},
+			args:   args{n: "foo", s: []PassedIPs{}},
 			want: &ec2.AuthorizeSecurityGroupEgressOutput{
 				Return: aws.Bool(true),
 			},
@@ -289,7 +290,7 @@ func TestEC2Instances_SGEngress(t *testing.T) {
 			c := &EC2Instances{
 				Client: tt.fields.Client,
 			}
-			got, err := c.SGEngress(tt.args.s)
+			got, err := c.SGEngress(tt.args.n, tt.args.s)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("EC2Instances.SGEngress() error = %v, wantErr %v", err, tt.wantErr)
 				return
