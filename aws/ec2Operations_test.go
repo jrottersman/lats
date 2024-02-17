@@ -290,7 +290,7 @@ func TestEC2Instances_SGEgress(t *testing.T) {
 			c := &EC2Instances{
 				Client: tt.fields.Client,
 			}
-			got, err := c.SGEngress(tt.args.n, tt.args.s)
+			got, err := c.SGEgress(tt.args.n, tt.args.s)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("EC2Instances.SGEngress() error = %v, wantErr %v", err, tt.wantErr)
 				return
