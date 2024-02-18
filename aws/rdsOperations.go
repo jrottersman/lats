@@ -355,10 +355,10 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 						return fmt.Errorf("Error creating security group")
 					}
 					if len(c.Ingress) > 0 {
-						c.ec2Client.SGIngress(&v.GroupName, c.Ingress)
+						c.ec2Client.SGIngress(*v.GroupName, c.Ingress)
 					}
 					if len(c.Egress) > 0 {
-						c.ec2Client.SGEgress(&v.GroupName, c.Egress)
+						c.ec2Client.SGEgress(*v.GroupName, c.Egress)
 					}
 				}
 			case *pgstate.ParameterGroup:
