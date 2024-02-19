@@ -176,6 +176,9 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 						slog.Error("creating SG", "error", err)
 						return fmt.Errorf("Creating security group error")
 					}
+					if len(c.Ingress) > 0 {
+						c.ec2Client.SGIngress(*v.GroupName, c.Ingress)
+					}
 				}
 			case *pgstate.ParameterGroup:
 				pg, ok := pb.(*pgstate.ParameterGroup)
