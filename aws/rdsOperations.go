@@ -162,7 +162,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 				sgs, ok := pb.(*state.SecurityGroupOutput)
 				if !ok {
 					slog.Error("error casting security group")
-					return fmt.Errorf("Type error security group")
+					return fmt.Errorf("type error security group")
 				}
 				for _, v := range sgs.SecurityGroups {
 					input := CreateSGInput{
@@ -174,7 +174,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 					_, err := c.ec2Client.CreateSG(input)
 					if err != nil {
 						slog.Error("creating SG", "error", err)
-						return fmt.Errorf("Creating security group error")
+						return fmt.Errorf("creating security group error")
 					}
 					if len(c.Ingress) > 0 {
 						c.ec2Client.SGIngress(*v.GroupName, c.Ingress)
