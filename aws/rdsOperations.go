@@ -179,12 +179,15 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 					if len(c.Ingress) > 0 {
 						c.ec2Client.SGIngress(*v.GroupName, c.Ingress)
 					}
+					if len(c.Egress) > 0 {
+						c.ec2Client.SGEgress(*v.GroupName, c.Egress)
+					}
 				}
 			case *pgstate.ParameterGroup:
 				pg, ok := pb.(*pgstate.ParameterGroup)
 				if !ok {
 					slog.Error("error casting to parameter group")
-					return fmt.Errorf("Type Error parameter group")
+					return fmt.Errorf("type Error parameter group")
 				}
 				pgName = pg.ClusterParameterGroup.DBClusterParameterGroupName
 				_, err := instances.GetParameterGroup(*pgName)
