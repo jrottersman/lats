@@ -97,7 +97,23 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		}
 	}
 	if ports != nil && addresses != nil && ruleTypes != nil && protocols != nil {
-		slog.Info("Ports were passed in", "ports", ports)
+		if len(ports) == len(addresses) && len(addresses) == len(ruleTypes) && len(ruleTypes) == len(protocols) {
+			for i, _ := range ports {
+				pi := aws.PassedIPs{
+					Port:        ports[i],
+					Type:        ruleTypes[i],
+					Protocol:    protocols[i],
+					Permissions: addresses[i],
+				}
+				if ruleTypes[i] == "ingress" {
+					ingressRules = append(ingressRules, pi)
+				} else if ruleTypes[i] == "egress" {
+					egressRules = append(egressRules, pi)
+				}
+			}
+		} else {
+			slog.Error("Error in parsing the security group rules")
+		}
 	}
 	slog.Info("finding the stack")
 	SnapshotStack, err := FindStack(stateKV, restoreSnapshotName)
