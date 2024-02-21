@@ -96,7 +96,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 			}
 		}
 	}
-	if ports != nil {
+	if ports != nil && addresses != nil && ruleTypes != nil && protocols != nil {
 		slog.Info("Ports were passed in", "ports", ports)
 	}
 	slog.Info("finding the stack")
