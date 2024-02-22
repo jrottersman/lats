@@ -98,7 +98,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 	}
 	if ports != nil && addresses != nil && ruleTypes != nil && protocols != nil {
 		if len(ports) == len(addresses) && len(addresses) == len(ruleTypes) && len(ruleTypes) == len(protocols) {
-			for i, _ := range ports {
+			for i := range ports {
 				pi := aws.PassedIPs{
 					Port:        ports[i],
 					Type:        ruleTypes[i],

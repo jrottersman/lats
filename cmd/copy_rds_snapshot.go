@@ -258,7 +258,7 @@ func getLoneInstanceObject(obj interface{}, name string, order int) stack.Object
 
 func getClusterObject(obj interface{}, name string, order int) stack.Object {
 	obj2 := obj.(*rds.RestoreDBClusterFromSnapshotInput)
-	clsID := fmt.Sprintf("%s", name)
+	clsID := name
 	obj2.DBClusterIdentifier = &clsID
 	obj2.SnapshotIdentifier = &copySnapshotName
 	obj2.AvailabilityZones = nil

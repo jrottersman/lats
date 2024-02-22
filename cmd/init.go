@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-//Config tells us our regions and where the state file is
+// Config tells us our regions and where the state file is
 type Config struct {
 	MainRegion    string `json:"mainRegion"`
 	BackupRegion  string `json:"backupRegion"`
@@ -109,6 +109,10 @@ func writeConfig(c Config, filename string) error {
 		return err
 	}
 	err = os.WriteFile(filename, conf, 0644)
+	if err != nil {
+		slog.Warn("Error writing config", "error", err)
+		return err
+	}
 	return nil
 }
 
