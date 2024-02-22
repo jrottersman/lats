@@ -134,7 +134,6 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		dbSubnetGroupName = *sg.DBSubnetGroup.DBSubnetGroupName
 	}
 
-	//Security Groups
 	slog.Info("starting restore", "type", SnapshotStack.RestorationObjectName)
 	if SnapshotStack.RestorationObjectName == stack.Cluster {
 		slog.Info("Restoring a cluster")
