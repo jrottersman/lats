@@ -160,5 +160,5 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 	}
 
 	slog.Error("Invalid type of stack for restoring an object", "StackType", SnapshotStack.RestorationObjectName)
-	return fmt.Errorf("Error invalid type of stack to restore a snapshot")
+	return fmt.Errorf("error invalid type of stack to restore a snapshot")
 }

@@ -183,6 +183,7 @@ func FindStack(sm state.StateManager, snapshot string) (*stack.Stack, error) {
 		}
 		if stack == nil {
 			slog.Error("Read stack returned a nil value")
+			return nil, nil
 		}
 		slog.Info("stack name is", "name", stack.Name, "snapshot", snapshot)
 		if stack.Name == snapshot {
@@ -224,7 +225,7 @@ func NewStack(oldStack stack.Stack, name string) *stack.Stack {
 		}
 	}
 	return &stack.Stack{
-		Name:                  fmt.Sprintf("%s", name),
+		Name:                  name,
 		RestorationObjectName: oldStack.RestorationObjectName,
 		Objects:               objs,
 	}
