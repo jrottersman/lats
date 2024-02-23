@@ -60,7 +60,7 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 		b := state.EncodeOptionGroup(c.OptionGroup)
 		_, err := state.WriteOutput(c.OptionGroupFileName, b)
 		if err != nil {
-			return nil, fmt.Errorf("Error writing option Group %s", err)
+			return nil, fmt.Errorf("error writing option Group %s", err)
 		}
 		optionObj := stack.NewObject(c.OptionGroupFileName, 1, stack.OptionGroup)
 		paramObjects = append(paramObjects, optionObj)
@@ -70,7 +70,7 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 		b := state.EncodeSecurityGroups(*c.SecurityGroups)
 		_, err := state.WriteOutput(c.SecurityGroupFileName, b)
 		if err != nil {
-			return nil, fmt.Errorf("Error saving security groups %s", err)
+			return nil, fmt.Errorf("error saving security groups %s", err)
 		}
 		sgObj := stack.NewObject(c.SecurityGroupFileName, 1, stack.SecurityGroup)
 		paramObjects = append(paramObjects, sgObj)
@@ -79,7 +79,7 @@ func GenerateRDSClusterStack(c ClusterStackInput) (*stack.Stack, error) {
 		b2 := state.EncodeSGRulesStorage(sgRules)
 		_, err = state.WriteOutput(c.SecurityGroupsRulesFileName, b2)
 		if err != nil {
-			return nil, fmt.Errorf("Error saving security group rules %s", err)
+			return nil, fmt.Errorf("error saving security group rules %s", err)
 		}
 		sgRulesObj := stack.NewObject(c.SecurityGroupsRulesFileName, 1, stack.SecurityGroupRules)
 		paramObjects = append(paramObjects, sgRulesObj)
