@@ -77,7 +77,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		securityGroups := []sgRulesStruct{}
 		err = viper.UnmarshalKey("securitygroups", &securityGroups)
 		if err != nil {
-			slog.Error("Error unmarshalling security groups", "error", err)
+			slog.Error("error unmarshalling security groups", "error", err)
 		}
 
 		for _, v := range securityGroups {
@@ -112,7 +112,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 				}
 			}
 		} else {
-			slog.Error("Error in parsing the security group rules")
+			slog.Error("error in parsing the security group rules")
 		}
 	}
 	slog.Info("finding the stack")
