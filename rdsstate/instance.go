@@ -70,7 +70,7 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 		b := state.EncodeSecurityGroups(*i.SecurityGroups)
 		_, err := state.WriteOutput(i.SecurityGroupsFileName, b)
 		if err != nil {
-			return nil, fmt.Errorf("Error saving security groups %s", err)
+			return nil, fmt.Errorf("error saving security groups %s", err)
 		}
 		sgObj := stack.NewObject(i.SecurityGroupsFileName, 1, stack.SecurityGroup)
 		paramObjects = append(paramObjects, sgObj)
@@ -79,7 +79,7 @@ func GenerateRDSInstanceStack(i InstanceStackInputs) (*stack.Stack, error) {
 		b2 := state.EncodeSGRulesStorage(sgRules)
 		_, err = state.WriteOutput(i.SecurityGroupsRulesFileName, b2)
 		if err != nil {
-			return nil, fmt.Errorf("Error saving security group rules %s", err)
+			return nil, fmt.Errorf("error saving security group rules %s", err)
 		}
 		sgRulesObj := stack.NewObject(i.SecurityGroupsRulesFileName, 1, stack.SecurityGroupRules)
 		paramObjects = append(paramObjects, sgRulesObj)
