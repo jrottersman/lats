@@ -122,6 +122,11 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 	}
 	slog.Info("Stack is", "stack", SnapshotStack)
 
+	if SnapshotStack.RestorationObjectName == stack.Cluster && len(subnets) > 2 {
+		slog.Error("subnet creation will fail for a cluster less then two azs", "subnets", subnets)
+		return fmt.Errorf("error subnet creation will fail for a cluster less then two azs")
+	}
+
 	// Creating subnet group
 	slog.Info("Db subnet group name", "dbSubnetGroupName", dbSubnetGroupName)
 	if dbSubnetGroupName == "" {
