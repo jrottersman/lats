@@ -123,6 +123,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 	slog.Info("Stack is", "stack", SnapshotStack)
 
 	// Creating subnet group
+	slog.Info("Db subnet group name", "dbSubnetGroupName", dbSubnetGroupName)
 	if dbSubnetGroupName == "" {
 		slog.Info("creating a subnet group")
 		name := fmt.Sprintf("%s-subnets", restoreDbName)
