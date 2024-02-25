@@ -43,7 +43,7 @@ func init() {
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&restoreDbName, "database-name", "d", "", "name of the database we want to restore the snapshot for")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&region, "region", "r", "", "AWS region we are restoring in")
 	RestoreRDSSnapshotCmd.Flags().StringVarP(&dbSubnetGroupName, "subnet-group", "g", "", "DB subnet group we are restoring the snapshot to")
-	RestoreRDSSnapshotCmd.Flags().StringVarP(&dbSubnetGroupName, "vpc-id", "v", "", "VPC Id we are restoring the db to")
+	RestoreRDSSnapshotCmd.Flags().StringVarP(&vpcID, "vpc-id", "v", "", "VPC Id we are restoring the db to")
 	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&subnets, "subnets", []string{}, "Subnets that we want to create a subnet group in")
 	RestoreRDSSnapshotCmd.Flags().StringArrayVar(&addresses, "addresses", []string{}, "Addresses that we want to update our security group with")
 	RestoreRDSSnapshotCmd.Flags().IntSliceVar(&ports, "ports", []int{}, "Ports that we want to update our security group with")
