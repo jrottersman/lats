@@ -128,6 +128,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		slog.Info("creating a subnet group")
 		name := fmt.Sprintf("%s-subnets", restoreDbName)
 		desc := fmt.Sprintf("%s-subnets created by lats for restoring database", restoreDbName)
+		slog.Info("Creating subnet group", "name", name, "description", desc, "subnets", subnets)
 		sg, err := dbi.CreateDBSubnetGroup(name, desc, subnets)
 		if err != nil {
 			slog.Error("problem creating subnet group", "error", err)
