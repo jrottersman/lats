@@ -134,6 +134,10 @@ func (instances *DbInstances) CreateDBSubnetGroup(name string, description strin
 		DBSubnetGroupName:        aws.String(name),
 		SubnetIds:                subnets,
 	})
+	if err != nil {
+		slog.Error("error creating subnet group", "error", err)
+		return nil, err
+	}
 	return group, err
 }
 
