@@ -128,6 +128,7 @@ func (instances *DbInstances) GetOptionGroup(OptionGroupName string) (*types.Opt
 func (instances *DbInstances) CreateDBSubnetGroup(name string, description string, subnets []string) (*rds.CreateDBSubnetGroupOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
+	slog.Info("creating subnet group", "name", name, "description", description, "subnets", subnets)
 	group, err := instances.RdsClient.CreateDBSubnetGroup(ctx, &rds.CreateDBSubnetGroupInput{
 		DBSubnetGroupDescription: aws.String(description),
 		DBSubnetGroupName:        aws.String(name),
