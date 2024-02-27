@@ -121,11 +121,9 @@ func TestCopySnapshot(t *testing.T) {
 func TestRestoreSnapshotInstance(t *testing.T) {
 
 	filename := "/tmp/foo"
-	var store int32
-	store = 1000
+	var store int32 = 1000
 	enc := true
-	var pp int32
-	pp = 100
+	var pp int32 = 100
 
 	snap := types.DBSnapshot{
 		AllocatedStorage:     &store,
