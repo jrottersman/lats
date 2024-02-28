@@ -75,7 +75,7 @@ func (c *EC2Instances) CreateSG(i CreateSGInput) (*ec2.CreateSecurityGroupOutput
 	defer cancel()
 
 	if i.groupID != nil {
-		describe := *&ec2.DescribeSecurityGroupsInput{
+		describe := ec2.DescribeSecurityGroupsInput{
 			GroupIds: []string{*i.groupID},
 		}
 
