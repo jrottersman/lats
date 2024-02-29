@@ -275,7 +275,7 @@ func TestEC2Instances_GetSubnet(t *testing.T) {
 		want    *ec2.DescribeSubnetsOutput
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{name: "test", fields: fields{Client: mock.EC2Client{}}, args: args{subnetID: "foo"}, want: &ec2.DescribeSubnetsOutput{}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
