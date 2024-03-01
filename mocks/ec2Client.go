@@ -43,7 +43,5 @@ func (m EC2Client) AuthorizeSecurityGroupIngress(ctx context.Context, params *ec
 }
 
 func (m EC2Client) DescribeSubnets(ctx context.Context, params *ec2.DescribeSubnetsInput, optFns ...func(*ec2.Options)) (*ec2.DescribeSubnetsOutput, error) {
-	return &ec2.DescribeSubnetsOutput{
-		Subnets: []types.Subnet{{SubnetId: aws.String("foobar")}},
-	}, nil
+	return &ec2.DescribeSubnetsOutput{}, nil
 }

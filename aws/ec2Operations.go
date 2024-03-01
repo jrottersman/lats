@@ -206,3 +206,18 @@ func (c *EC2Instances) GetSubnet(subnetID string) (*ec2.DescribeSubnetsOutput, e
 	}
 	return output, nil
 }
+
+func (c *EC2Instances) GetSGs(sgIds []string) (*ec2.DescribeSecurityGroupsOutput, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+
+	params := ec2.DescribeSecurityGroupsInput{
+		GroupIds: sgIds,
+	}
+
+	output, err := c.Client.DescribeSecurityGroups(ctx, &params)
+	if err != nil {
+		return nil, err
+	}
+	return output, nil
+}
