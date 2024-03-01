@@ -293,3 +293,36 @@ func TestEC2Instances_GetSubnet(t *testing.T) {
 		})
 	}
 }
+
+func TestEC2Instances_GetSGs(t *testing.T) {
+	type fields struct {
+		Client Ec2Client
+	}
+	type args struct {
+		sgIds []string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *ec2.DescribeSecurityGroupsOutput
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &EC2Instances{
+				Client: tt.fields.Client,
+			}
+			got, err := c.GetSGs(tt.args.sgIds)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("EC2Instances.GetSGs() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("EC2Instances.GetSGs() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
