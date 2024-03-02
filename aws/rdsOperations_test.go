@@ -191,10 +191,8 @@ func TestRestoreSnapshotInstance(t *testing.T) {
 }
 
 func TestRestoreSnapshotCluster(t *testing.T) {
-	var storage int32
-	storage = 1000
-	var pp int32
-	pp = 100
+	var storage int32 = 1000
+	var pp int32 = 100
 	snap := types.DBClusterSnapshot{
 		AllocatedStorage:            &storage,
 		PercentProgress:             &pp,
