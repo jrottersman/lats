@@ -294,7 +294,7 @@ func TestEC2Instances_GetSubnet(t *testing.T) {
 	}
 }
 
-func TestEC2Instances_GetSGs(t *testing.T) {
+func TestEC2Instances_GetSubnets(t *testing.T) {
 	type fields struct {
 		Client Ec2Client
 	}
@@ -305,17 +305,17 @@ func TestEC2Instances_GetSGs(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    *ec2.DescribeSecurityGroupsOutput
+		want    *ec2.DescribeSubnetsOutput
 		wantErr bool
 	}{
-		{name: "test", fields: fields{Client: mock.EC2Client{}}, args: args{sgIds: []string{"foo"}}, want: &ec2.DescribeSecurityGroupsOutput{}, wantErr: false},
+		{name: "test", fields: fields{Client: mock.EC2Client{}}, args: args{sgIds: []string{"foo"}}, want: &ec2.DescribeSubnetsOutput{}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &EC2Instances{
 				Client: tt.fields.Client,
 			}
-			got, err := c.GetSGs(tt.args.sgIds)
+			got, err := c.GetSubnets(tt.args.sgIds)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("EC2Instances.GetSGs() error = %v, wantErr %v", err, tt.wantErr)
 				return

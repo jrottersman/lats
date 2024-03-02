@@ -207,15 +207,15 @@ func (c *EC2Instances) GetSubnet(subnetID string) (*ec2.DescribeSubnetsOutput, e
 	return output, nil
 }
 
-func (c *EC2Instances) GetSGs(sgIds []string) (*ec2.DescribeSecurityGroupsOutput, error) {
+func (c *EC2Instances) GetSubnets(sgIds []string) (*ec2.DescribeSubnetsOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
-	params := ec2.DescribeSecurityGroupsInput{
-		GroupIds: sgIds,
+	params := ec2.DescribeSubnetsInput{
+		SubnetIds: sgIds,
 	}
 
-	output, err := c.Client.DescribeSecurityGroups(ctx, &params)
+	output, err := c.Client.DescribeSubnets(ctx, &params)
 	if err != nil {
 		return nil, err
 	}
