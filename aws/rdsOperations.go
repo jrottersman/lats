@@ -119,7 +119,7 @@ func (instances *DbInstances) GetOptionGroup(OptionGroupName string) (*types.Opt
 	defer cancel()
 	output, err := instances.RdsClient.DescribeOptionGroups(ctx, &input)
 	if err != nil {
-		return nil, fmt.Errorf("Error getting Option group %s", err)
+		return nil, fmt.Errorf("error getting Option group %s", err)
 	}
 	return &output.OptionGroupsList[0], nil
 }
@@ -251,7 +251,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 	second := c.S.Objects[2]
 	if len(second) != 1 {
 		slog.Error("Multiple clusters and there should only be one")
-		return fmt.Errorf("Multiple clusters and there should only be one")
+		return fmt.Errorf("multiple clusters and there should only be one")
 	}
 	for _, v := range second {
 		b := v.ReadObject()
