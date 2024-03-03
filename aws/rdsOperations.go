@@ -432,7 +432,7 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 	slog.Info("starting to restore the instance")
 	if len(instance) != 1 {
 		slog.Error("No instances")
-		return fmt.Errorf("There should only be a single instance")
+		return fmt.Errorf("there should only be a single instance")
 	}
 	for _, v := range instance {
 		b := v.ReadObject()
@@ -448,7 +448,7 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 		}
 		_, err := instances.RestoreSnapshotInstance(*ins)
 		if err != nil {
-			slog.Error("Failed to restore the instance", "error", err)
+			slog.Error("failed to restore the instance", "error", err)
 			return err
 		}
 		slog.Info("Database creation in progress")
