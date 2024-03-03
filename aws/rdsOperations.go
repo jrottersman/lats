@@ -590,7 +590,7 @@ func (instances *DbInstances) RestoreOptionGroup(EngineName string, MajorEngineV
 	}
 	out, err := instances.RdsClient.CreateOptionGroup(ctx, &input)
 	if err != nil {
-		return nil, fmt.Errorf("Restore option group had an error %s", err)
+		return nil, fmt.Errorf("restore option group had an error %s", err)
 	}
 	return out, nil
 }
@@ -945,7 +945,7 @@ func (instances *DbInstances) GetSnapshotARN(name string, cluster bool) (*string
 	}
 	snap, err := instances.GetInstanceSnapshotARN(name, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Instance Snapshot error %s", err)
+		return nil, fmt.Errorf("instance Snapshot error %s", err)
 	}
 	return snap, nil
 }
