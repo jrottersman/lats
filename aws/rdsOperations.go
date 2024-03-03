@@ -263,6 +263,7 @@ func (instances *DbInstances) CreateClusterFromStack(c CreateClusterFromStackInp
 			dbi.DBClusterParameterGroupName = pgName
 		}
 		dbi.DBSubnetGroupName = c.DBSubnetGroup
+		slog.Info("subnet group is called ", "subnet", *dbi.DBSubnetGroupName)
 		if c.ClusterName != nil {
 			slog.Info("creating cluster", "ClusterName", *c.ClusterName)
 			dbi.DBClusterIdentifier = c.ClusterName
