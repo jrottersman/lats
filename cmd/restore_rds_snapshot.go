@@ -154,7 +154,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		}
 		return dbi.CreateClusterFromStack(c)
 	} else if SnapshotStack.RestorationObjectName == stack.LoneInstance {
-		slog.Info("Restoring an Instance with inputs", "inputs", "restoreDbName", "dbSubnetGroupName", "vpcID", "ingressRules", "egressRules", restoreDbName, dbSubnetGroupName, vpcID, ingressRules, egressRules)
+		slog.Info("Restoring an Instance with inputs", "restoreDbName", "dbSubnetGroupName", "vpcID", restoreDbName, dbSubnetGroupName, vpcID)
 		c := aws.CreateInstanceFromStackInput{
 			Stack:         SnapshotStack,
 			DBName:        &restoreDbName,
