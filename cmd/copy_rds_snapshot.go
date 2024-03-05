@@ -71,7 +71,7 @@ func copySnapshot() {
 	// Create KMS key
 	if kmsKey == "" {
 		slog.Info("creating KMS key")
-		kmsKey = createKMSKey(config, sm)
+		kmsKey = createKMSKey(config)
 	}
 
 	// Get RDS Client
@@ -152,7 +152,7 @@ func copySnapshot() {
 	sm.SyncState(stateFileName)
 }
 
-func createKMSKey(config Config, sm state.StateManager) string {
+func createKMSKey(config Config) string {
 	var kmsStruct *types.KeyMetadata
 	c := aws.InitKms(config.BackupRegion)
 	kmsStruct, err := c.CreateKMSKey(nil)
