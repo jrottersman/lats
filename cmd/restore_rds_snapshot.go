@@ -143,7 +143,7 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 
 	slog.Info("starting restore", "type", SnapshotStack.RestorationObjectName)
 	if SnapshotStack.RestorationObjectName == stack.Cluster {
-		slog.Info("Restoring a cluster")
+		slog.Info("Restoring a cluster with inputs", "restoreDbName", "dbSubnetGroupName", "vpcID", restoreDbName, dbSubnetGroupName, vpcID)
 		c := aws.CreateClusterFromStackInput{
 			S:             SnapshotStack,
 			ClusterName:   &restoreDbName,
