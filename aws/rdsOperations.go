@@ -125,7 +125,7 @@ func (instances *DbInstances) GetOptionGroup(OptionGroupName string) (*types.Opt
 }
 
 // CreateDBSubnetGroup creates a subnet group to allow for the creation of databases
-func (instances *DbInstances) CreateDBSubnetGroup(name string, description string, subnets []string) (*rds.CreateDBSubnetGroupOutput, error) {
+func (instances *DbInstances) CreateDBSubnetGroup(name string, description string, subnets []string, ec2Client ...Ec2Client) (*rds.CreateDBSubnetGroupOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 	slog.Info("creating subnet group", "name", name, "description", description, "subnets", subnets)
