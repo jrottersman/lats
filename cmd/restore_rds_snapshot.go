@@ -56,6 +56,7 @@ func init() {
 func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) error {
 	slog.Info("Starting restore snapshot procedure")
 	dbi := aws.Init(region)
+	ec2 := aws.InitEc2(region)
 
 	slog.Info("Check if config file is passed in")
 	var ingressRules []aws.PassedIPs
@@ -133,6 +134,14 @@ func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) err
 		slog.Info("creating a subnet group")
 		name := fmt.Sprintf("%s-subnets", restoreDbName)
 		desc := fmt.Sprintf("%s-subnets created by lats for restoring database", restoreDbName)
+		check, err := ec2.GetSubnets(subnets)
+		if err != nil {
+			slog.Error("error getting subnets", "error", err)
+		}
+		if len(check.Subnets) != len(subnets) { // TODO Check if all subnets exist this isn't quite good enough cause of the next token so we need to improve it
+			slog.Error("error in subnets", "subnets", subnets)
+			return fmt.Errorf("error in subnets")
+		}
 		slog.Info("Creating subnet group", "name", name, "description", desc, "subnets", subnets)
 		sg, err := dbi.CreateDBSubnetGroup(name, desc, subnets)
 		if err != nil {
