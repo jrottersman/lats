@@ -55,6 +55,7 @@ func init() {
 // RestoreSnapshot is the function that restores a snapshot
 func RestoreSnapshot(stateKV state.StateManager, restoreSnapshotName string) error {
 	slog.Info("Starting restore snapshot procedure")
+	slog.Info("Creating AWS session in region", "region", region)
 	dbi := aws.Init(region)
 	ec2 := aws.InitEc2(region)
 
