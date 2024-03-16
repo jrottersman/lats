@@ -26,7 +26,7 @@ func EncodeRDSDatabaseOutput(db *types.DBInstance) bytes.Buffer {
 	return encoder
 }
 
-//EncodeOptionGroup convers an option group struct to bytes
+// EncodeOptionGroup convers an option group struct to bytes
 func EncodeOptionGroup(og *types.OptionGroup) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
@@ -49,7 +49,7 @@ func DecodeOptionGroup(b bytes.Buffer) types.OptionGroup {
 	return optionGroup
 }
 
-//EncodeSecurityGroup converts a security group struct to bytes
+// EncodeSecurityGroup converts a security group struct to bytes
 func EncodeSecurityGroup(s ec2types.SecurityGroup) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
@@ -118,7 +118,7 @@ func EncodeRDSSnapshotOutput(snapshot *types.DBSnapshot) bytes.Buffer {
 	return encoder
 }
 
-//GetRDSSnapshotOutput reads a snapshot
+// GetRDSSnapshotOutput reads a snapshot
 func GetRDSSnapshotOutput(s StateManager, snap string) (*types.DBSnapshot, error) {
 	i := s.GetStateObject(snap)
 	snapshot, ok := i.(types.DBSnapshot)
@@ -129,7 +129,7 @@ func GetRDSSnapshotOutput(s StateManager, snap string) (*types.DBSnapshot, error
 	return &snapshot, nil
 }
 
-//EncodeRDSClusterSnapshotOutput cluster output as bytes
+// EncodeRDSClusterSnapshotOutput cluster output as bytes
 func EncodeRDSClusterSnapshotOutput(snapshot *types.DBClusterSnapshot) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
@@ -141,7 +141,7 @@ func EncodeRDSClusterSnapshotOutput(snapshot *types.DBClusterSnapshot) bytes.Buf
 	return encoder
 }
 
-//GenerateRestoreDBInstanceFromDBSnapshotInput create a db instance input
+// GenerateRestoreDBInstanceFromDBSnapshotInput create a db instance input
 func GenerateRestoreDBInstanceFromDBSnapshotInput(r RDSRestorationStore) *rds.RestoreDBInstanceFromDBSnapshotInput {
 	return &rds.RestoreDBInstanceFromDBSnapshotInput{
 		DBInstanceClass:             r.GetInstanceClass(),
@@ -155,7 +155,7 @@ func GenerateRestoreDBInstanceFromDBSnapshotInput(r RDSRestorationStore) *rds.Re
 	}
 }
 
-//GenerateRestoreDBInstanceFromDBClusterSnapshotInput create a db cluster input
+// GenerateRestoreDBInstanceFromDBClusterSnapshotInput create a db cluster input
 func GenerateRestoreDBInstanceFromDBClusterSnapshotInput(r RDSRestorationStore) *rds.RestoreDBInstanceFromDBSnapshotInput {
 	return &rds.RestoreDBInstanceFromDBSnapshotInput{
 		DBInstanceClass:             r.GetInstanceClass(),
@@ -302,7 +302,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 	}
 }
 
-//EncodeCreateDBInstanceInput bytes buffer for create
+// EncodeCreateDBInstanceInput bytes buffer for create
 func EncodeCreateDBInstanceInput(c *rds.CreateDBInstanceInput) bytes.Buffer {
 	var encoder bytes.Buffer
 	enc := gob.NewEncoder(&encoder)
@@ -313,13 +313,13 @@ func EncodeCreateDBInstanceInput(c *rds.CreateDBInstanceInput) bytes.Buffer {
 	return encoder
 }
 
-//DecodeCreateDBInstanceInput creates the instance from our bytes buffer when we want to replay
+// DecodeCreateDBInstanceInput creates the instance from our bytes buffer when we want to replay
 func DecodeCreateDBInstanceInput(b bytes.Buffer) *rds.CreateDBInstanceInput {
-	var dbCluster rds.CreateDBInstanceInput
+	var dbInstance rds.CreateDBInstanceInput
 	dec := gob.NewDecoder(&b)
-	err := dec.Decode(&dbCluster)
+	err := dec.Decode(&dbInstance)
 	if err != nil {
 		slog.Error("Error decoding state for RDS Cluster", "error", err)
 	}
-	return &dbCluster
+	return &dbInstance
 }
