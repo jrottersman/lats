@@ -319,7 +319,7 @@ func DecodeCreateDBInstanceInput(b bytes.Buffer) *rds.CreateDBInstanceInput {
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&dbInstance)
 	if err != nil {
-		slog.Error("Error decoding state for RDS Cluster", "error", err)
+		slog.Error("Error decoding state for RDS Instance", "error", err)
 	}
 	return &dbInstance
 }
