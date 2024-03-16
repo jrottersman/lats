@@ -368,9 +368,11 @@ func (instances *DbInstances) CreateInstanceFromStack(c CreateInstanceFromStackI
 						return fmt.Errorf("error creating security group")
 					}
 					if len(c.Ingress) > 0 {
+						slog.Info("updating ingress rules")
 						c.ec2Client.SGIngress(*v.GroupName, c.Ingress)
 					}
 					if len(c.Egress) > 0 {
+						slog.Info("updating egress rules")
 						c.ec2Client.SGEgress(*v.GroupName, c.Egress)
 					}
 				}
