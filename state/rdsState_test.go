@@ -318,7 +318,7 @@ func TestGetRDSSnapshotOutput(t *testing.T) {
 	}
 
 	if *newSnap.AllocatedStorage != 1000 {
-		t.Errorf("expected %d got 1000", *&newSnap.AllocatedStorage)
+		t.Errorf("expected %d got 1000", newSnap.AllocatedStorage)
 	}
 }
 
@@ -355,7 +355,7 @@ func TestGetRDSClusterSnapshotOutput(t *testing.T) {
 	}
 
 	if *newSnap.AllocatedStorage != 1000 {
-		t.Errorf("expected %d got 1000", *&newSnap.AllocatedStorage)
+		t.Errorf("expected %d got 1000", newSnap.AllocatedStorage)
 	}
 }
 
@@ -391,7 +391,7 @@ func TestGetRDSInstanceOutput(t *testing.T) {
 	}
 
 	if *newDbi.AllocatedStorage != 1000 {
-		t.Errorf("expected %d got 1000", *&newDbi.AllocatedStorage)
+		t.Errorf("expected %d got 1000", newDbi.AllocatedStorage)
 	}
 }
 
@@ -428,7 +428,7 @@ func TestGetRDSClusterOutput(t *testing.T) {
 	}
 
 	if *newDbi.AllocatedStorage != storage {
-		t.Errorf("expected %d got 1000", *&newDbi.AllocatedStorage)
+		t.Errorf("expected %d got 1000", newDbi.AllocatedStorage)
 	}
 }
 
