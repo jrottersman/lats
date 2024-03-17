@@ -87,11 +87,9 @@ func TestSyncState(t *testing.T) {
 
 func TestGetStateObject(t *testing.T) {
 	filename := "/tmp/foo"
-	var storage int32
-	storage = 1000
+	var storage int32 = 1000
 	enc := true
-	var pp int32
-	pp = 100
+	var pp int32 = 100
 	snap := types.DBSnapshot{
 		AllocatedStorage:     &storage,
 		Encrypted:            &enc,
