@@ -271,8 +271,7 @@ func TestWriteOutput(t *testing.T) {
 		t.Errorf("Error encoding our test: %s", err)
 	}
 
-	var expected int64
-	expected = 36
+	var expected int64 = 36
 	filename := "/tmp/foo.gob"
 	defer os.Remove(filename)
 
