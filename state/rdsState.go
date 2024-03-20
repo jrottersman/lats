@@ -293,16 +293,17 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 	dbID := helpers.InstanceName()
 	slog.Info("Creating database input")
 	return &rds.CreateDBInstanceInput{
-		DBInstanceIdentifier: dbID,
-		Engine:               i.Engine,
-		EngineVersion:        i.EngineVersion,
-		DBInstanceClass:      i.DBInstanceClass,
-		StorageType:          i.StorageType,
-		DBClusterIdentifier:  ci,
-		AllocatedStorage:     i.AllocatedStorage,
-		StorageEncrypted:     i.StorageEncrypted,
-		MaxAllocatedStorage:  i.MaxAllocatedStorage,
-		MultiAZ:              i.MultiAZ,
+		DBInstanceClass:         i.DBInstanceClass,
+		DBInstanceIdentifier:    dbID,
+		Engine:                  i.Engine,
+		AutoMinorVersionUpgrade: i.AutoMinorVersionUpgrade,
+		EngineVersion:           i.EngineVersion,
+		StorageType:             i.StorageType,
+		DBClusterIdentifier:     ci,
+		AllocatedStorage:        i.AllocatedStorage,
+		StorageEncrypted:        i.StorageEncrypted,
+		MaxAllocatedStorage:     i.MaxAllocatedStorage,
+		MultiAZ:                 i.MultiAZ,
 	}
 }
 
