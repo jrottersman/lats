@@ -301,6 +301,8 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		DBClusterIdentifier:  ci,
 		AllocatedStorage:     i.AllocatedStorage,
 		StorageEncrypted:     i.StorageEncrypted,
+		MaxAllocatedStorage:  i.MaxAllocatedStorage,
+		MultiAZ:              i.MultiAZ,
 	}
 }
 
