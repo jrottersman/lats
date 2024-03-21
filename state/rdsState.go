@@ -305,7 +305,6 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		MaxAllocatedStorage:     i.MaxAllocatedStorage,
 		MultiAZ:                 i.MultiAZ,
 		LicenseModel:            i.LicenseModel,
-		OptionGroupName:         i.OptionGroupMemberships[0].OptionGroupName,
 		BackupRetentionPeriod:   i.BackupRetentionPeriod,
 	}
 }
