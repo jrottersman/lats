@@ -308,6 +308,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		BackupRetentionPeriod:      i.BackupRetentionPeriod,
 		PreferredBackupWindow:      i.PreferredBackupWindow,
 		PreferredMaintenanceWindow: i.PreferredMaintenanceWindow,
+		PubliclyAccessible:         i.PubliclyAccessible,
 	}
 }
 
