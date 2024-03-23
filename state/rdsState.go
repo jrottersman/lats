@@ -311,6 +311,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		PubliclyAccessible:         i.PubliclyAccessible,
 		Iops:                       i.Iops,
 		AvailabilityZone:           i.AvailabilityZone,
+		BackupTarget:               i.BackupTarget,
 	}
 }
 
