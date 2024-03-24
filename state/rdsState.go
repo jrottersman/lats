@@ -313,6 +313,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		AvailabilityZone:           i.AvailabilityZone,
 		BackupTarget:               i.BackupTarget,
 		MonitoringRoleArn:          i.MonitoringRoleArn,
+		CopyTagsToSnapshot:         i.CopyTagsToSnapshot,
 	}
 }
 
