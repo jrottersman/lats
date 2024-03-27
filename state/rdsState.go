@@ -292,6 +292,12 @@ func WriteOutput(filename string, b bytes.Buffer) (int64, error) {
 func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanceInput {
 	dbID := helpers.InstanceName()
 	slog.Info("Creating database input")
+	sgs := []string{}
+	if i.VpcSecurityGroups != nil {
+		for _, sg := range i.VpcSecurityGroups {
+			sgs = append(sgs, *sg.VpcSecurityGroupId)
+		}
+	}
 	return &rds.CreateDBInstanceInput{
 		DBInstanceClass:            i.DBInstanceClass,
 		DBInstanceIdentifier:       dbID,
@@ -314,6 +320,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		BackupTarget:               i.BackupTarget,
 		MonitoringRoleArn:          i.MonitoringRoleArn,
 		CopyTagsToSnapshot:         i.CopyTagsToSnapshot,
+		VpcSecurityGroupIds:        sgs,
 	}
 }
 
