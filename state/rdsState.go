@@ -322,6 +322,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		CopyTagsToSnapshot:              i.CopyTagsToSnapshot,
 		VpcSecurityGroupIds:             sgs,
 		EnableIAMDatabaseAuthentication: i.IAMDatabaseAuthenticationEnabled,
+		EnablePerformanceInsights:       i.PerformanceInsightsEnabled,
 	}
 }
 
