@@ -330,6 +330,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		OptionGroupName:                 og,
 		DeletionProtection:              i.DeletionProtection,
 		EnableCloudwatchLogsExports:     i.EnabledCloudwatchLogsExports,
+		CACertificateIdentifier:         i.CACertificateIdentifier,
 	}
 }
 
