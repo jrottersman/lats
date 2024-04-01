@@ -298,6 +298,10 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 			sgs = append(sgs, *sg.VpcSecurityGroupId)
 		}
 	}
+	var og *string
+	if len(i.OptionGroupMemberships) > 0 {
+		og = i.OptionGroupMemberships[0].OptionGroupName
+	}
 	return &rds.CreateDBInstanceInput{
 		DBInstanceClass:                 i.DBInstanceClass,
 		DBInstanceIdentifier:            dbID,
@@ -323,6 +327,8 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		VpcSecurityGroupIds:             sgs,
 		EnableIAMDatabaseAuthentication: i.IAMDatabaseAuthenticationEnabled,
 		EnablePerformanceInsights:       i.PerformanceInsightsEnabled,
+		OptionGroupName:                 og,
+		DeletionProtection:              i.DeletionProtection,
 	}
 }
 
