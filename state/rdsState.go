@@ -329,6 +329,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		EnablePerformanceInsights:       i.PerformanceInsightsEnabled,
 		OptionGroupName:                 og,
 		DeletionProtection:              i.DeletionProtection,
+		EnableCloudwatchLogsExports:     i.EnabledCloudwatchLogsExports,
 	}
 }
 
