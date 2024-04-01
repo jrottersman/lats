@@ -332,6 +332,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		EnableCloudwatchLogsExports:     i.EnabledCloudwatchLogsExports,
 		CACertificateIdentifier:         i.CACertificateIdentifier,
 		CharacterSetName:                i.CharacterSetName,
+		CustomIamInstanceProfile:        i.CustomIamInstanceProfile,
 	}
 }
 
