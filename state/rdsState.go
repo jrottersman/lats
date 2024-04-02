@@ -347,6 +347,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		DBSubnetGroupName:               dbSubnetGroup,
 		DBSystemId:                      i.DBSystemId,
 		DedicatedLogVolume:              i.DedicatedLogVolume,
+		Domain                           i.Domain,
 	}
 }
 
