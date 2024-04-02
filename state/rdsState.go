@@ -312,9 +312,11 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 	}
 	var domain *string
 	var authSecretArn *string
+	var dnsIps []string
 	if i.DomainMemberships != nil {
 		domain = i.DomainMemberships[0].Domain
 		authSecretArn = i.DomainMemberships[0].AuthSecretArn
+		dnsIps = i.DomainMemberships[0].DnsIps
 	}
 
 	return &rds.CreateDBInstanceInput{
@@ -355,6 +357,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		DedicatedLogVolume:              i.DedicatedLogVolume,
 		Domain:                          domain,
 		DomainAuthSecretArn:             authSecretArn,
+		DomainDnsIps:                    dnsIps,
 	}
 }
 
