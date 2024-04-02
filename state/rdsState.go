@@ -333,6 +333,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		CACertificateIdentifier:         i.CACertificateIdentifier,
 		CharacterSetName:                i.CharacterSetName,
 		CustomIamInstanceProfile:        i.CustomIamInstanceProfile,
+		DBName:                          i.DBName,
 	}
 }
 
