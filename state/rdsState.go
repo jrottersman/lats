@@ -311,8 +311,10 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		dbSubnetGroup = i.DBSubnetGroup.DBSubnetGroupName
 	}
 	var domain *string
+	var authSecretArn *string
 	if i.DomainMemberships != nil {
 		domain = i.DomainMemberships[0].Domain
+		authSecretArn = i.DomainMemberships[0].AuthSecretArn
 	}
 
 	return &rds.CreateDBInstanceInput{
@@ -352,6 +354,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		DBSystemId:                      i.DBSystemId,
 		DedicatedLogVolume:              i.DedicatedLogVolume,
 		Domain:                          domain,
+		DomainAuthSecretArn:             authSecretArn,
 	}
 }
 
