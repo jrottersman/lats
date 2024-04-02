@@ -302,6 +302,10 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 	if len(i.OptionGroupMemberships) > 0 {
 		og = i.OptionGroupMemberships[0].OptionGroupName
 	}
+	var pg *string
+	if len(i.DBParameterGroups) > 0 {
+		pg = i.DBParameterGroups[0].DBParameterGroupName
+	}
 	return &rds.CreateDBInstanceInput{
 		DBInstanceClass:                 i.DBInstanceClass,
 		DBInstanceIdentifier:            dbID,
@@ -334,6 +338,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		CharacterSetName:                i.CharacterSetName,
 		CustomIamInstanceProfile:        i.CustomIamInstanceProfile,
 		DBName:                          i.DBName,
+		DBParameterGroupName:            pg,
 	}
 }
 
