@@ -306,6 +306,11 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 	if len(i.DBParameterGroups) > 0 {
 		pg = i.DBParameterGroups[0].DBParameterGroupName
 	}
+	var dbSubnetGroup *string
+	if i.DBSubnetGroup != nil {
+		dbSubnetGroup = i.DBSubnetGroup.DBSubnetGroupName
+	}
+
 	return &rds.CreateDBInstanceInput{
 		DBInstanceClass:                 i.DBInstanceClass,
 		DBInstanceIdentifier:            dbID,
@@ -339,6 +344,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		CustomIamInstanceProfile:        i.CustomIamInstanceProfile,
 		DBName:                          i.DBName,
 		DBParameterGroupName:            pg,
+		DBSubnetGroupName:               dbSubnetGroup,
 	}
 }
 
