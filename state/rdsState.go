@@ -345,6 +345,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		DBName:                          i.DBName,
 		DBParameterGroupName:            pg,
 		DBSubnetGroupName:               dbSubnetGroup,
+		DBSystemId: i.DBSystemId,
 	}
 }
 
