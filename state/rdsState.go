@@ -361,6 +361,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		DomainAuthSecretArn:             authSecretArn,
 		DomainDnsIps:                    dnsIps,
 		DomainOu:                        domainOu,
+		EnableCustomerOwnedIp:           i.CustomerOwnedIpEnabled,
 	}
 }
 
