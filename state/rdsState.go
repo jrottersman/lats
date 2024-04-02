@@ -310,6 +310,10 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 	if i.DBSubnetGroup != nil {
 		dbSubnetGroup = i.DBSubnetGroup.DBSubnetGroupName
 	}
+	var domain *string
+	if i.DomainMemberships != nil {
+		domain = i.DomainMemberships[0].Domain
+	}
 
 	return &rds.CreateDBInstanceInput{
 		DBInstanceClass:                 i.DBInstanceClass,
@@ -347,7 +351,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		DBSubnetGroupName:               dbSubnetGroup,
 		DBSystemId:                      i.DBSystemId,
 		DedicatedLogVolume:              i.DedicatedLogVolume,
-		Domain                           i.Domain,
+		Domain:                          domain,
 	}
 }
 
