@@ -321,9 +321,13 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		domainOu = i.DomainMemberships[0].OU
 	}
 	var masterUserPassword *bool
+	var kmsKeyId *string
 	if i.MasterUserSecret != nil {
 		mup := true
 		masterUserPassword = &mup
+		if i.MasterUserSecret.KmsKeyId != nil {
+			kmsKeyId = i.MasterUserSecret.KmsKeyId
+		}
 	}
 
 	return &rds.CreateDBInstanceInput{
@@ -369,7 +373,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		EnableCustomerOwnedIp:           i.CustomerOwnedIpEnabled,
 		KmsKeyId:                        i.KmsKeyId,
 		ManageMasterUserPassword:        masterUserPassword,
-		MasterUserSecretKmsKeyId:        i.MasterUserSecret.KmsKeyId,
+		MasterUserSecretKmsKeyId:        kmsKeyId,
 		MasterUsername:                  i.MasterUsername,
 		MonitoringInterval:              i.MonitoringInterval,
 		MultiTenant:                     i.MultiTenant,
