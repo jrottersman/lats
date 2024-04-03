@@ -369,6 +369,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		EnableCustomerOwnedIp:           i.CustomerOwnedIpEnabled,
 		KmsKeyId:                        i.KmsKeyId,
 		ManageMasterUserPassword:        masterUserPassword,
+		MasterUserSecretKmsKeyId:        i.MasterUserSecret.KmsKeyId,
 	}
 }
 
