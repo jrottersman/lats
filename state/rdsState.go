@@ -362,6 +362,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		DomainDnsIps:                    dnsIps,
 		DomainOu:                        domainOu,
 		EnableCustomerOwnedIp:           i.CustomerOwnedIpEnabled,
+		KmsKeyId:                        i.KmsKeyId,
 	}
 }
 
