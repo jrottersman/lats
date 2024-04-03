@@ -371,6 +371,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		ManageMasterUserPassword:        masterUserPassword,
 		MasterUserSecretKmsKeyId:        i.MasterUserSecret.KmsKeyId,
 		MasterUsername:                  i.MasterUsername,
+		MonitoringInterval:              i.MonitoringInterval,
 	}
 }
 
