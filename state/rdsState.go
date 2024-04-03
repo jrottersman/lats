@@ -377,6 +377,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		MasterUsername:                  i.MasterUsername,
 		MonitoringInterval:              i.MonitoringInterval,
 		MultiTenant:                     i.MultiTenant,
+		NcharCharacterSetName:           i.NcharCharacterSetName,
 	}
 }
 
