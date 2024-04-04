@@ -387,6 +387,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		StorageThroughput:                  i.StorageThroughput,
 		Tags:                               i.TagList,
 		TdeCredentialArn:                   i.TdeCredentialArn,
+		Timezone:                           i.Timezone,
 	}
 }
 
