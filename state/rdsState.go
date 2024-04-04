@@ -379,6 +379,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		MultiTenant:                     i.MultiTenant,
 		NcharCharacterSetName:           i.NcharCharacterSetName,
 		NetworkType:                     i.NetworkType,
+		PerformanceInsightsKMSKeyId:     i.PerformanceInsightsKMSKeyId,
 	}
 }
 
