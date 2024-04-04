@@ -381,6 +381,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		NetworkType:                        i.NetworkType,
 		PerformanceInsightsKMSKeyId:        i.PerformanceInsightsKMSKeyId,
 		PerformanceInsightsRetentionPeriod: i.PerformanceInsightsRetentionPeriod,
+		Port:                               i.DbInstancePort,
 	}
 }
 
