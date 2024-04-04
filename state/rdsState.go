@@ -386,6 +386,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		PromotionTier:                      i.PromotionTier,
 		StorageThroughput:                  i.StorageThroughput,
 		Tags:                               i.TagList,
+		TdeCredentialArn:                   i.TdeCredentialArn,
 	}
 }
 
