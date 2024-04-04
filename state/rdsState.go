@@ -384,6 +384,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 		Port:                               i.DbInstancePort,
 		ProcessorFeatures:                  i.ProcessorFeatures,
 		PromotionTier:                      i.PromotionTier,
+		StorageThroughput:                  i.StorageThroughput,
 	}
 }
 
