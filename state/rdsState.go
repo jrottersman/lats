@@ -315,10 +315,12 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 	var dnsIps []string
 	var domainOu *string
 	if i.DomainMemberships != nil {
-		domain = i.DomainMemberships[0].Domain
-		authSecretArn = i.DomainMemberships[0].AuthSecretArn
-		dnsIps = i.DomainMemberships[0].DnsIps
-		domainOu = i.DomainMemberships[0].OU
+		if len(i.DomainMemberships) > 0 {
+			domain = i.DomainMemberships[0].Domain
+			authSecretArn = i.DomainMemberships[0].AuthSecretArn
+			dnsIps = i.DomainMemberships[0].DnsIps
+			domainOu = i.DomainMemberships[0].OU
+		}
 	}
 	var masterUserPassword *bool
 	var kmsKeyId *string
@@ -329,7 +331,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 			kmsKeyId = i.MasterUserSecret.KmsKeyId
 		}
 	}
-
+	slog.Info("Testing allocated storage", "allocated storage", i.AllocatedStorage)
 	return &rds.CreateDBInstanceInput{
 		DBInstanceClass:                    i.DBInstanceClass,
 		DBInstanceIdentifier:               dbID,
