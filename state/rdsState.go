@@ -36,6 +36,16 @@ func EncodeCreateDBClusterInput(c *rds.CreateDBClusterInput) bytes.Buffer {
 	return encoder
 }
 
+func DecodeCreateDBClusterInput(b bytes.Buffer) *rds.CreateDBClusterInput {
+	var dbCluster rds.CreateDBClusterInput
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&dbCluster)
+	if err != nil {
+		slog.Error("Error decoding state for RDS Cluster", "error", err)
+	}
+	return &dbCluster
+}
+
 // EncodeOptionGroup convers an option group struct to bytes
 func EncodeOptionGroup(og *types.OptionGroup) bytes.Buffer {
 	var encoder bytes.Buffer
