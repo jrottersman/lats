@@ -36,7 +36,7 @@ func init() {
 	CreateRDSSnapshotCmd.Flags().StringVarP(&snapshotName, "snapshot-name", "s", "", "Snapshot name that we want to create our snapshot with")
 }
 
-//CreateSnapshot generates a snapshot in AWS
+// CreateSnapshot generates a snapshot in AWS
 func CreateSnapshot() {
 	//Get Config and state
 	config, sm := GetState()
@@ -163,7 +163,7 @@ func createSnapshotForInstance(c CreateInstanceSnapshotInput) {
 		Instance: db,
 		Snapshot: snapshot,
 	}
-	slog.Debug("getting parameter groups")
+	slog.Warn("getting parameter groups")
 	pgs, err := aws.GetParameterGroups(store, c.dbi)
 	if err != nil {
 		slog.Warn("error getting parameter groups", "error", err)
@@ -205,7 +205,7 @@ func createSnapshotForInstance(c CreateInstanceSnapshotInput) {
 	c.sm.SyncState(c.sfn)
 }
 
-//GetState reads in our statefile and config for future processing
+// GetState reads in our statefile and config for future processing
 func GetState() (Config, state.StateManager) {
 	slog.Debug("getting config")
 	config, err := readConfig(".latsConfig.json")
