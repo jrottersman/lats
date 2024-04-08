@@ -26,6 +26,16 @@ func EncodeRDSDatabaseOutput(db *types.DBInstance) bytes.Buffer {
 	return encoder
 }
 
+func EncodeCreateDBClusterInput(c *rds.CreateDBClusterInput) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+	err := enc.Encode(&c)
+	if err != nil {
+		slog.Error("Error encoding our database", "error", err)
+	}
+	return encoder
+}
+
 // EncodeOptionGroup convers an option group struct to bytes
 func EncodeOptionGroup(og *types.OptionGroup) bytes.Buffer {
 	var encoder bytes.Buffer
