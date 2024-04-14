@@ -57,6 +57,17 @@ func TestEncodeCreateDBClusterInput(t *testing.T) {
 	}
 }
 
+func TestDecodeCreateDBClusterInput(t *testing.T) {
+	c := rds.CreateDBClusterInput{
+		DBClusterIdentifier: aws.String("foo"),
+	}
+	r := EncodeCreateDBClusterInput(&c)
+	resp := DecodeCreateDBClusterInput(r)
+	if *resp.DBClusterIdentifier != *c.DBClusterIdentifier {
+		t.Errorf("got %s expected %s", *resp.DBClusterIdentifier, *c.DBClusterIdentifier)
+	}
+}
+
 func TestEncodeSecurityGroup(t *testing.T) {
 
 	sg := ec2types.SecurityGroup{

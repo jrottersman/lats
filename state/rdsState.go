@@ -434,3 +434,13 @@ func DecodeCreateDBInstanceInput(b bytes.Buffer) *rds.CreateDBInstanceInput {
 	}
 	return &dbInstance
 }
+
+func EncodeClusterCreateDBInstanceInput(c []rds.CreateDBInstanceInput) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+	err := enc.Encode(&c)
+	if err != nil {
+		slog.Error("Error encoding our database", "error", err)
+	}
+	return encoder
+}
