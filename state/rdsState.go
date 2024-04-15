@@ -445,7 +445,7 @@ func EncodeClusterCreateDBInstanceInput(c []rds.CreateDBInstanceInput) bytes.Buf
 	return encoder
 }
 
-func DecodeClusterCreateInstanceInput(b bytes.Buffer) []rds.CreateDBInstanceInput {
+func DecodeClusterCreateDBInstanceInput(b bytes.Buffer) []rds.CreateDBInstanceInput {
 	var dbInstances []rds.CreateDBInstanceInput
 	dec := gob.NewDecoder(&b)
 	err := dec.Decode(&dbInstances)
