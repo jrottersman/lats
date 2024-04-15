@@ -526,3 +526,21 @@ func Test_DecodeCreateDBInstanceInput(t *testing.T) {
 		t.Errorf("got %s expected %s", *resp.DBInstanceIdentifier, *db.DBInstanceIdentifier)
 	}
 }
+
+func Test_EncodeClusterCreateDBInstanceInput(t *testing.T) {
+	dbs := []rds.CreateDBInstanceInput{}
+	db := rds.CreateDBInstanceInput{
+		DBInstanceIdentifier: aws.String("foo"),
+	}
+	dbs = append(dbs, db)
+	r := EncodeClusterCreateDBInstanceInput(dbs)
+	var result []rds.CreateDBInstanceInput
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if len(result) != len(dbs) {
+		t.Errorf("got %d expected %d", len(result), len(dbs))
+	}
+}
