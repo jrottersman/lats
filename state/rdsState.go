@@ -413,8 +413,10 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 	}
 }
 
-func CreateDBClusterInput(i *types.DBCluster) *rds.CreateDBClusterInput {
-	return &rds.CreateDBClusterInput{}
+func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
+	return &rds.CreateDBClusterInput{
+		DBClusterIdentifier: c.DBClusterIdentifier,
+	}
 }
 
 // EncodeCreateDBInstanceInput bytes buffer for create
