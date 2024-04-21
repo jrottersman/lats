@@ -415,8 +415,8 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 
 func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 	var caId *string
-	if c.CACertificateIdentifier != nil {
-		caId = c.CACertificateIdentifier.CACertificateIdentifier
+	if c.CertificateDetails != nil {
+		caId = c.CertificateDetails.CAIdentifier
 	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:     c.DBClusterIdentifier,
