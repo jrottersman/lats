@@ -414,6 +414,10 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 }
 
 func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
+	var caId *string
+	if c.CACertificateIdentifier != nil {
+		caId = c.CACertificateIdentifier.CACertificateIdentifier
+	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:     c.DBClusterIdentifier,
 		Engine:                  c.Engine,
@@ -422,7 +426,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		AvailabilityZones:       c.AvailabilityZones,
 		BacktrackWindow:         c.BacktrackWindow,
 		BackupRetentionPeriod:   c.BackupRetentionPeriod,
-		CACertificateIdentifier: c.CertificateDetails.CAIdentifier,
+		CACertificateIdentifier: caId,
 	}
 }
 
