@@ -416,6 +416,7 @@ func CreateDbInstanceInput(i *types.DBInstance, ci *string) *rds.CreateDBInstanc
 func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier: c.DBClusterIdentifier,
+		Engine:              c.Engine,
 	}
 }
 
