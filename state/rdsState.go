@@ -417,6 +417,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier: c.DBClusterIdentifier,
 		Engine:              c.Engine,
+		AllocatedStorage:    c.AllocatedStorage,
 	}
 }
 
