@@ -422,6 +422,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		AvailabilityZones:       c.AvailabilityZones,
 		BacktrackWindow:         c.BacktrackWindow,
 		BackupRetentionPeriod:   c.BackupRetentionPeriod,
+		CACertificateIdentifier: c.CertificateDetails.CAIdentifier,
 	}
 }
 
