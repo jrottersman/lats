@@ -420,6 +420,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		AllocatedStorage:        c.AllocatedStorage,
 		AutoMinorVersionUpgrade: c.AutoMinorVersionUpgrade,
 		AvailabilityZones:       c.AvailabilityZones,
+		BacktrackWindow:         c.BacktrackWindow,
 	}
 }
 
