@@ -420,8 +420,10 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 	}
 
 	var domain *string
+	var domainIAMRoleName *string
 	if len(c.DomainMemberships) > 0 {
 		domain = c.DomainMemberships[0].Domain
+		domainIAMRoleName = c.DomainMemberships[0].IAMRoleName
 	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:         c.DBClusterIdentifier,
@@ -441,6 +443,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		DatabaseName:                c.DatabaseName,
 		DeletionProtection:          c.DeletionProtection,
 		Domain:                      domain,
+		DomainIAMRoleName:           domainIAMRoleName,
 	}
 }
 
