@@ -418,6 +418,11 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 	if c.CertificateDetails != nil {
 		caId = c.CertificateDetails.CAIdentifier
 	}
+
+	var domain *string
+	if len(c.DomainMemberships) > 0 {
+		domain = c.DomainMemberships[0].Domain
+	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:         c.DBClusterIdentifier,
 		Engine:                      c.Engine,
@@ -435,6 +440,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		DBSystemId:                  c.DBSystemId,
 		DatabaseName:                c.DatabaseName,
 		DeletionProtection:          c.DeletionProtection,
+		Domain:                      domain,
 	}
 }
 
