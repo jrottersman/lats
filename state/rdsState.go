@@ -419,17 +419,18 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		caId = c.CertificateDetails.CAIdentifier
 	}
 	return &rds.CreateDBClusterInput{
-		DBClusterIdentifier:     c.DBClusterIdentifier,
-		Engine:                  c.Engine,
-		AllocatedStorage:        c.AllocatedStorage,
-		AutoMinorVersionUpgrade: c.AutoMinorVersionUpgrade,
-		AvailabilityZones:       c.AvailabilityZones,
-		BacktrackWindow:         c.BacktrackWindow,
-		BackupRetentionPeriod:   c.BackupRetentionPeriod,
-		CACertificateIdentifier: caId,
-		CharacterSetName:        c.CharacterSetName,
-		CopyTagsToSnapshot:      c.CopyTagsToSnapshot,
-		DBClusterInstanceClass:  c.DBClusterInstanceClass,
+		DBClusterIdentifier:         c.DBClusterIdentifier,
+		Engine:                      c.Engine,
+		AllocatedStorage:            c.AllocatedStorage,
+		AutoMinorVersionUpgrade:     c.AutoMinorVersionUpgrade,
+		AvailabilityZones:           c.AvailabilityZones,
+		BacktrackWindow:             c.BacktrackWindow,
+		BackupRetentionPeriod:       c.BackupRetentionPeriod,
+		CACertificateIdentifier:     caId,
+		CharacterSetName:            c.CharacterSetName,
+		CopyTagsToSnapshot:          c.CopyTagsToSnapshot,
+		DBClusterInstanceClass:      c.DBClusterInstanceClass,
+		DBClusterParameterGroupName: c.DBClusterParameterGroup,
 	}
 }
 
