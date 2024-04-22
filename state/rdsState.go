@@ -432,6 +432,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		DBClusterInstanceClass:      c.DBClusterInstanceClass,
 		DBClusterParameterGroupName: c.DBClusterParameterGroup,
 		DBSubnetGroupName:           c.DBSubnetGroup,
+		DBSystemId:                  c.DBSystemId,
 	}
 }
 
