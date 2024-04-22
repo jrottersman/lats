@@ -444,6 +444,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		DeletionProtection:          c.DeletionProtection,
 		Domain:                      domain,
 		DomainIAMRoleName:           domainIAMRoleName,
+		EnableCloudwatchLogsExports: c.EnabledCloudwatchLogsExports,
 	}
 }
 
