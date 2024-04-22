@@ -427,6 +427,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		BacktrackWindow:         c.BacktrackWindow,
 		BackupRetentionPeriod:   c.BackupRetentionPeriod,
 		CACertificateIdentifier: caId,
+		CharacterSetName:        c.CharacterSetName,
 	}
 }
 
