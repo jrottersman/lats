@@ -431,6 +431,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		CopyTagsToSnapshot:          c.CopyTagsToSnapshot,
 		DBClusterInstanceClass:      c.DBClusterInstanceClass,
 		DBClusterParameterGroupName: c.DBClusterParameterGroup,
+		DBSubnetGroupName:           c.DBSubnetGroup,
 	}
 }
 
