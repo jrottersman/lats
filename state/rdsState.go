@@ -428,6 +428,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		BackupRetentionPeriod:   c.BackupRetentionPeriod,
 		CACertificateIdentifier: caId,
 		CharacterSetName:        c.CharacterSetName,
+		CopyTagsToSnapshot:      c.CopyTagsToSnapshot,
 	}
 }
 
