@@ -429,6 +429,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		CACertificateIdentifier: caId,
 		CharacterSetName:        c.CharacterSetName,
 		CopyTagsToSnapshot:      c.CopyTagsToSnapshot,
+		DBClusterInstanceClass:  c.DBClusterInstanceClass,
 	}
 }
 
