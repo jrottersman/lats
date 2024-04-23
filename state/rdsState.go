@@ -432,6 +432,12 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 			enableLimitless = &t
 		}
 	}
+	var localWriteForwarding *bool
+	if c.LocalWriteForwardingStatus == "enabled" || c.LocalWriteForwardingStatus == "enabling" || c.LocalWriteForwardingStatus == "active" {
+		t := true
+		localWriteForwarding = &t
+
+	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:             c.DBClusterIdentifier,
 		Engine:                          c.Engine,
@@ -456,6 +462,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		EnableHttpEndpoint:              c.HttpEndpointEnabled,
 		EnableIAMDatabaseAuthentication: c.IAMDatabaseAuthenticationEnabled,
 		EnableLimitlessDatabase:         enableLimitless,
+		EnableLocalWriteForwarding:      localWriteForwarding,
 	}
 }
 
