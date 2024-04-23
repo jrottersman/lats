@@ -465,6 +465,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		EnableLocalWriteForwarding:      localWriteForwarding,
 		EnablePerformanceInsights:       c.PerformanceInsightsEnabled,
 		EngineMode:                      c.EngineMode,
+		EngineVersion:                   c.EngineVersion,
 	}
 }
 
