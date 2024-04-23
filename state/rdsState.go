@@ -445,6 +445,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		Domain:                      domain,
 		DomainIAMRoleName:           domainIAMRoleName,
 		EnableCloudwatchLogsExports: c.EnabledCloudwatchLogsExports,
+		EnableGlobalWriteForwarding: c.GlobalWriteForwardingRequested,
 	}
 }
 
