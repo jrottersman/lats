@@ -425,6 +425,13 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		domain = c.DomainMemberships[0].Domain
 		domainIAMRoleName = c.DomainMemberships[0].IAMRoleName
 	}
+	var enableLimitless *bool
+	if c.LimitlessDatabase != nil {
+		if c.LimitlessDatabase.Status == "enabled" || c.LimitlessDatabase.Status == "enabling" || c.LimitlessDatabase.Status == "active" {
+			t := true
+			enableLimitless = &t
+		}
+	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:             c.DBClusterIdentifier,
 		Engine:                          c.Engine,
@@ -448,6 +455,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		EnableGlobalWriteForwarding:     c.GlobalWriteForwardingRequested,
 		EnableHttpEndpoint:              c.HttpEndpointEnabled,
 		EnableIAMDatabaseAuthentication: c.IAMDatabaseAuthenticationEnabled,
+		EnableLimitlessDatabase:         enableLimitless,
 	}
 }
 
