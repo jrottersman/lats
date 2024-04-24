@@ -466,6 +466,8 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		EnablePerformanceInsights:       c.PerformanceInsightsEnabled,
 		EngineMode:                      c.EngineMode,
 		EngineVersion:                   c.EngineVersion,
+		// TODO GlobalClusterIdentifier
+
 	}
 }
 
