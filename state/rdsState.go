@@ -438,6 +438,11 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		localWriteForwarding = &t
 
 	}
+	var manageMasterUserPassword *bool
+	if c.MasterUserSecret != nil {
+		t := true
+		manageMasterUserPassword = &t
+	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:             c.DBClusterIdentifier,
 		Engine:                          c.Engine,
@@ -468,6 +473,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		EngineVersion:                   c.EngineVersion,
 		Iops:                            c.Iops,
 		KmsKeyId:                        c.KmsKeyId,
+		ManageMasterUserPassword:        manageMasterUserPassword,
 		// TODO GlobalClusterIdentifier
 
 	}
