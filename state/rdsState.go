@@ -467,6 +467,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		EngineMode:                      c.EngineMode,
 		EngineVersion:                   c.EngineVersion,
 		Iops:                            c.Iops,
+		KmsKeyId:                        c.KmsKeyId,
 		// TODO GlobalClusterIdentifier
 
 	}
