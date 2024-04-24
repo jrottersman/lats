@@ -439,9 +439,13 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 
 	}
 	var manageMasterUserPassword *bool
+	var kmsKeyId *string
 	if c.MasterUserSecret != nil {
 		t := true
 		manageMasterUserPassword = &t
+		if c.MasterUserSecret.KmsKeyId != nil {
+			kmsKeyId = c.MasterUserSecret.KmsKeyId
+		}
 	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:             c.DBClusterIdentifier,
@@ -474,6 +478,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		Iops:                            c.Iops,
 		KmsKeyId:                        c.KmsKeyId,
 		ManageMasterUserPassword:        manageMasterUserPassword,
+		MasterUserSecretKmsKeyId:        kmsKeyId,
 		// TODO GlobalClusterIdentifier
 
 	}
