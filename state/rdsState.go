@@ -488,6 +488,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		MonitoringRoleArn:               c.MonitoringRoleArn,
 		NetworkType:                     c.NetworkType,
 		OptionGroupName:                 optionGroupName,
+		PerformanceInsightsKMSKeyId:     c.PerformanceInsightsKMSKeyId,
 		// TODO GlobalClusterIdentifier
 
 	}
