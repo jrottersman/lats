@@ -482,6 +482,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		MasterUsername:                  c.MasterUsername,
 		MonitoringInterval:              c.MonitoringInterval,
 		MonitoringRoleArn:               c.MonitoringRoleArn,
+		NetworkType:                     c.NetworkType,
 		// TODO GlobalClusterIdentifier
 
 	}
