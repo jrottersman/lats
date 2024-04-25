@@ -447,6 +447,10 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 			kmsKeyId = c.MasterUserSecret.KmsKeyId
 		}
 	}
+	var optionGroupName *string
+	if len(c.DBClusterOptionGroupMemberships) > 0 {
+		optionGroupName = c.DBClusterOptionGroupMemberships[0].DBClusterOptionGroupName
+	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:             c.DBClusterIdentifier,
 		Engine:                          c.Engine,
@@ -483,6 +487,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		MonitoringInterval:              c.MonitoringInterval,
 		MonitoringRoleArn:               c.MonitoringRoleArn,
 		NetworkType:                     c.NetworkType,
+		OptionGroupName:                 optionGroupName,
 		// TODO GlobalClusterIdentifier
 
 	}
