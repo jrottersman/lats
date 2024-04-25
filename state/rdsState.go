@@ -480,6 +480,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		ManageMasterUserPassword:        manageMasterUserPassword,
 		MasterUserSecretKmsKeyId:        kmsKeyId,
 		MasterUsername:                  c.MasterUsername,
+		MonitoringInterval:              c.MonitoringInterval,
 		// TODO GlobalClusterIdentifier
 
 	}
