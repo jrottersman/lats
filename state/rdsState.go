@@ -492,6 +492,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		PerformanceInsightsRetentionPeriod: c.PerformanceInsightsRetentionPeriod,
 		Port:                               c.Port,
 		PreferredBackupWindow:              c.PreferredBackupWindow,
+		PreferredMaintenanceWindow:         c.PreferredMaintenanceWindow,
 		//TODO PresignedURL
 		// TODO GlobalClusterIdentifier
 
