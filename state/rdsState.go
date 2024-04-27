@@ -494,6 +494,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		PreferredBackupWindow:              c.PreferredBackupWindow,
 		PreferredMaintenanceWindow:         c.PreferredMaintenanceWindow,
 		PubliclyAccessible:                 c.PubliclyAccessible,
+		ReplicationSourceIdentifier:        c.ReplicationSourceIdentifier,
 		//TODO PresignedURL
 		// TODO GlobalClusterIdentifier
 
