@@ -451,6 +451,12 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 	if len(c.DBClusterOptionGroupMemberships) > 0 {
 		optionGroupName = c.DBClusterOptionGroupMemberships[0].DBClusterOptionGroupName
 	}
+	var vpcSecurityGroupIds []string
+	if c.VpcSecurityGroups != nil {
+		for _, sg := range c.VpcSecurityGroups {
+			vpcSecurityGroupIds = append(vpcSecurityGroupIds, *sg.VpcSecurityGroupId)
+		}
+	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:                c.DBClusterIdentifier,
 		Engine:                             c.Engine,
@@ -498,6 +504,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		StorageEncrypted:                   c.StorageEncrypted,
 		StorageType:                        c.StorageType,
 		Tags:                               c.TagList,
+		VpcSecurityGroupIds:                vpcSecurityGroupIds,
 		//TODO ScalingConfiguration
 		//TODO ServererlessV2ScalingConfiguration
 		//TODO PresignedURL
