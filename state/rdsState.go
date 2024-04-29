@@ -495,6 +495,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		PreferredMaintenanceWindow:         c.PreferredMaintenanceWindow,
 		PubliclyAccessible:                 c.PubliclyAccessible,
 		ReplicationSourceIdentifier:        c.ReplicationSourceIdentifier,
+		StorageEncrypted:                   c.StorageEncrypted,
 		//TODO ScalingConfiguration
 		//TODO ServererlessV2ScalingConfiguration
 		//TODO PresignedURL
