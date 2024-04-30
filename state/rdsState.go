@@ -468,6 +468,13 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 			TimeoutAction:         c.ScalingConfigurationInfo.TimeoutAction,
 		}
 	}
+	var serverlessV2ScalingConfiguration *types.ServerlessV2ScalingConfiguration
+	if c.ServerlessV2ScalingConfiguration != nil {
+		serverlessV2ScalingConfiguration = &types.ServerlessV2ScalingConfiguration{
+			MaxCapacity: c.ServerlessV2ScalingConfiguration.MaxCapacity,
+			MinCapacity: c.ServerlessV2ScalingConfiguration.MinCapacity,
+		}
+	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:                c.DBClusterIdentifier,
 		Engine:                             c.Engine,
@@ -517,6 +524,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		Tags:                               c.TagList,
 		VpcSecurityGroupIds:                vpcSecurityGroupIds,
 		ScalingConfiguration:               ScalingConfiguration,
+		ServerlessV2ScalingConfiguration:   serverlessV2ScalingConfiguration,
 		//TODO ServererlessV2ScalingConfiguration
 		//TODO PresignedURL
 		// TODO GlobalClusterIdentifier
