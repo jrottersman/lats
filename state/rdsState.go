@@ -457,6 +457,17 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 			vpcSecurityGroupIds = append(vpcSecurityGroupIds, *sg.VpcSecurityGroupId)
 		}
 	}
+	var ScalingConfiguration *types.ScalingConfiguration
+	if c.ScalingConfigurationInfo != nil {
+		ScalingConfiguration = &types.ScalingConfiguration{
+			AutoPause:             c.ScalingConfigurationInfo.AutoPause,
+			MaxCapacity:           c.ScalingConfigurationInfo.MaxCapacity,
+			MinCapacity:           c.ScalingConfigurationInfo.MinCapacity,
+			SecondsBeforeTimeout:  c.ScalingConfigurationInfo.SecondsBeforeTimeout,
+			SecondsUntilAutoPause: c.ScalingConfigurationInfo.SecondsUntilAutoPause,
+			TimeoutAction:         c.ScalingConfigurationInfo.TimeoutAction,
+		}
+	}
 	return &rds.CreateDBClusterInput{
 		DBClusterIdentifier:                c.DBClusterIdentifier,
 		Engine:                             c.Engine,
@@ -505,6 +516,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		StorageType:                        c.StorageType,
 		Tags:                               c.TagList,
 		VpcSecurityGroupIds:                vpcSecurityGroupIds,
+		ScalingConfiguration:               ScalingConfiguration,
 		//TODO ScalingConfiguration
 		//TODO ServererlessV2ScalingConfiguration
 		//TODO PresignedURL
