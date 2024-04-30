@@ -517,7 +517,6 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		Tags:                               c.TagList,
 		VpcSecurityGroupIds:                vpcSecurityGroupIds,
 		ScalingConfiguration:               ScalingConfiguration,
-		//TODO ScalingConfiguration
 		//TODO ServererlessV2ScalingConfiguration
 		//TODO PresignedURL
 		// TODO GlobalClusterIdentifier
