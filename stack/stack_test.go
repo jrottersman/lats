@@ -31,7 +31,7 @@ func Test_ReadObject(t *testing.T) {
 	i := resp.ReadObject()
 	_, ok := i.(*rds.RestoreDBInstanceFromDBSnapshotInput)
 	if !ok {
-		t.Errorf("failed to coerece to *rds.RestoreDBInstanceFromDBSnapshotInput")
+		t.Errorf("failed to coerce to *rds.RestoreDBInstanceFromDBSnapshotInput")
 	}
 }
 

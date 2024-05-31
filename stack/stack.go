@@ -43,13 +43,13 @@ func (o Object) ReadObject() interface{} {
 	case Instance:
 		return state.DecodeCreateDBInstanceInput(*buf)
 	case DBParameterGroup:
-		pgstate.DecodeParameterGroups(*buf)
+		return pgstate.DecodeParameterGroups(*buf)
 	case DBClusterParameterGroup:
-		pgstate.DecodeParameterGroups(*buf)
+		return pgstate.DecodeParameterGroups(*buf)
 	case SecurityGroup:
-		state.DecodeSecurityGroups(*buf)
+		return state.DecodeSecurityGroups(*buf)
 	case SecurityGroupRules:
-		state.DecodeSGRulesStorage(*buf)
+		return state.DecodeSGRulesStorage(*buf)
 	}
 	return nil
 }
@@ -64,8 +64,8 @@ func NewObject(filename string, order int, objtype string) Object {
 
 type Stack struct {
 	Name                  string //Name is the name of the stack
-	RestorationObjectName string
-	Objects               map[int][]Object //int is the order in which we restore
+	RestorationObjectName string // RestorationObjectName is the name of the object that will be restored
+	Objects               map[int][]Object
 }
 
 func (s Stack) Encoder() (*bytes.Buffer, error) {
