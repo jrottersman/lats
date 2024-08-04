@@ -208,14 +208,16 @@ func (c *EC2Instances) DescribeVpcs(vpcID string) (*ec2.DescribeVpcsOutput, erro
 	return output, nil
 }
 
-func (c *EC2Instances) getVpc(vpcs *ec2.DescribeVpcsOutput) {
+func (c *EC2Instances) getVpc(vpcs *ec2.DescribeVpcsOutput) *types.Vpc {
 	if len(vpcs.Vpcs) == 0 {
 		slog.Error("no vpcs found")
+		return nil
 	}
 	if len(vpcs.Vpcs) > 1 {
 		slog.Error("to many vpcs we are supposed to have one for this operation")
+		return nil
 	}
-
+	return &vpcs.Vpcs[0]
 }
 
 func (c *EC2Instances) GetSubnet(subnetID string) (*ec2.DescribeSubnetsOutput, error) {
