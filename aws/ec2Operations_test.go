@@ -341,7 +341,7 @@ func TestEC2Instances_DescribeVpcs(t *testing.T) {
 		want    *ec2.DescribeVpcsOutput
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{name: "test", fields: fields{Client: mock.EC2Client{}}, args: args{vpcID: "foo"}, want: &ec2.DescribeVpcsOutput{}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
