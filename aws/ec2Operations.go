@@ -208,6 +208,16 @@ func (c *EC2Instances) DescribeVpcs(vpcID string) (*ec2.DescribeVpcsOutput, erro
 	return output, nil
 }
 
+func (c *EC2Instances) getVpc(vpcs *ec2.DescribeVpcsOutput) {
+	if len(vpcs.Vpcs) == 0 {
+		slog.Error("no vpcs found")
+	}
+	if len(vpcs.Vpcs) > 1 {
+		slog.Error("to many vpcs we are supposed to have one for this operation")
+	}
+
+}
+
 func (c *EC2Instances) GetSubnet(subnetID string) (*ec2.DescribeSubnetsOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
