@@ -193,6 +193,21 @@ func (c *EC2Instances) DescribeSG(sgIds string) (*ec2.DescribeSecurityGroupsOutp
 	return output, nil
 }
 
+func (c *EC2Instances) DescribeVpcs(vpcID string) (*ec2.DescribeVpcsOutput, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+
+	params := ec2.DescribeVpcsInput{
+		VpcIds: []string{vpcID},
+	}
+
+	output, err := c.Client.DescribeVpcs(ctx, &params)
+	if err != nil {
+		return nil, err
+	}
+	return output, nil
+}
+
 func (c *EC2Instances) GetSubnet(subnetID string) (*ec2.DescribeSubnetsOutput, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
