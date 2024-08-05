@@ -95,6 +95,22 @@ func TestDecodeSGRuleStorage(t *testing.T) {
 	}
 }
 
+func TestEncodeVpc(t *testing.T) {
+	vpc := types.Vpc{
+		CidrBlock: aws.String("foo"),
+	}
+	r := EncodeVpc(vpc)
+	var result types.Vpc
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if *result.CidrBlock != *vpc.CidrBlock {
+		t.Errorf("got %s expected %s", *result.CidrBlock, *vpc.CidrBlock)
+	}
+}
+
 func TestSgRuleStorageToIpPermission(t *testing.T) {
 	type args struct {
 		sg SGRuleStorage
