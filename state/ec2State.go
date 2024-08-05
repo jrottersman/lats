@@ -89,6 +89,17 @@ func DecodeSGRulesStorage(b bytes.Buffer) []SGRuleStorage {
 	return sg
 }
 
+func EncodeVpc(vpc types.Vpc) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(vpc)
+	if err != nil {
+		slog.Error("Error encoding our VPC", "error", err)
+	}
+	return encoder
+}
+
 func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	var ip types.IpPermission
 	ip.FromPort = sg.FromPort
