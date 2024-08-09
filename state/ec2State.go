@@ -110,6 +110,17 @@ func DecodeVpc(b bytes.Buffer) types.Vpc {
 	return vpc
 }
 
+func EncodeSubnets(subnets []types.Subnet) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(subnets)
+	if err != nil {
+		slog.Error("Error encoding our Subnets", "error", err)
+	}
+	return encoder
+}
+
 func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	var ip types.IpPermission
 	ip.FromPort = sg.FromPort
