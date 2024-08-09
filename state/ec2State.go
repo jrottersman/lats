@@ -121,6 +121,16 @@ func EncodeSubnets(subnets []types.Subnet) bytes.Buffer {
 	return encoder
 }
 
+func DecodeSubnets(b bytes.Buffer) []types.Subnet {
+	var subnets []types.Subnet
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&subnets)
+	if err != nil {
+		slog.Error("Error decoding state for Subnets", "error", err)
+	}
+	return subnets
+}
+
 func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	var ip types.IpPermission
 	ip.FromPort = sg.FromPort
