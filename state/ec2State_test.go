@@ -122,6 +122,23 @@ func TestDecodeVpc(t *testing.T) {
 	}
 }
 
+func TestEncodeSubnets(t *testing.T) {
+	sn := types.Subnet{
+		CidrBlock: aws.String("foo"),
+	}
+	subnets := []types.Subnet{sn}
+	r := EncodeSubnets(subnets)
+	var result []types.Subnet
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if len(result) != len(subnets) {
+		t.Errorf("got %d expected %d", len(result), len(subnets))
+	}
+}
+
 func TestSgRuleStorageToIpPermission(t *testing.T) {
 	type args struct {
 		sg SGRuleStorage
