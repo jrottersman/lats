@@ -139,6 +139,18 @@ func TestEncodeSubnets(t *testing.T) {
 	}
 }
 
+func TestDecodeSubnets(t *testing.T) {
+	sn := types.Subnet{
+		CidrBlock: aws.String("foo"),
+	}
+	subnets := []types.Subnet{sn}
+	r := EncodeSubnets(subnets)
+	result := DecodeSubnets(r)
+	if len(result) != len(subnets) {
+		t.Errorf("got %d expected %d", len(result), len(subnets))
+	}
+}
+
 func TestSgRuleStorageToIpPermission(t *testing.T) {
 	type args struct {
 		sg SGRuleStorage
