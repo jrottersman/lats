@@ -131,6 +131,17 @@ func DecodeSubnets(b bytes.Buffer) []types.Subnet {
 	return subnets
 }
 
+func EncodeInternetGateways(igws []types.InternetGateway) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(igws)
+	if err != nil {
+		slog.Error("Error encoding our Internet Gateways", "error", err)
+	}
+	return encoder
+}
+
 func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	var ip types.IpPermission
 	ip.FromPort = sg.FromPort
