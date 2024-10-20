@@ -142,6 +142,16 @@ func EncodeInternetGateways(igws []types.InternetGateway) bytes.Buffer {
 	return encoder
 }
 
+func DecodeInternetGateways(b bytes.Buffer) []types.InternetGateway {
+	var igws []types.InternetGateway
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&igws)
+	if err != nil {
+		slog.Error("Error decoding state for Internet Gateways", "error", err)
+	}
+	return igws
+}
+
 func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	var ip types.IpPermission
 	ip.FromPort = sg.FromPort
