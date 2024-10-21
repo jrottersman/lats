@@ -250,3 +250,17 @@ func (c *EC2Instances) GetSubnets(sgIds []string) (*ec2.DescribeSubnetsOutput, e
 	}
 	return output, nil
 }
+
+func (c *EC2Instances) GetInternetGateways(igwIds []string) (*ec2.DescribeInternetGatewaysOutput, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+
+	params := ec2.DescribeInternetGatewaysInput{
+		InternetGatewayIds: igwIds,
+	}
+	output, err := c.Client.DescribeInternetGateways(ctx, &params)
+	if err != nil {
+		return nil, err
+	}
+	return output, nil
+}
