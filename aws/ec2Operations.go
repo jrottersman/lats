@@ -262,16 +262,16 @@ func (c *EC2Instances) GetInternetGateways(igwIds []string) (*ec2.DescribeIntern
 	if err != nil {
 		return nil, err
 	}
-	outputs = []types.InternetGateway{}
+	outputs := []types.InternetGateway{}
 	nt := output.NextToken
-	while nt != nil {
-		nt = output.NextTokcen
+	for nt != nil {
+		nt = output.NextToken
 		outputs = append(outputs, output.InternetGateways...)
 		params := ec2.DescribeInternetGatewaysInput{
 			InternetGatewayIds: igwIds,
 			NextToken:          nt,
 		}
-		output, err := c.Client.DescribeInternetGateways(ctx, &params)
+		output, err = c.Client.DescribeInternetGateways(ctx, &params)
 		if err != nil {
 			return nil, err
 		}
