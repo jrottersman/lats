@@ -359,3 +359,36 @@ func TestEC2Instances_DescribeVpcs(t *testing.T) {
 		})
 	}
 }
+
+func TestEC2Instances_GetInternetGateways(t *testing.T) {
+	type fields struct {
+		Client Ec2Client
+	}
+	type args struct {
+		igwIds []string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    []types.InternetGateway
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &EC2Instances{
+				Client: tt.fields.Client,
+			}
+			got, err := c.GetInternetGateways(tt.args.igwIds)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("EC2Instances.GetInternetGateways() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("EC2Instances.GetInternetGateways() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
