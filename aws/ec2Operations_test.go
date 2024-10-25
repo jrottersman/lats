@@ -374,7 +374,7 @@ func TestEC2Instances_GetInternetGateways(t *testing.T) {
 		want    []types.InternetGateway
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{name: "test", fields: fields{Client: mock.EC2Client{}}, args: args{igwIds: []string{"foo"}}, want: []types.InternetGateway{}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
