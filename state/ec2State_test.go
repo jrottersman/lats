@@ -151,6 +151,23 @@ func TestDecodeSubnets(t *testing.T) {
 	}
 }
 
+func TestEncodeInternetGateways(t *testing.T) {
+	ig := types.InternetGateway{
+		InternetGatewayId: aws.String("foo"),
+	}
+	igs := []types.InternetGateway{ig}
+	r := EncodeInternetGateways(igs)
+	var result []types.InternetGateway
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if len(result) != len(igs) {
+		t.Errorf("got %d expected %d", len(result), len(igs))
+	}
+}
+
 func TestSgRuleStorageToIpPermission(t *testing.T) {
 	type args struct {
 		sg SGRuleStorage
