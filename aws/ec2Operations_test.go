@@ -407,7 +407,7 @@ func TestEC2Instances_GetRouteTables(t *testing.T) {
 		want    []types.RouteTable
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{name: "test", fields: fields{Client: mock.EC2Client{}}, args: args{rtIds: []string{"foo"}}, want: []types.RouteTable{}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
