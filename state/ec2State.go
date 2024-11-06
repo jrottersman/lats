@@ -152,6 +152,17 @@ func DecodeInternetGateways(b bytes.Buffer) []types.InternetGateway {
 	return igws
 }
 
+func EncodeRouteTables(rts []types.RouteTable) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(rts)
+	if err != nil {
+		slog.Error("Error encoding our Route Tables", "error", err)
+	}
+	return encoder
+}
+
 func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	var ip types.IpPermission
 	ip.FromPort = sg.FromPort
