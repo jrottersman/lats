@@ -280,3 +280,31 @@ func (c *EC2Instances) GetInternetGateways(igwIds []string) ([]types.InternetGat
 
 	return outputs, nil
 }
+
+func (c *EC2Instances) GetRouteTables(rtIds []string) ([]types.RouteTable, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+
+	params := ec2.DescribeRouteTablesInput{
+		RouteTableIds: rtIds,
+	}
+	outputs := []types.RouteTable{}
+	output, err := c.Client.DescribeRouteTables(ctx, &params)
+	if err != nil {
+		return nil, err
+	}
+	outputs = append(outputs, output.RouteTables...)
+	nt := output.NextToken
+	for nt != nil {
+		params := ec2.DescribeRouteTablesInput{
+			RouteTableIds: rtIds,
+			NextToken:     nt,
+		}
+		output, err = c.Client.DescribeRouteTables(ctx, &params)
+		if err != nil {
+			return nil, err
+		}
+		outputs = append(outputs, output.RouteTables...)
+	}
+	return outputs, nil
+}
