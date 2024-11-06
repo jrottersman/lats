@@ -103,7 +103,7 @@ func (instances *DbInstances) GetInstancesFromCluster(c *types.DBCluster) ([]typ
 	for _, v := range c.DBClusterMembers {
 		db, err := instances.GetInstance(*v.DBInstanceIdentifier)
 		if err != nil {
-			slog.Warn("error with get instance %s", err)
+			slog.Warn("error with get instance", "error", err)
 		}
 		dbs = append(dbs, *db)
 	}
