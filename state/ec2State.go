@@ -163,6 +163,16 @@ func EncodeRouteTables(rts []types.RouteTable) bytes.Buffer {
 	return encoder
 }
 
+func DecodeRouteTables(b bytes.Buffer) []types.RouteTable {
+	var rts []types.RouteTable
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&rts)
+	if err != nil {
+		slog.Error("Error decoding state for Route Tables", "error", err)
+	}
+	return rts
+}
+
 func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	var ip types.IpPermission
 	ip.FromPort = sg.FromPort
