@@ -57,3 +57,7 @@ func (m EC2Client) DescribeInternetGateways(ctx context.Context, params *ec2.Des
 func (m EC2Client) DescribeRouteTables(ctx context.Context, params *ec2.DescribeRouteTablesInput, optFns ...func(*ec2.Options)) (*ec2.DescribeRouteTablesOutput, error) {
 	return &ec2.DescribeRouteTablesOutput{}, nil
 }
+
+func (m EC2Client) DescribeAvailabilityZones(ctx context.Context, params *ec2.DescribeAvailabilityZonesInput, optFns ...func(*ec2.Options)) (*ec2.DescribeAvailabilityZonesOutput, error) {
+	return &ec2.DescribeAvailabilityZonesOutput{}, nil
+}
