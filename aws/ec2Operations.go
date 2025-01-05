@@ -309,3 +309,18 @@ func (c *EC2Instances) GetRouteTables(rtIds []string) ([]types.RouteTable, error
 	}
 	return outputs, nil
 }
+
+func (c *EC2Instances) GetAvailabilityZones(azs []string) ([]types.AvailabilityZone, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	all := true
+
+	params := ec2.DescribeAvailabilityZonesInput{
+		AllAvailabilityZones: &all,
+	}
+	output, err := c.Client.DescribeAvailabilityZones(ctx, &params)
+	if err != nil {
+		return nil, err
+	}
+	return output.AvailabilityZones, nil
+}
