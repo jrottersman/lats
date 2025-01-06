@@ -173,6 +173,17 @@ func DecodeRouteTables(b bytes.Buffer) []types.RouteTable {
 	return rts
 }
 
+func EncodeAvailabilityZones(azs []types.AvailabilityZone) bytes.Buffer {
+	var encoder bytes.Buffer
+	enc := gob.NewEncoder(&encoder)
+
+	err := enc.Encode(azs)
+	if err != nil {
+		slog.Error("Error encoding our Availability Zones", "error", err)
+	}
+	return encoder
+}
+
 func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	var ip types.IpPermission
 	ip.FromPort = sg.FromPort
