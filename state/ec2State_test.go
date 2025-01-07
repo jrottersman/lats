@@ -180,6 +180,20 @@ func TestDecodeInternetGateways(t *testing.T) {
 	}
 }
 
+func TestEncodeAvailabilityZones(t *testing.T) {
+	azs := []types.AvailabilityZone{{ZoneName: aws.String("foo")}}
+	r := EncodeAvailabilityZones(azs)
+	var result []types.AvailabilityZone
+	dec := gob.NewDecoder(&r)
+	err := dec.Decode(&result)
+	if err != nil {
+		t.Errorf("decode error: %s", err)
+	}
+	if len(result) != len(azs) {
+		t.Errorf("got %d expected %d", len(result), len(azs))
+	}
+}
+
 func TestSgRuleStorageToIpPermission(t *testing.T) {
 	type args struct {
 		sg SGRuleStorage
