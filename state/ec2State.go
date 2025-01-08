@@ -184,6 +184,16 @@ func EncodeAvailabilityZones(azs []types.AvailabilityZone) bytes.Buffer {
 	return encoder
 }
 
+func DecodeAvailabilityZones(b bytes.Buffer) []types.AvailabilityZone {
+	var azs []types.AvailabilityZone
+	dec := gob.NewDecoder(&b)
+	err := dec.Decode(&azs)
+	if err != nil {
+		slog.Error("Error decoding state for Availability Zones", "error", err)
+	}
+	return azs
+}
+
 func SgRuleStorageToIpPermission(sg SGRuleStorage) types.IpPermission {
 	var ip types.IpPermission
 	ip.FromPort = sg.FromPort
