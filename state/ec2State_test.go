@@ -194,6 +194,15 @@ func TestEncodeAvailabilityZones(t *testing.T) {
 	}
 }
 
+func TestDecodeAvailabilityZones(t *testing.T) {
+	azs := []types.AvailabilityZone{{ZoneName: aws.String("foo")}}
+	r := EncodeAvailabilityZones(azs)
+	result := DecodeAvailabilityZones(r)
+	if len(result) != len(azs) {
+		t.Errorf("got %d expected %d", len(result), len(azs))
+	}
+}
+
 func TestSgRuleStorageToIpPermission(t *testing.T) {
 	type args struct {
 		sg SGRuleStorage
