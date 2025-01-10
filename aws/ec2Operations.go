@@ -2,6 +2,7 @@ package aws
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"time"
 
@@ -323,4 +324,17 @@ func (c *EC2Instances) GetAvailabilityZones(azs []string) ([]types.AvailabilityZ
 		return nil, err
 	}
 	return output.AvailabilityZones, nil
+}
+
+func (c *EC2Instances) GetAvailabilityZoneNames(azs []types.AvailabilityZone) ([]string, error) {
+	var names []string
+	for _, v := range azs {
+		if v.ZoneName == nil {
+			slog.Error("no name found")
+			return names, fmt.Errorf("AZ name not found for an AZ")
+		}
+		slog.Info("AZ", "name", *v.ZoneName)
+		names = append(names, *v.ZoneName)
+	}
+	return names, nil
 }
