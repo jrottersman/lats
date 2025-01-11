@@ -1,13 +1,16 @@
 package aws
 
 import (
+	"context"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	mock "github.com/jrottersman/lats/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestEC2Instances_CreateSG(t *testing.T) {
@@ -424,4 +427,18 @@ func TestEC2Instances_GetRouteTables(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestGetSubnet(t *testing.T) {
+	c := &EC2Instances{
+		Client: &mockEC2Client{},
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+
+	output, err := c.GetSubnet("subnet-0123456789abcdef0")
+	assert.NoError(t, err)
+
+	assert.Equal(t, "subnet-0123456789abcdef0", *output.Subnets[0].SubnetId)
 }
