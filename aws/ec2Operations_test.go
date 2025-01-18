@@ -262,39 +262,6 @@ func TestEC2Instances_SGEgress(t *testing.T) {
 	}
 }
 
-func TestEC2Instances_GetSubnet(t *testing.T) {
-	type fields struct {
-		Client Ec2Client
-	}
-	type args struct {
-		subnetID string
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    *ec2.DescribeSubnetsOutput
-		wantErr bool
-	}{
-		{name: "test", fields: fields{Client: mock.EC2Client{}}, args: args{subnetID: "foo"}, want: &ec2.DescribeSubnetsOutput{}, wantErr: false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c := &EC2Instances{
-				Client: tt.fields.Client,
-			}
-			got, err := c.GetSubnet(tt.args.subnetID)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("EC2Instances.GetSubnet() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("EC2Instances.GetSubnet() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestEC2Instances_GetSubnets(t *testing.T) {
 	type fields struct {
 		Client Ec2Client
