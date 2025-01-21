@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/jrottersman/lats/state"
@@ -311,13 +312,14 @@ func (c *EC2Instances) GetRouteTables(rtIds []string) ([]types.RouteTable, error
 	return outputs, nil
 }
 
-func (c *EC2Instances) GetAvailabilityZones(azs []string) ([]types.AvailabilityZone, error) {
+func (c *EC2Instances) GetAvailabilityZones(region string) ([]types.AvailabilityZone, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 	all := true
 
 	params := ec2.DescribeAvailabilityZonesInput{
 		AllAvailabilityZones: &all,
+		Filters:              []types.Filter{{Name: aws.String("region-name"), Values: []string{region}}},
 	}
 	output, err := c.Client.DescribeAvailabilityZones(ctx, &params)
 	if err != nil {
