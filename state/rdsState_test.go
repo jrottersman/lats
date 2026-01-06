@@ -557,3 +557,17 @@ func Test_DecodeClusterCreateDBInstanceInput(t *testing.T) {
 		t.Errorf("got %d expected %d", len(result), len(dbs))
 	}
 }
+
+func TestCreateDBClusterInput(t *testing.T) {
+	c := types.DBCluster{
+		DBClusterIdentifier: aws.String("foo"),
+		Engine:              aws.String("aurora-mysql"),
+	}
+	result := CreateDBClusterInput(&c)
+	if result.PreSignedUrl != nil {
+		t.Errorf("expected PreSignedUrl to be nil, got %v", result.PreSignedUrl)
+	}
+	if *result.DBClusterIdentifier != "foo" {
+		t.Errorf("expected DBClusterIdentifier to be foo, got %s", *result.DBClusterIdentifier)
+	}
+}

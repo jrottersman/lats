@@ -525,7 +525,7 @@ func CreateDBClusterInput(c *types.DBCluster) *rds.CreateDBClusterInput {
 		VpcSecurityGroupIds:                vpcSecurityGroupIds,
 		ScalingConfiguration:               ScalingConfiguration,
 		ServerlessV2ScalingConfiguration:   serverlessV2ScalingConfiguration,
-		//TODO PresignedURL
+		PreSignedUrl:                       nil,
 		// TODO GlobalClusterIdentifier
 
 	}
